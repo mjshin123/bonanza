@@ -1,0 +1,12 @@
+/* ── Bonanza webfonts ──────────────────────────────────────────────
+   SUIT Variable — carried over from the Transight style guide.
+   A Korean+Latin variable sans (weight axis 100–900).
+   Served from jsDelivr; see readme.md "Font substitution" note.        */
+
+@font-face {
+  font-family: "SUIT Variable";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.woff2") format("woff2-variations");
+}

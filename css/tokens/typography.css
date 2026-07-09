@@ -1,0 +1,111 @@
+/* ── Bonanza typography ────────────────────────────────────────────
+   Type system carried over from the Transight style guide, rebuilt on
+   SUIT Variable. Weight naming: r=400 m=500 sb=600 b=700 eb=800.       */
+
+:root {
+  --font-sans: "SUIT Variable", "SUIT", -apple-system, BlinkMacSystemFont,
+    system-ui, "Roboto", "Noto Sans KR", "Malgun Gothic", sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+
+  /* weight axis */
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --fw-extrabold: 800;
+
+  /* size ramp */
+  --fs-8: 8px;
+  --fs-9: 9px;
+  --fs-10: 10px;
+  --fs-12: 12px;
+  --fs-13: 13px;
+  --fs-14: 14px;
+  --fs-16: 16px;
+  --fs-18: 18px;
+  --fs-24: 24px;
+  --fs-32: 32px;
+  --fs-54: 54px;
+
+  /* line-heights */
+  --lh-tight: 1.2;
+  --lh-snug: 1.3;
+  --lh-normal: 1.5;
+  --lh-relaxed: 1.6;
+}
+
+/* ── Semantic presets (1st choice: size+weight+leading+color complete) ── */
+.text-hero {
+  font: var(--fw-extrabold) var(--fs-54) / var(--lh-tight) var(--font-sans);
+  letter-spacing: -0.005em;
+  color: var(--text-strong);
+}
+.text-page-title {
+  font: var(--fw-extrabold) var(--fs-32) / var(--lh-snug) var(--font-sans);
+  color: var(--text-strong);
+}
+.text-section-title {
+  font: var(--fw-bold) var(--fs-24) / var(--lh-relaxed) var(--font-sans);
+  color: var(--text-strong);
+}
+.text-modal-title {
+  font: var(--fw-bold) var(--fs-18) / var(--lh-relaxed) var(--font-sans);
+  color: var(--text-strong);
+}
+.text-card-title {
+  font: var(--fw-bold) var(--fs-16) / var(--lh-relaxed) var(--font-sans);
+  letter-spacing: -0.005em;
+  color: var(--text-strong);
+}
+.text-label {
+  font: var(--fw-semibold) var(--fs-14) / var(--lh-relaxed) var(--font-sans);
+  color: var(--text-strong);
+}
+.text-body {
+  font: var(--fw-medium) var(--fs-14) / var(--lh-relaxed) var(--font-sans);
+  color: var(--text-body);
+}
+.text-subtitle {
+  font: var(--fw-medium) var(--fs-14) / var(--lh-relaxed) var(--font-sans);
+  color: var(--text-muted);
+}
+.text-caption {
+  font: var(--fw-regular) var(--fs-12) / var(--lh-relaxed) var(--font-sans);
+  color: var(--text-muted);
+}
+.text-description {
+  font: var(--fw-regular) var(--fs-12) / var(--lh-relaxed) var(--font-sans);
+  color: var(--text-subtle);
+}
+.text-overline {
+  font: var(--fw-semibold) var(--fs-9) / var(--lh-normal) var(--font-sans);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.text-link {
+  font: var(--fw-medium) var(--fs-14) / var(--lh-relaxed) var(--font-sans);
+  color: var(--link);
+}
+.text-error {
+  font: var(--fw-semibold) var(--fs-14) / var(--lh-relaxed) var(--font-sans);
+  color: var(--danger);
+}
+
+/* ── Type presets (2nd choice: weight+size, pair with a color) ──────
+   Naming: typo-{weight}{size}. Set color separately.                 */
+.typo-r10 { font: var(--fw-regular) var(--fs-10) / var(--lh-relaxed) var(--font-sans); }
+.typo-r12 { font: var(--fw-regular) var(--fs-12) / var(--lh-relaxed) var(--font-sans); }
+.typo-r14 { font: var(--fw-regular) var(--fs-14) / var(--lh-relaxed) var(--font-sans); }
+.typo-m12 { font: var(--fw-medium)  var(--fs-12) / var(--lh-normal)  var(--font-sans); }
+.typo-m13 { font: var(--fw-medium)  var(--fs-13) / var(--lh-normal)  var(--font-sans); letter-spacing: 0.02em; }
+.typo-m14 { font: var(--fw-medium)  var(--fs-14) / var(--lh-relaxed) var(--font-sans); }
+.typo-m16 { font: var(--fw-medium)  var(--fs-16) / var(--lh-relaxed) var(--font-sans); }
+.typo-sb13 { font: var(--fw-semibold) var(--fs-13) / var(--lh-relaxed) var(--font-sans); }
+.typo-sb14 { font: var(--fw-semibold) var(--fs-14) / var(--lh-relaxed) var(--font-sans); }
+.typo-b16 { font: var(--fw-bold) var(--fs-16) / var(--lh-relaxed) var(--font-sans); letter-spacing: -0.005em; }
+.typo-b18 { font: var(--fw-bold) var(--fs-18) / var(--lh-relaxed) var(--font-sans); }
+.typo-b24 { font: var(--fw-bold) var(--fs-24) / var(--lh-relaxed) var(--font-sans); }
+.typo-eb32 { font: var(--fw-extrabold) var(--fs-32) / var(--lh-snug) var(--font-sans); }
+.typo-eb54 { font: var(--fw-extrabold) var(--fs-54) / var(--lh-tight) var(--font-sans); letter-spacing: -0.005em; }

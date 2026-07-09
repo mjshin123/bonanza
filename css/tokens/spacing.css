@@ -1,0 +1,28 @@
+/* ── Bonanza spacing, radius, shadow ───────────────────────────────
+   Spacing follows the Transight rule: even units only (2/4 multiples). */
+
+:root {
+  /* spacing scale (px) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* border radius */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-full: 9999px;
+
+  /* shadow system */
+  --shadow-xs: 0 1px 2px rgba(23, 23, 23, 0.05);
+  --shadow-sm: 0 1px 3px rgba(23, 23, 23, 0.08), 0 1px 2px rgba(23, 23, 23, 0.06);
+  --shadow-md: 0 4px 10px rgba(23, 23, 23, 0.08), 0 2px 4px rgba(23, 23, 23, 0.05);
+  --shadow-lg: 0 12px 28px rgba(23, 23, 23, 0.12), 0 4px 10px rgba(23, 23, 23, 0.06);
+  --shadow-ring: 0 0 0 3px var(--blue-alpha-20);
+}
