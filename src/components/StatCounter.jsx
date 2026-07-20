@@ -4,9 +4,13 @@ function easeOut(t) {
   return 1 - Math.pow(1 - t, 3);
 }
 
+function format(v, decimals) {
+  return v.toLocaleString("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+}
+
 export default function StatCounter({ target, decimals = 0, suffix = "" }) {
   const ref = useRef(null);
-  const [value, setValue] = useState(target.toFixed(decimals) + suffix);
+  const [value, setValue] = useState(format(target, decimals) + suffix);
 
   useEffect(() => {
     const el = ref.current;
@@ -18,9 +22,9 @@ export default function StatCounter({ target, decimals = 0, suffix = "" }) {
       function step(now) {
         const p = Math.min(1, (now - start) / dur);
         const v = target * easeOut(p);
-        setValue(v.toFixed(decimals) + suffix);
+        setValue(format(v, decimals) + suffix);
         if (p < 1) requestAnimationFrame(step);
-        else setValue(target.toFixed(decimals) + suffix);
+        else setValue(format(target, decimals) + suffix);
       }
       requestAnimationFrame(step);
     }

@@ -1,10 +1,10 @@
 import StatCounter from "./StatCounter.jsx";
 
 const stats = [
-  { target: 1, suffix: "위", label: "국내 가상자산 컴플라이언스" },
-  { target: 40, suffix: "+", label: "도입 기관·거래소" },
-  { target: 99.2, decimals: 1, suffix: "%", label: "이상거래 탐지 정확도" },
-  { target: 2, suffix: "조+", label: "누적 모니터링 규모(₩)" },
+  { target: 1026, suffix: "조", label: "누적 입출금 검증 금액" },
+  { target: 671, suffix: "만", label: "이상거래 탐지 건수" },
+  { target: 9, suffix: "억+", label: "KYT 검증 건수" },
+  { target: 48, suffix: "분", label: "평균 공조 응답 시간" },
 ];
 
 export default function About() {
