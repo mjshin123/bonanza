@@ -1,0 +1,174 @@
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:#ffffff;font-family:var(--font-sans);-webkit-font-smoothing:antialiased;color:var(--text-body);}
+a{color:var(--link);text-decoration:none;}
+a:hover{color:var(--link-hover);}
+::selection{background:var(--blue-alpha-10);}
+@keyframes revU{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:none;}}
+@keyframes floatA{0%,100%{transform:translate3d(0,0,0);}50%{transform:translate3d(0,-34px,0);}}
+@keyframes floatB{0%,100%{transform:translate3d(0,0,0);}50%{transform:translate3d(0,26px,0);}}
+@keyframes spinSlow{from{transform:rotateX(18deg) rotateY(0deg);}to{transform:rotateX(18deg) rotateY(360deg);}}
+@keyframes spinRev{from{transform:rotateX(-12deg) rotateY(360deg);}to{transform:rotateX(-12deg) rotateY(0deg);}}
+@keyframes pulseGlow{0%,100%{opacity:.55;}50%{opacity:.9;}}
+@keyframes scrollDot{0%{transform:translateY(0);opacity:0;}30%{opacity:1;}100%{transform:translateY(16px);opacity:0;}}
+@keyframes vennBreath{0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}
+.bf-navlink{position:relative;color:inherit;white-space:nowrap;transition:color .2s ease;}
+.bf-navgroup{position:relative;height:64px;display:flex;align-items:center;}
+.bf-navgroup > a::after{content:"";position:absolute;left:0;right:0;bottom:-8px;height:2px;background:var(--primary);transform:scaleX(0);transform-origin:left;transition:transform .22s ease;}
+.bf-navgroup:hover > a::after{transform:scaleX(1);}
+.bf-mega{position:fixed;left:0;right:0;top:64px;background:#fff;border-top:1px solid var(--border);box-shadow:var(--shadow-md);opacity:0;pointer-events:none;transform:translateY(6px);transition:opacity .22s ease, transform .22s ease, background .25s ease, border-color .25s ease;z-index:90;}
+.bf-mega[data-open="1"]{opacity:1;pointer-events:auto;transform:none;}
+.bf-megaitem{display:block;padding:12px 0;font-size:14px;font-weight:500;color:var(--text-muted);transition:color .16s ease, padding-left .16s ease;}
+.bf-megaitem:hover{color:var(--primary);padding-left:6px;}
+nav[data-theme="dark"] .bf-mega{background:#0A0A0A;border-top-color:rgba(255,255,255,.12);border-bottom:1px solid rgba(255,255,255,.12);}
+nav[data-theme="dark"] .bf-megaitem{color:rgba(255,255,255,.6);}
+nav[data-theme="dark"] .bf-megaitem:hover{color:#fff;}
+.bf-navlink::after{content:"";position:absolute;left:0;bottom:-6px;height:2px;width:0;background:var(--primary);transition:width .25s ease;}
+.bf-navlink:hover::after{width:100%;}
+.bf-solcard{transition:background .2s ease;}
+.bf-solcard:hover{background:var(--surface-subtle);}
+.bf-bar{height:10px;background:linear-gradient(90deg,var(--blue-300) 0%,var(--primary) 100%);transform-origin:left;transform:scaleX(0);transition:transform .9s cubic-bezier(.4,0,.2,1);}
+.bf-solcard.bf-in .bf-bar{transform:scaleX(1);}
+.bf-soltag{color:var(--grey-400);transition:color .9s cubic-bezier(.4,0,.2,1);}
+.bf-solcard.bf-in .bf-soltag{color:var(--primary);}
+.bf-soltitle{color:var(--grey-300);transition:color .9s cubic-bezier(.4,0,.2,1);}
+.bf-solcard.bf-in .bf-soltitle{color:var(--primary);}
+.bf-solicon{background:var(--grey-100);color:var(--grey-300);transition:background .9s cubic-bezier(.4,0,.2,1), color .9s cubic-bezier(.4,0,.2,1);}
+.bf-solcard.bf-in .bf-solicon{background:var(--blue-50);color:var(--primary);}
+.bf-soldesc{color:var(--text-muted);opacity:0;transition:opacity .9s cubic-bezier(.4,0,.2,1);}
+.bf-solcard.bf-in .bf-soldesc{opacity:1;}
+.bf-newsrow{display:grid;grid-template-columns:140px 1fr 290px;align-items:center;gap:40px;padding:36px 0;border-top:1px solid #e6e7ec;color:inherit;position:relative;transition:background .2s ease;}
+.bf-newsrow:hover{background:rgba(22,64,219,0.05);}
+.bf-newsrow:hover .bf-newsttl{color:var(--primary);}
+.bf-newsarrow{position:absolute;right:20px;top:50%;transform:translateY(-50%) translateX(6px);display:flex;align-items:center;justify-content:center;color:var(--primary);opacity:0;pointer-events:none;transition:opacity .22s ease, transform .22s ease;}
+.bf-newsrow:hover .bf-newsarrow{opacity:1;transform:translateY(-50%) translateX(0);}
+.bf-newsthumb{justify-self:start;width:230px;height:140px;border-radius:0;overflow:hidden;background:linear-gradient(135deg,#dbe2fb,#c3cef7);display:flex;align-items:center;justify-content:center;color:var(--blue-400);}
+.bf-techrow{color:#c2c2c2;transition:color .18s ease;cursor:default;}
+.bf-techrow:hover{color:var(--grey-900);}
+.bf-techrow .bf-techttl{color:inherit;}
+.bf-techrow .bf-techsub{max-height:0;opacity:0;overflow:hidden;margin-top:0;transition:max-height .3s ease, opacity .22s ease, margin-top .3s ease;}
+.bf-techrow:hover .bf-techsub{max-height:48px;opacity:1;margin-top:10px;}
+.bf-accrow{display:flex;gap:14px;}
+.bf-acc{position:relative;flex:1 1 0;min-width:0;height:480px;border-radius:14px;overflow:hidden;cursor:pointer;background:#141414;transition:flex .5s cubic-bezier(.4,0,.2,1);}
+.bf-acc:hover{flex:3.4 1 0;}
+.bf-accrow:hover .bf-acc:not(:hover){flex:0.45 1 0;}
+.bf-acc-media{position:absolute;top:0;left:0;right:0;height:70%;background-repeat:no-repeat;background-position:top center;background-size:cover;transition:height .5s cubic-bezier(.4,0,.2,1);}
+.bf-acc:hover .bf-acc-media{height:100%;}
+.bf-acc-fade{position:absolute;top:0;left:0;right:0;height:70%;background:linear-gradient(to bottom,rgba(20,20,20,0) 0%,#141414 100%);transition:height .5s cubic-bezier(.4,0,.2,1), background .35s ease;}
+.bf-acc:hover .bf-acc-fade{height:100%;background:linear-gradient(to bottom,rgba(20,20,20,0) 0%,#141414 100%);}
+.bf-acc-collapsed{transition:opacity .3s ease;}
+.bf-acc-collapsed span{white-space:nowrap;writing-mode:horizontal-tb;transition:font-size .35s ease;}
+.bf-accrow:hover .bf-acc:not(:hover) .bf-acc-collapsed span{writing-mode:vertical-rl;}
+.bf-acc-expanded{opacity:0;transition:opacity .35s ease .05s;}
+.bf-acc:hover .bf-acc-collapsed{opacity:0;}
+.bf-acc:hover .bf-acc-expanded{opacity:1;}
+@media(max-width:860px){
+  .bf-accrow{flex-direction:column;}
+  .bf-acc,.bf-acc:hover,.bf-accrow:hover .bf-acc:not(:hover){flex:none;height:auto;min-height:96px;}
+  .bf-acc-media,.bf-acc:hover .bf-acc-media{height:100%;}
+  .bf-acc-fade,.bf-acc:hover .bf-acc-fade{height:100%;background:linear-gradient(to bottom,rgba(20,20,20,0) 0%,#141414 100%);}
+  .bf-acc-collapsed{display:none;}
+  .bf-acc-expanded{opacity:1;position:static;padding:28px;}
+}
+@media(max-width:1000px){
+  .bf-stack-stage{display:none !important;}
+  .bf-stack-mobile{display:flex !important;}
+}
+.bf-histrow{transition:background .18s ease;}
+.bf-histrow[data-clickable="1"]{cursor:pointer;}
+.bf-histrow[data-clickable="1"]:hover{background:var(--surface-subtle);}
+.bf-histrow[data-clickable="1"]:hover .bf-histttl{color:var(--primary);}
+@media(max-width:720px){
+  .bf-histmonth{width:74px !important;}
+  .bf-year{font-size:40px !important;}
+}
+.bf-groupcard{transition:transform .25s ease, box-shadow .25s ease;}
+.bf-groupcard:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg);}
+.bf-affcard{cursor:pointer;}
+.bf-affcard-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(10,14,30,.35);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;transition:opacity .3s ease;}
+.bf-affcard:hover .bf-affcard-overlay{opacity:1;}
+.bf-logotile{transition:transform .2s ease, border-color .2s ease, background .2s ease;}
+.bf-logotile:hover{transform:translateY(-3px);border-color:var(--blue-200);background:var(--blue-50);}
+.bf-reveal{opacity:0;transform:translateY(30px);transition:opacity .6s cubic-bezier(.4,0,.2,1), transform .6s cubic-bezier(.4,0,.2,1);}
+.bf-reveal.bf-in{opacity:1;transform:none;}
+.bf-revealF{opacity:0;transition:opacity .6s ease;}
+.bf-revealF.bf-in{opacity:1;}
+.bf-fbar{transform:scaleY(0);transform-origin:bottom;transition:transform .6s cubic-bezier(.4,0,.2,1);}
+.bf-finance.bf-in .bf-fbar{transform:scaleY(1);}
+@media (max-width:1100px){
+  .bf-desktopnav{display:none !important;}
+  .bf-burger{display:inline-flex !important;}
+}
+@media (max-width:860px){
+  .bf-hero-h{font-size:30px !important;}
+  .bf-split{grid-template-columns:1fr !important;}
+  .bf-stats{grid-template-columns:repeat(2,1fr) !important;}
+  .bf-finance{grid-template-columns:1fr !important;}
+  .bf-sol{grid-template-columns:1fr !important;}
+  .bf-group{grid-template-columns:1fr 1fr !important;}
+  .bf-pad{padding-left:24px !important;padding-right:24px !important;}
+  .bf-newsrow{grid-template-columns:1fr;gap:12px;padding:28px 0;}
+  .bf-newsdate{margin-bottom:-4px;}
+  .bf-newsthumb{display:none !important;}
+}
+
+/* ── Hover states (handled by the DC runtime's style-hover attribute
+   in the source design; expressed as real CSS here) ───────────────── */
+.bf-cta:hover{background:#1235b0;}
+.bf-ghostlink:hover{background:rgba(115,141,233,.12);}
+
+/* ── "전체 보기" button (design-system Button, variant=outline size=sm) */
+.bf-btn-outline{display:inline-flex;align-items:center;justify-content:center;height:36px;padding:0 20px;border:1px solid var(--primary);border-radius:var(--radius-full);color:var(--primary);font-weight:600;font-size:14px;transition:background .18s ease, color .18s ease;}
+.bf-btn-outline:hover{background:var(--primary);color:#fff;}
+
+/* ── Milestone stack diamonds (built by Tech.jsx) ─────────────────── */
+.bf-stack-stage{position:relative;margin:8px auto 0;}
+.bf-diamond,.bf-connector,.bf-title{position:absolute;}
+.bf-diamond{cursor:pointer;transition:top .3s cubic-bezier(.4,0,.2,1), transform .3s cubic-bezier(.4,0,.2,1), filter .28s ease;}
+.bf-diamond svg{display:block;overflow:visible;}
+.bf-connector{height:0;transform:translateY(-50%);z-index:1;transition:border-color .24s ease, top .3s cubic-bezier(.4,0,.2,1);}
+.bf-title{transform:translateY(-50%);text-align:right;font-weight:500;font-size:15px;line-height:20px;white-space:nowrap;cursor:pointer;transition:color .24s ease, top .3s cubic-bezier(.4,0,.2,1);}
+.bf-stack-mobile{display:none;flex-direction:column;gap:0;margin-top:28px;}
+.bf-stack-mobile-item{border-top:1px solid rgba(255,255,255,.15);padding:18px 0;}
+
+/* ── Sectors trefoil sequential reveal (Sectors.jsx) ───────────────── */
+.bf-petal-c1,.bf-petal-c2,.bf-petal-c3{opacity:0;transition:opacity .6s ease, transform .6s cubic-bezier(.4,0,.2,1);}
+.bf-petal-c1{transform:scale(.8);}
+.bf-petal-c2{transform:rotate(-130deg) scale(.8);}
+.bf-petal-c3{transform:rotate(130deg) scale(.8);}
+.bf-revealF.bf-in .bf-petal-c1{opacity:1;transform:scale(1);transition-delay:0s;}
+.bf-revealF.bf-in .bf-petal-c2{opacity:1;transform:rotate(-130deg) scale(1);transition-delay:.3s;}
+.bf-revealF.bf-in .bf-petal-c3{opacity:1;transform:rotate(130deg) scale(1);transition-delay:.6s;}
+.bf-petal-l1,.bf-petal-l2,.bf-petal-l3{opacity:0;transition:opacity .5s ease;}
+.bf-revealF.bf-in .bf-petal-l1{opacity:1;transition-delay:.1s;}
+.bf-revealF.bf-in .bf-petal-l2{opacity:1;transition-delay:.4s;}
+.bf-revealF.bf-in .bf-petal-l3{opacity:1;transition-delay:.7s;}
+.bf-petal-center{opacity:0;transform:translate(-50%,-50%) scale(.8);transition:opacity .6s ease, transform .6s cubic-bezier(.4,0,.2,1);}
+.bf-revealF.bf-in .bf-petal-center{opacity:1;transform:translate(-50%,-50%) scale(1);transition-delay:1s;}
+
+/* ── TranSight bento cards (TransightSolutions.jsx) ────────────────── */
+.bf-bento-card{background:#141414;border-radius:14px;transition:background .3s ease, opacity .6s cubic-bezier(.4,0,.2,1) var(--reveal-delay,0s), transform .6s cubic-bezier(.4,0,.2,1) var(--reveal-delay,0s);}
+.bf-bento-card:hover{background:#1a1a1a;}
+.bf-bento-glow{position:absolute;inset:0;background:radial-gradient(circle at 85% 0%,rgba(42,91,255,.5) 0%,rgba(42,91,255,.15) 45%,rgba(20,20,20,0) 78%);pointer-events:none;opacity:.85;transition:opacity .3s ease;}
+.bf-bento-card:hover .bf-bento-glow{opacity:1;}
+.bf-bento-card .bf-bento-tag{color:#738DE9;}
+.bf-bento-card .bf-bento-title{color:#fff;}
+.bf-bento-card .bf-bento-desc{color:rgba(255,255,255,.6);}
+@media(max-width:860px){
+  .bf-bento-grid{grid-template-columns:1fr !important;grid-template-rows:none !important;}
+  .bf-bento-large{grid-row:auto !important;}
+}
+
+/* ── Trust network logo marquee (Network.jsx) ──────────────────────── */
+.bf-marquee-viewport{
+  overflow:hidden;
+  width:100%;
+  -webkit-mask-image:linear-gradient(90deg, transparent 0, #000 64px, #000 calc(100% - 64px), transparent 100%);
+  mask-image:linear-gradient(90deg, transparent 0, #000 64px, #000 calc(100% - 64px), transparent 100%);
+}
+.bf-marquee-row{display:flex;width:max-content;will-change:transform;}
+.bf-marquee-left{animation:bf-marqueeLeft 34s linear infinite;}
+.bf-marquee-right{animation:bf-marqueeRight 34s linear infinite;}
+.bf-marquee-viewport:hover .bf-marquee-row{animation-play-state:paused;}
+@keyframes bf-marqueeLeft{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+@keyframes bf-marqueeRight{from{transform:translateX(-50%);}to{transform:translateX(0);}}

@@ -1,9 +1,9 @@
 /* ── Bonanza typography ────────────────────────────────────────────
    Type system carried over from the Transight style guide, rebuilt on
-   SUIT Variable. Weight naming: r=400 m=500 sb=600 b=700 eb=800.       */
+   Pretendard Variable. Weight naming: r=400 m=500 sb=600 b=700 eb=800. */
 
 :root {
-  --font-sans: "SUIT Variable", "SUIT", -apple-system, BlinkMacSystemFont,
+  --font-sans: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont,
     system-ui, "Roboto", "Noto Sans KR", "Malgun Gothic", sans-serif;
   --font-mono: ui-monospace, "SFMono-Regular", "SF Mono", Menlo, Consolas,
     "Liberation Mono", monospace;
@@ -75,7 +75,7 @@
   color: var(--text-muted);
 }
 .text-description {
-  font: var(--fw-regular) var(--fs-12) / var(--lh-relaxed) var(--font-sans);
+  font: var(--fw-regular) var(--fs-13) / var(--lh-relaxed) var(--font-sans);
   color: var(--text-subtle);
 }
 .text-overline {

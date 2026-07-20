@@ -1,0 +1,11 @@
+/* ── Bonanza webfonts ──────────────────────────────────────────────
+   Pretendard Variable — Korean+Latin variable sans (weight axis 45–920).
+   Served from jsDelivr; see readme.md "Font substitution" note.        */
+
+@font-face {
+  font-family: "Pretendard Variable";
+  font-style: normal;
+  font-weight: 45 920;
+  font-display: swap;
+  src: url("https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/woff2/PretendardVariable.woff2") format("woff2-variations");
+}

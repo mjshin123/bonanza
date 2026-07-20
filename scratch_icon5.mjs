@@ -1,0 +1,11 @@
+import { chromium } from "playwright";
+const browser = await chromium.launch({ channel: "msedge" });
+const page = await browser.newPage({ viewport: { width: 1600, height: 1000 } });
+const errors = [];
+page.on("pageerror", (e) => errors.push(String(e)));
+await page.goto("http://localhost:5173/", { waitUntil: "load" });
+await page.locator("#solutions").scrollIntoViewIfNeeded();
+await page.waitForTimeout(1500);
+await page.screenshot({ path: "C:/Users/보난자/AppData/Local/Temp/claude/C--Users-----Desktop-bonanza/61d01c1e-ec47-48e8-97f0-cc159364c7ba/scratchpad/icon2_updated.png" });
+console.log("errors:", errors);
+await browser.close();
