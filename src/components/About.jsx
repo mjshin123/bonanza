@@ -16,8 +16,8 @@ export default function About() {
             className="bf-reveal"
             style={{
               margin: 0,
-              fontWeight: 800,
-              fontSize: 30,
+              fontWeight: 700,
+              fontSize: "clamp(26px,3.2vw,36px)",
               lineHeight: 1.3,
               letterSpacing: "-0.02em",
               color: "var(--text-strong)",
@@ -47,12 +47,13 @@ export default function About() {
           {stats.map((stat, i) => (
             <div
               key={stat.label}
+              className="bf-statcell"
               style={{
                 padding: "40px 28px",
                 borderRight: i < stats.length - 1 ? "1px solid var(--border)" : undefined,
               }}
             >
-              <div style={{ fontWeight: 800, fontSize: 40, letterSpacing: "-0.02em", color: "var(--text-strong)" }}>
+              <div style={{ fontWeight: 800, fontSize: "clamp(28px,7vw,40px)", letterSpacing: "-0.02em", color: "var(--text-strong)" }}>
                 <StatCounter target={stat.target} decimals={stat.decimals} suffix={stat.suffix} />
               </div>
               <div style={{ marginTop: 10, fontSize: 13, fontWeight: 600, color: "var(--text-muted)" }}>

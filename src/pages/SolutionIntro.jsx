@@ -34,10 +34,10 @@ export default function SolutionIntro({ slug }) {
     <div style={{ position: "relative", paddingTop: 64 }}>
       <section
         ref={darkZoneRef}
+        className="bf-pad"
         style={{ position: "relative", overflow: "hidden", background: "#0A0A0A", padding: "72px 48px 120px" }}
       >
         <div
-          className="bf-pad"
           style={{ position: "relative", display: "flex", alignItems: "center", flexWrap: "wrap", gap: 60, maxWidth: 1400, margin: "0 auto" }}
         >
           <div style={{ flex: "1 1 420px", minWidth: 0 }}>
@@ -79,13 +79,13 @@ export default function SolutionIntro({ slug }) {
           </div>
 
           {slug === "transight" && (
-            <div className="bf-reveal" style={{ flex: "1 1 420px", maxWidth: 640, minWidth: 280 }}>
+            <div className="bf-reveal" style={{ flex: "1 1 420px", maxWidth: 640, minWidth: 0 }}>
               <TransightRing />
             </div>
           )}
 
           {slug === "transafer" && (
-            <div className="bf-reveal" style={{ flex: "1 1 420px", maxWidth: 640, minWidth: 280 }}>
+            <div className="bf-reveal" style={{ flex: "1 1 420px", maxWidth: 640, minWidth: 0 }}>
               <TransaferFlow />
             </div>
           )}

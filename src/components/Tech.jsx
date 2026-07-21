@@ -1,9 +1,12 @@
 import { useRef, useState } from "react";
-import { ArrowRight } from "lucide-react";
-import { milestones } from "../data/milestones.js";
+import { Link } from "react-router-dom";
+import { ArrowRight, Image as ImageIcon } from "lucide-react";
+import { historyEntries } from "../data/history.js";
 import DiamondSvg from "./DiamondSvg.jsx";
-import { scrollToAnchor } from "../lib/scroll.js";
 import useNavDarkZone from "../hooks/useNavDarkZone.js";
+
+// 연혁 페이지와 동일한 데이터에서 "홈 화면에 보이기"로 표시된 항목만 사용한다.
+const milestones = historyEntries.filter((entry) => entry.showOnHome);
 
 const W = 1120;
 const DW = 300;
@@ -32,8 +35,8 @@ export default function Tech() {
           className="bf-reveal"
           style={{
             margin: "0 auto",
-            fontWeight: 500,
-            fontSize: "clamp(24px,3vw,40px)",
+            fontWeight: 700,
+            fontSize: "clamp(26px,3.2vw,36px)",
             lineHeight: 1.3,
             letterSpacing: "-0.01em",
             color: "#fff",
@@ -109,33 +112,75 @@ export default function Tech() {
             })}
 
             <div style={{ position: "absolute", left: 760, top: 150, width: 320 }}>
-              <div style={{ color: "#BFBFBF", fontSize: 14, fontWeight: 400, marginBottom: 26 }}>{picked.year}</div>
+              <div style={{ color: "#BFBFBF", fontSize: 14, fontWeight: 400, marginBottom: 26 }}>
+                {picked.year}년 {picked.month}월
+              </div>
               <div style={{ color: "#738DE9", fontSize: 26, fontWeight: 700, lineHeight: 1.3, marginBottom: 22 }}>
                 {picked.title}
               </div>
-              <div style={{ color: "#ffffff", fontSize: 13, fontWeight: 400, lineHeight: 1.6 }}>{picked.body}</div>
+              <div style={{ color: "#ffffff", fontSize: 13, fontWeight: 400, lineHeight: 1.6 }}>{picked.detail}</div>
+              {picked.image && (
+                <div
+                  style={{
+                    marginTop: 20,
+                    width: "100%",
+                    maxWidth: 280,
+                    aspectRatio: "16 / 10",
+                    background: "rgba(255,255,255,0.06)",
+                    border: "1px solid rgba(255,255,255,0.15)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexDirection: "column",
+                    gap: 8,
+                    color: "#A2B3F1",
+                  }}
+                >
+                  <ImageIcon width={28} height={28} />
+                  <span style={{ fontSize: 11, fontWeight: 600 }}>이미지 영역 (추후 삽입)</span>
+                </div>
+              )}
             </div>
           </div>
 
           <div className="bf-stack-mobile">
             {milestones.map((m, i) => (
               <div className="bf-stack-mobile-item" key={`mobile-${i}`}>
-                <div style={{ color: "#738DE9", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>{m.year}</div>
+                <div style={{ color: "#738DE9", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>
+                  {m.year}년 {m.month}월
+                </div>
                 <div style={{ color: "#fff", fontSize: 16, fontWeight: 700, marginBottom: 8 }}>{m.title}</div>
-                <div style={{ color: "rgba(255,255,255,.7)", fontSize: 13, lineHeight: 1.6 }}>{m.body}</div>
+                <div style={{ color: "rgba(255,255,255,.7)", fontSize: 13, lineHeight: 1.6 }}>{m.detail}</div>
+                {m.image && (
+                  <div
+                    style={{
+                      marginTop: 14,
+                      width: "100%",
+                      maxWidth: 320,
+                      aspectRatio: "16 / 10",
+                      background: "rgba(255,255,255,0.06)",
+                      border: "1px solid rgba(255,255,255,0.15)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexDirection: "column",
+                      gap: 8,
+                      color: "#A2B3F1",
+                    }}
+                  >
+                    <ImageIcon width={26} height={26} />
+                    <span style={{ fontSize: 11, fontWeight: 600 }}>이미지 영역 (추후 삽입)</span>
+                  </div>
+                )}
               </div>
             ))}
           </div>
         </div>
 
         <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 20 }}>
-          <a
-            href="#news"
+          <Link
+            to="/연혁"
             className="bf-ghostlink"
-            onClick={(e) => {
-              e.preventDefault();
-              scrollToAnchor("news");
-            }}
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -150,7 +195,7 @@ export default function Tech() {
             }}
           >
             연혁 보기 <ArrowRight width={20} height={20} />
-          </a>
+          </Link>
         </div>
       </div>
     </section>

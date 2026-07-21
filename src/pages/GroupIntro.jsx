@@ -42,6 +42,7 @@ function AccordionRow({ item, index, open, onOpen }) {
   return (
     <div
       id={`bf-acc-${index}`}
+      className="bf-groupacc-row"
       onClick={() => onOpen(index)}
       style={{
         display: "grid",
@@ -194,11 +195,17 @@ const SWIPE_THRESHOLD = 30;
 // higher means the user has to scroll further/harder for each row to advance.
 const WHEEL_THRESHOLD = 150;
 
+const NAV_HEIGHT = 64;
+// Mobile carousel: scroll distance (in vh) dedicated to each push transition
+// between solution cards.
+const CAROUSEL_STEP_VH = 60;
+
 export default function GroupIntro() {
   const darkZoneRef = useRef(null);
   useNavDarkZone(darkZoneRef);
   const [inquiryTarget, setInquiryTarget] = useState(null);
 
+  const [isMobile, setIsMobile] = useState(false);
   const [active, setActive] = useState(0);
   const activeRef = useRef(0);
   const targetRef = useRef(0);
@@ -208,6 +215,10 @@ export default function GroupIntro() {
   const wheelAccumRef = useRef(0);
   const listRef = useRef(null);
   const [listHeight, setListHeight] = useState(0);
+
+  // Mobile carousel: which solution card is currently pushed into view.
+  const [mobileActive, setMobileActive] = useState(0);
+  const mobileOuterRef = useRef(null);
 
   // The accordion's wheel/touch handlers are bound to `window` (see below), so
   // they'd otherwise fire while the user is still scrolling through the hero or
@@ -221,6 +232,50 @@ export default function GroupIntro() {
     document.title = "보난자 그룹 | Bonanza Factory";
     window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width:860px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  // Mobile carousel: derives which card is "active" directly from scroll
+  // position (not swipe events), so a small scroll immediately triggers the
+  // full push transition — the card slides fully off, the next one fully in —
+  // and it can never land half-transitioned no matter how the user scrolls.
+  useEffect(() => {
+    if (!isMobile) return undefined;
+    let ticking = false;
+
+    function measure() {
+      ticking = false;
+      const el = mobileOuterRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const runwayPx = (window.innerHeight * (solutionItems.length - 1) * CAROUSEL_STEP_VH) / 100;
+      const scrolled = Math.min(Math.max(NAV_HEIGHT - rect.top, 0), runwayPx);
+      const stepPx = runwayPx / (solutionItems.length - 1);
+      const idx = stepPx > 0 ? Math.round(scrolled / stepPx) : 0;
+      setMobileActive(Math.min(solutionItems.length - 1, Math.max(0, idx)));
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(measure);
+      }
+    }
+
+    measure();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [isMobile]);
 
   useEffect(() => {
     const el = solutionsRef.current;
@@ -273,6 +328,11 @@ export default function GroupIntro() {
   }
 
   useEffect(() => {
+    // Mobile uses a native scroll-snap list instead (see the render below) — one
+    // row pinned full-screen at a time, snapping cleanly to the next on swipe.
+    // This wheel/touch-delta system is a desktop-only substitute for that (mice
+    // have no scroll-snap-driving momentum the way touch scrolling does).
+    if (isMobile) return undefined;
     // Driven by wheel/touch gestures rather than actual page scroll position:
     // once the page is already at the very top or bottom, native scrolling can't
     // move any further in that direction, so it never fires another scroll event —
@@ -317,7 +377,7 @@ export default function GroupIntro() {
       window.removeEventListener("touchend", onTouchEnd);
       if (stepTimeoutRef.current) window.clearTimeout(stepTimeoutRef.current);
     };
-  }, []);
+  }, [isMobile]);
 
   function openRow(index) {
     if (stepTimeoutRef.current) {
@@ -408,7 +468,7 @@ export default function GroupIntro() {
         </div>
 
         <div
-          className="bf-reveal bf-affcard"
+          className="bf-reveal bf-affcard bf-parentcard"
           onClick={() => setInquiryTarget(PARENT_COMPANY)}
           style={{
             position: "relative",
@@ -444,13 +504,13 @@ export default function GroupIntro() {
         </div>
 
         <div
-          className="bf-reveal"
+          className="bf-reveal bf-affgrid"
           style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 24 }}
         >
           {subsidiaries.map((sub) => (
             <div
               key={sub.key}
-              className="bf-affcard"
+              className="bf-affcard bf-affcarditem"
               onClick={() => setInquiryTarget(sub)}
               style={{
                 position: "relative",
@@ -494,14 +554,106 @@ export default function GroupIntro() {
           </p>
         </div>
 
-        <div style={{ height: listHeight || undefined, overflow: "hidden" }}>
-          <div ref={listRef} style={{ borderBottom: "1px solid var(--border)" }}>
-            {solutionItems.map((item, i) => (
-              <AccordionRow key={item.company} item={item} index={i} open={i === active} onOpen={openRow} />
-            ))}
+        {isMobile ? (
+          // A pinned "viewport window" the size of one screen; every card sits
+          // absolutely stacked inside it and is translated in/out based on how
+          // far its index is from `mobileActive` — the active card sits at 0%,
+          // ones before it are pushed to -100% (off the top), ones after sit at
+          // +100% (waiting below). Scrolling changes `mobileActive`, and every
+          // card's transform transitions together, so the active card visibly
+          // slides fully off while the next one slides fully into place.
+          <div ref={mobileOuterRef} style={{ position: "relative", height: `calc(100dvh - ${NAV_HEIGHT}px + ${(solutionItems.length - 1) * CAROUSEL_STEP_VH}vh)` }}>
+            <div
+              style={{
+                position: "sticky",
+                top: NAV_HEIGHT,
+                height: `calc(100dvh - ${NAV_HEIGHT}px)`,
+                overflow: "hidden",
+                background: "#fff",
+                borderTop: "1px solid var(--border)",
+                borderBottom: "1px solid var(--border)",
+              }}
+            >
+              {solutionItems.map((item, i) => (
+                <div
+                  key={item.company}
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    transform: `translateY(${(i - mobileActive) * 100}%)`,
+                    transition: "transform .5s cubic-bezier(.65,0,.35,1)",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "flex-start",
+                    overflowY: "auto",
+                    padding: "36px 24px",
+                    background: "#fff",
+                  }}
+                >
+                  <span style={{ fontSize: 13, fontWeight: 700, color: "var(--primary)", fontVariantNumeric: "tabular-nums" }}>
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <div style={{ marginTop: 6, fontSize: 14, fontWeight: 700, color: "var(--primary)" }}>{item.company}</div>
+                  <h2 style={{ margin: "10px 0 0", fontWeight: 700, fontSize: "clamp(22px,7vw,28px)", lineHeight: 1.3, letterSpacing: "-0.01em", color: "var(--text-strong)" }}>
+                    {item.title}
+                  </h2>
+                  <p style={{ margin: "16px 0 0", fontSize: 14, lineHeight: 1.7, color: "var(--text-muted)", fontWeight: 500 }}>
+                    {item.desc}
+                  </p>
+                  <a
+                    href={item.link || "#"}
+                    style={{
+                      alignSelf: "flex-start",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 8,
+                      marginTop: 24,
+                      padding: "12px 24px",
+                      borderRadius: 6,
+                      background: "var(--grey-900)",
+                      color: "#fff",
+                      fontWeight: 600,
+                      fontSize: 14,
+                    }}
+                  >
+                    자세히 보기 <ArrowRight width={16} height={16} />
+                  </a>
+                  <div
+                    style={{
+                      position: "relative",
+                      width: "100%",
+                      aspectRatio: "16 / 10",
+                      background: "linear-gradient(135deg,#eef1fc,#dbe2fb)",
+                      border: "1px solid var(--border)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexDirection: "column",
+                      gap: 10,
+                      color: "var(--blue-400)",
+                      marginTop: 24,
+                      flex: "none",
+                    }}
+                  >
+                    <PlayCircle width={40} height={40} />
+                    <span style={{ fontSize: 12, fontWeight: 600 }}>이미지 / 영상 영역</span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-        <div style={{ paddingBottom: "22vh" }} />
+        ) : (
+          <>
+            <div style={{ height: listHeight || undefined, overflow: "hidden" }}>
+              <div ref={listRef} style={{ borderBottom: "1px solid var(--border)" }}>
+                {solutionItems.map((item, i) => (
+                  <AccordionRow key={item.company} item={item} index={i} open={i === active} onOpen={openRow} />
+                ))}
+              </div>
+            </div>
+            <div style={{ paddingBottom: "22vh" }} />
+          </>
+        )}
       </section>
 
       <InquiryModal

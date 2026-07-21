@@ -1,12 +1,30 @@
 import { useRef } from "react";
-import { scrollToAnchor } from "../lib/scroll.js";
+import { Link } from "react-router-dom";
 import useNavDarkZone from "../hooks/useNavDarkZone.js";
 
-const quickLinks = [
-  { label: "회사소개", id: "about" },
-  { label: "솔루션", id: "solutions" },
-  { label: "그룹사", id: "group" },
-  { label: "뉴스", id: "news" },
+const menuGroups = [
+  {
+    label: "기업 개요",
+    items: [
+      { label: "회사 소개", href: "/회사소개" },
+      { label: "연혁", href: "/연혁" },
+      { label: "보난자 그룹", href: "/계열사-소개" },
+    ],
+  },
+  {
+    label: "솔루션",
+    items: [
+      { label: "TranSight", href: "/TranSight" },
+      { label: "TranSafer", href: "/TranSafer" },
+    ],
+  },
+  {
+    label: "뉴스룸",
+    items: [
+      { label: "보도자료", href: "/보도자료" },
+      { label: "공지사항", href: "/공지사항" },
+    ],
+  },
 ];
 
 export default function Footer() {
@@ -16,7 +34,7 @@ export default function Footer() {
   return (
     <footer ref={darkZoneRef} className="bf-pad" style={{ background: "#0A0A0A", color: "#c5cef3", padding: "72px 40px 40px" }}>
       <div style={{ maxWidth: 1400, margin: "0 auto" }}>
-        <div className="bf-split" style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr 1fr", gap: 40 }}>
+        <div className="bf-split" style={{ display: "grid", gridTemplateColumns: "1.4fr 0.8fr 0.8fr 0.8fr 1fr", gap: 40 }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", marginBottom: 18 }}>
               <img
@@ -31,24 +49,18 @@ export default function Footer() {
               가상자산 컴플라이언스 전문 기업, 보난자팩토리.
             </p>
           </div>
-          <div>
-            <div style={{ fontWeight: 700, fontSize: 13, color: "#fff", marginBottom: 16 }}>바로가기</div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {quickLinks.map((link) => (
-                <a
-                  key={link.id}
-                  href={`#${link.id}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    scrollToAnchor(link.id);
-                  }}
-                  style={{ fontSize: 13, color: "#9a9a9a" }}
-                >
-                  {link.label}
-                </a>
-              ))}
+          {menuGroups.map((group) => (
+            <div key={group.label}>
+              <div style={{ fontWeight: 700, fontSize: 13, color: "#fff", marginBottom: 16 }}>{group.label}</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {group.items.map((item) => (
+                  <Link key={item.href} to={item.href} style={{ fontSize: 13, color: "#9a9a9a" }}>
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
+          ))}
           <div>
             <div style={{ fontWeight: 700, fontSize: 13, color: "#fff", marginBottom: 16 }}>문의</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 10, fontSize: 13, color: "#9a9a9a" }}>

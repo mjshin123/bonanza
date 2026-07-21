@@ -62,7 +62,7 @@ export default function TransightDetails() {
             <h2
               style={{
                 margin: "20px 0 0",
-                maxWidth: 800,
+                maxWidth: 1050,
                 fontWeight: 500,
                 fontSize: "clamp(18px,1.8vw,26px)",
                 lineHeight: 1.35,
@@ -72,6 +72,7 @@ export default function TransightDetails() {
               {renderHeading(sec.heading)}
             </h2>
             <div
+              className="bf-detailsgrid"
               style={{
                 marginTop: 32,
                 display: "grid",
@@ -84,12 +85,13 @@ export default function TransightDetails() {
               {sec.items.map((title, i) => (
                 <div
                   key={title}
+                  className="bf-detailsitem"
                   style={{
                     display: "flex",
                     alignItems: "center",
                     gap: 16,
-                    height: 60,
-                    padding: "0 24px",
+                    minHeight: 60,
+                    padding: "14px 24px",
                     background: "#F4F5FB",
                     borderRadius: 8,
                   }}

@@ -270,51 +270,53 @@ export default function Nav() {
           })}
         </div>
 
-        <a
-          href="#about"
-          className="bf-cta"
-          onClick={(e) => {
-            e.preventDefault();
-            closeAll();
-            setInquiryOpen(true);
-          }}
-          style={{
-            display: "inline-flex",
-            whiteSpace: "nowrap",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "7px 16px",
-            background: "var(--primary)",
-            borderRadius: 6,
-            color: "#fff",
-            fontWeight: 600,
-            fontSize: 13,
-            transition: "background .18s ease",
-          }}
-        >
-          사업 문의
-        </a>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <a
+            href="#about"
+            className="bf-cta bf-navcta"
+            onClick={(e) => {
+              e.preventDefault();
+              closeAll();
+              setInquiryOpen(true);
+            }}
+            style={{
+              display: "inline-flex",
+              whiteSpace: "nowrap",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "7px 16px",
+              background: "var(--primary)",
+              borderRadius: 6,
+              color: "#fff",
+              fontWeight: 600,
+              fontSize: 13,
+              transition: "background .18s ease",
+            }}
+          >
+            사업 문의
+          </a>
 
-        <button
-          id="bf-burger"
-          className="bf-burger"
-          aria-label="menu"
-          onClick={() => setMobileOpen((v) => !v)}
-          style={{
-            display: "none",
-            alignItems: "center",
-            justifyContent: "center",
-            width: 44,
-            height: 44,
-            border: "none",
-            background: "transparent",
-            color: dark ? "#fff" : "var(--primary)",
-            cursor: "pointer",
-            transition: "color .25s ease",
-          }}
-        >
-          <Menu width={26} height={26} />
-        </button>
+          <button
+            id="bf-burger"
+            className="bf-burger"
+            aria-label="menu"
+            onClick={() => setMobileOpen((v) => !v)}
+            style={{
+              display: "none",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 44,
+              height: 44,
+              border: "none",
+              background: "transparent",
+              color: dark ? "#fff" : "var(--primary)",
+              cursor: "pointer",
+              transition: "color .25s ease",
+            }}
+          >
+            <Menu width={26} height={26} />
+          </button>
+        </div>
       </div>
 
       <div
@@ -375,6 +377,29 @@ export default function Nav() {
           </div>
           );
         })}
+
+        <a
+          href="#about"
+          onClick={(e) => {
+            e.preventDefault();
+            closeAll();
+            setInquiryOpen(true);
+          }}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            marginTop: 4,
+            padding: "12px 16px",
+            background: "var(--primary)",
+            borderRadius: 6,
+            color: "#fff",
+            fontWeight: 600,
+            fontSize: 14,
+          }}
+        >
+          사업 문의
+        </a>
       </div>
 
       <InquiryModal

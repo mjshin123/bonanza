@@ -50,7 +50,7 @@ function FilterBar({ companies, company, onCompanyChange, query, onQueryChange, 
           </div>
         )}
       </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 280, maxWidth: 340, flex: "1 1 280px", justifyContent: "flex-end" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0, maxWidth: 340, flex: "1 1 280px", justifyContent: "flex-end" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", maxWidth: 320, border: "1px solid var(--border)", borderRadius: 8, background: "#fff", padding: "10px 14px" }}>
           <input
             type="text"

@@ -49,38 +49,42 @@ nav[data-theme="dark"] .bf-megaitem:hover{color:#fff;}
 .bf-techrow .bf-techsub{max-height:0;opacity:0;overflow:hidden;margin-top:0;transition:max-height .3s ease, opacity .22s ease, margin-top .3s ease;}
 .bf-techrow:hover .bf-techsub{max-height:48px;opacity:1;margin-top:10px;}
 .bf-accrow{display:flex;gap:14px;}
-.bf-acc{position:relative;flex:1 1 0;min-width:0;height:480px;border-radius:14px;overflow:hidden;cursor:pointer;background:#141414;transition:flex .5s cubic-bezier(.4,0,.2,1);}
-.bf-acc:hover{flex:3.4 1 0;}
-.bf-accrow:hover .bf-acc:not(:hover){flex:0.45 1 0;}
-.bf-acc-media{position:absolute;top:0;left:0;right:0;height:70%;background-repeat:no-repeat;background-position:top center;background-size:cover;transition:height .5s cubic-bezier(.4,0,.2,1);}
-.bf-acc:hover .bf-acc-media{height:100%;}
-.bf-acc-fade{position:absolute;top:0;left:0;right:0;height:70%;background:linear-gradient(to bottom,rgba(20,20,20,0) 0%,#141414 100%);transition:height .5s cubic-bezier(.4,0,.2,1), background .35s ease;}
-.bf-acc:hover .bf-acc-fade{height:100%;background:linear-gradient(to bottom,rgba(20,20,20,0) 0%,#141414 100%);}
-.bf-acc-collapsed{transition:opacity .3s ease;}
-.bf-acc-collapsed span{white-space:nowrap;writing-mode:horizontal-tb;transition:font-size .35s ease;}
-.bf-accrow:hover .bf-acc:not(:hover) .bf-acc-collapsed span{writing-mode:vertical-rl;}
-.bf-acc-expanded{opacity:0;transition:opacity .35s ease .05s;}
-.bf-acc:hover .bf-acc-collapsed{opacity:0;}
-.bf-acc:hover .bf-acc-expanded{opacity:1;}
+/* Every interactive value (flex/height/opacity/writing-mode) is set via
+   inline styles driven by JS in Group.jsx, unconditionally at any viewport
+   width — see the comment there for why (hover and tap used to be driven
+   separately, one via CSS class + media query and the other via inline
+   style, and could disagree on the same card). These rules only declare
+   WHICH properties animate and how. */
+.bf-acc{position:relative;min-width:0;height:480px;border-radius:14px;overflow:hidden;cursor:pointer;background:#141414;transition:flex .5s cubic-bezier(.4,0,.2,1), height .5s cubic-bezier(.4,0,.2,1);}
+.bf-acc-media{position:absolute;top:0;left:0;right:0;background-repeat:no-repeat;background-position:top center;background-size:cover;transition:height .5s cubic-bezier(.4,0,.2,1);}
+.bf-acc-fade{position:absolute;top:0;left:0;right:0;transition:height .5s cubic-bezier(.4,0,.2,1);}
+.bf-acc-collapsed span{white-space:nowrap;transition:font-size .35s ease;}
 @media(max-width:860px){
-  .bf-accrow{flex-direction:column;}
-  .bf-acc,.bf-acc:hover,.bf-accrow:hover .bf-acc:not(:hover){flex:none;height:auto;min-height:96px;}
-  .bf-acc-media,.bf-acc:hover .bf-acc-media{height:100%;}
-  .bf-acc-fade,.bf-acc:hover .bf-acc-fade{height:100%;background:linear-gradient(to bottom,rgba(20,20,20,0) 0%,#141414 100%);}
-  .bf-acc-collapsed{display:none;}
-  .bf-acc-expanded{opacity:1;position:static;padding:28px;}
+  /* Stacked (보난자랩, then 트라버스, ...) instead of side-by-side — each card's
+     own height (set inline in Group.jsx) grows/shrinks instead of its width. */
+  .bf-accrow{flex-direction:column;gap:8px;}
 }
 @media(max-width:1000px){
   .bf-stack-stage{display:none !important;}
   .bf-stack-mobile{display:flex !important;}
+}
+.bf-sectors-mobile-caption{display:none;}
+.bf-sectors-mobile-graphic{display:none;}
+@media(max-width:860px){
+  .bf-sectors-mobile-caption{display:block;text-align:center;color:#fff;font-weight:600;font-size:clamp(18px,5vw,22px);letter-spacing:-0.01em;margin-top:60px;}
+  .bf-petal-center{display:none !important;}
+  .bf-sectors-desktop{display:none !important;}
+  .bf-sectors-mobile-graphic{display:block !important;}
+  #sectors{padding-bottom:190px !important;}
 }
 .bf-histrow{transition:background .18s ease;}
 .bf-histrow[data-clickable="1"]{cursor:pointer;}
 .bf-histrow[data-clickable="1"]:hover{background:var(--surface-subtle);}
 .bf-histrow[data-clickable="1"]:hover .bf-histttl{color:var(--primary);}
 @media(max-width:720px){
-  .bf-histmonth{width:74px !important;}
   .bf-year{font-size:40px !important;}
+  .bf-histrow{grid-template-columns:64px 1fr 24px !important;column-gap:12px !important;}
+  .bf-histdetail{grid-column:1 / -1 !important;}
 }
 .bf-groupcard{transition:transform .25s ease, box-shadow .25s ease;}
 .bf-groupcard:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg);}
@@ -98,6 +102,7 @@ nav[data-theme="dark"] .bf-megaitem:hover{color:#fff;}
 @media (max-width:1100px){
   .bf-desktopnav{display:none !important;}
   .bf-burger{display:inline-flex !important;}
+  .bf-navcta{display:none !important;}
 }
 @media (max-width:860px){
   .bf-hero-h{font-size:30px !important;}
@@ -110,6 +115,24 @@ nav[data-theme="dark"] .bf-megaitem:hover{color:#fff;}
   .bf-newsrow{grid-template-columns:1fr;gap:12px;padding:28px 0;}
   .bf-newsdate{margin-bottom:-4px;}
   .bf-newsthumb{display:none !important;}
+  .bf-groupacc-row{
+    grid-template-columns:auto 1fr !important;
+    grid-template-areas:"num company" "title title" "media media" !important;
+    gap:10px 14px !important;
+  }
+  .bf-groupacc-row > *:nth-child(1){grid-area:num;}
+  .bf-groupacc-row > *:nth-child(2){grid-area:company;}
+  .bf-groupacc-row > *:nth-child(3){grid-area:title;}
+  .bf-groupacc-row > *:nth-child(4){grid-area:media;}
+  .bf-achstats{grid-template-columns:1fr !important;gap:28px !important;}
+  .bf-detailsgrid{grid-template-columns:1fr !important;grid-template-rows:none !important;grid-auto-flow:row !important;}
+  .bf-affgrid{grid-template-columns:1fr !important;}
+  .bf-affcarditem{padding:28px !important;}
+  .bf-parentcard{padding:28px !important;}
+  .bf-techrow .bf-techsub{max-height:48px !important;opacity:1 !important;margin-top:6px !important;}
+  .bf-stats .bf-statcell{border-right:1px solid var(--border) !important;border-bottom:1px solid var(--border) !important;}
+  .bf-stats .bf-statcell:nth-child(2n){border-right:none !important;}
+  .bf-stats .bf-statcell:nth-child(n+3){border-bottom:none !important;}
 }
 
 /* ── Hover states (handled by the DC runtime's style-hover attribute
@@ -145,6 +168,14 @@ nav[data-theme="dark"] .bf-megaitem:hover{color:#fff;}
 .bf-revealF.bf-in .bf-petal-l3{opacity:1;transition-delay:.7s;}
 .bf-petal-center{opacity:0;transform:translate(-50%,-50%) scale(.8);transition:opacity .6s ease, transform .6s cubic-bezier(.4,0,.2,1);}
 .bf-revealF.bf-in .bf-petal-center{opacity:1;transform:translate(-50%,-50%) scale(1);transition-delay:1s;}
+
+/* ── On-chain/off-chain divider sequential reveal (Solutions.jsx) ──── */
+.bf-oc-line{transform:scaleX(0);transform-origin:center;transition:transform .6s cubic-bezier(.4,0,.2,1);}
+.bf-revealF.bf-in .bf-oc-line{transform:scaleX(1);transition-delay:0s;}
+.bf-oc-arrow{opacity:0;transition:opacity .35s ease;}
+.bf-revealF.bf-in .bf-oc-arrow{opacity:1;transition-delay:.6s;}
+.bf-oc-label{opacity:0;transform:translateY(6px);transition:opacity .4s ease, transform .4s ease;}
+.bf-revealF.bf-in .bf-oc-label{opacity:1;transform:none;transition-delay:.9s;}
 
 /* ── TranSight bento cards (TransightSolutions.jsx) ────────────────── */
 .bf-bento-card{background:#141414;border-radius:14px;transition:background .3s ease, opacity .6s cubic-bezier(.4,0,.2,1) var(--reveal-delay,0s), transform .6s cubic-bezier(.4,0,.2,1) var(--reveal-delay,0s);}

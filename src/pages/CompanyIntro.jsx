@@ -55,20 +55,33 @@ export default function CompanyIntro() {
   useNavDarkZone(darkZoneRef);
   const madeHeadingRef = useRef(null);
   const [descWidth, setDescWidth] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     document.title = "회사 소개 | Bonanza Factory";
     window.scrollTo(0, 0);
   }, []);
 
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width:860px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  // Below the mobile breakpoint the headline wraps instead of forcing a fixed
+  // nowrap width, so the description block just flows full-width instead of
+  // matching this measured pixel value (see the width:descWidth wrapper below).
   useLayoutEffect(() => {
+    if (isMobile) return;
     function measure() {
       if (madeHeadingRef.current) setDescWidth(madeHeadingRef.current.offsetWidth);
     }
     measure();
     window.addEventListener("resize", measure);
     return () => window.removeEventListener("resize", measure);
-  }, []);
+  }, [isMobile]);
 
   return (
     <div style={{ position: "relative", paddingTop: 64 }}>
@@ -132,16 +145,16 @@ export default function CompanyIntro() {
         </div>
       </section>
 
-      <section className="bf-pad" style={{ background: "#000", padding: "28px 48px 160px" }}>
+      <section className="bf-pad" style={{ background: "#000", padding: "0px 48px 160px" }}>
         <div style={{ maxWidth: 1400, margin: "0 auto" }}>
-          <div className="bf-reveal" style={{ width: "max-content", maxWidth: "100%", margin: "0 auto", display: "flex", flexDirection: "column" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 20, height: 62 }}>
+          <div className="bf-reveal" style={{ width: isMobile ? "100%" : "max-content", maxWidth: "100%", margin: "0 auto", display: "flex", flexDirection: "column" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 20, height: isMobile ? "auto" : 62 }}>
               <div
                 style={{
                   flex: "none",
-                  whiteSpace: "nowrap",
+                  whiteSpace: isMobile ? "normal" : "nowrap",
                   fontWeight: 500,
-                  fontSize: 48,
+                  fontSize: isMobile ? "clamp(22px,7vw,32px)" : 48,
                   lineHeight: "130%",
                   display: "flex",
                   alignItems: "center",
@@ -150,16 +163,16 @@ export default function CompanyIntro() {
               >
                 불가능을 가능으로
               </div>
-              <div style={{ width: 334.76, flex: "none", borderTop: "1.5px solid #738DE9" }} />
+              <div style={{ width: isMobile ? undefined : 334.76, flex: isMobile ? "1 1 auto" : "none", borderTop: "1.5px solid #738DE9" }} />
             </div>
             <div
               ref={madeHeadingRef}
               style={{
                 alignSelf: "flex-start",
-                height: 62,
-                whiteSpace: "nowrap",
+                height: isMobile ? "auto" : 62,
+                whiteSpace: isMobile ? "normal" : "nowrap",
                 fontWeight: 500,
-                fontSize: 48,
+                fontSize: isMobile ? "clamp(22px,7vw,32px)" : 48,
                 lineHeight: "130%",
                 display: "flex",
                 alignItems: "center",
@@ -168,10 +181,10 @@ export default function CompanyIntro() {
             >
               컴플라이언스의 새로운 표준을 만들다.
             </div>
-            <div style={{ width: descWidth ?? undefined }}>
+            <div style={{ width: isMobile ? "100%" : descWidth ?? undefined }}>
             <p
               style={{
-                margin: "28px 0 0",
+                margin: "50px 0 0",
                 fontSize: 16,
                 lineHeight: 1.85,
                 color: "rgba(255,255,255,.6)",
@@ -209,8 +222,9 @@ export default function CompanyIntro() {
               }}
             >
               보난자팩토리는 이 문제를 해결하기 위해 거래소와 은행 시스템을 직접 연동하는 '펌뱅킹(Firm-Banking) 기반
-              원화 송금 시스템'을 최초로 고안하였습니다. 이렇게 탄생한 'TranSafer'는 위험 고객을 필터링하는
-              이상거래탐지(FDS) 인프라로서, 금융위원회 규제 샌드박스를 거쳐 2020년 정식으로 상용화되었습니다.
+              원화 송금 시스템'을 최초로 고안하였습니다. 이렇게 탄생한 'TranSafer'는 전자서명 인증 기반의 특허를
+              획득했으며, 위험 고객 확인과 지급정지 연계 구조를 갖춰 금융위원회 규제 샌드박스를 통과했습니다. 2020년
+              정식으로 상용화되어, 현재 국내 주요 거래소가 채택한 원화입출금 검증 솔루션으로 자리매김했습니다.
             </p>
             <p
               style={{
@@ -270,13 +284,13 @@ export default function CompanyIntro() {
               <h2 style={{ margin: "0 0 32px", fontWeight: 800, fontSize: 28, letterSpacing: "-0.02em", color: "var(--text-strong)" }}>
                 {section.title}
               </h2>
-              <div style={{ display: "grid", gridTemplateColumns: `repeat(${section.stats.length},1fr)`, gap: 72 }}>
+              <div className="bf-achstats" style={{ display: "grid", gridTemplateColumns: `repeat(${section.stats.length},1fr)`, gap: 72 }}>
                 {section.stats.map((stat) => (
                   <div key={stat.label} style={{ borderTop: "1px solid var(--border)", paddingTop: 18 }}>
                     <div style={{ fontSize: 15, color: "var(--text-subtle)", marginBottom: 6 }}>
                       {stat.label}
                     </div>
-                    <div style={{ fontWeight: 700, fontSize: 48, letterSpacing: "-0.02em", color: "var(--text-strong)" }}>
+                    <div style={{ fontWeight: 700, fontSize: "clamp(32px,8vw,48px)", letterSpacing: "-0.02em", color: "var(--text-strong)" }}>
                       {stat.value}
                       <span style={{ fontSize: 22, fontWeight: 600, marginLeft: 4 }}>{stat.unit}</span>
                     </div>
