@@ -14,7 +14,7 @@ a:hover{color:var(--link-hover);}
 @keyframes vennBreath{0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}
 .bf-navlink{position:relative;color:inherit;white-space:nowrap;transition:color .2s ease;}
 .bf-navgroup{position:relative;height:64px;display:flex;align-items:center;}
-.bf-navgroup > a::after{content:"";position:absolute;left:0;right:0;bottom:-8px;height:2px;background:var(--primary);transform:scaleX(0);transform-origin:left;transition:transform .22s ease;}
+.bf-navgroup > a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--primary);transform:scaleX(0);transform-origin:left;transition:transform .22s ease;z-index:91;}
 .bf-navgroup:hover > a::after{transform:scaleX(1);}
 .bf-mega{position:fixed;left:0;right:0;top:64px;background:#fff;border-top:1px solid var(--border);box-shadow:var(--shadow-md);opacity:0;pointer-events:none;transform:translateY(6px);transition:opacity .22s ease, transform .22s ease, background .25s ease, border-color .25s ease;z-index:90;}
 .bf-mega[data-open="1"]{opacity:1;pointer-events:auto;transform:none;}

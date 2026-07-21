@@ -7,6 +7,19 @@ import InquiryModal from "../components/InquiryModal.jsx";
 import Orb from "../components/Orb/Orb.jsx";
 
 const PARENT_COMPANY = { name: "보난자팩토리", email: "contact@bonanza-factory.co.kr" };
+const PARENT_DESC =
+  "보난자팩토리는 고객이 가상자산 거래를 보다 안전하게 할 수 있도록 투명한 디지털자산 생태계를 만들어가는 컴플라이언스 기업입니다. 그룹의 자회사들과 함께 데이터·보안·인프라 기술 시너지를 이끌어갑니다.";
+
+// 문장이 바뀌는 지점(마침표 뒤)마다 줄바꿈해서 보여준다.
+function renderDesc(desc) {
+  const sentences = desc.split(/(?<=\.)\s+/);
+  return sentences.map((sentence, idx) => (
+    <span key={idx}>
+      {sentence}
+      {idx < sentences.length - 1 && <br />}
+    </span>
+  ));
+}
 
 const solutionItems = [
   {
@@ -478,7 +491,7 @@ export default function GroupIntro() {
             justifyContent: "space-between",
             gap: 32,
             padding: "56px",
-            background: "linear-gradient(90deg,rgba(20,20,20,1) 0%,rgba(20,20,20,0) 65%), url(/images/bonanzafactory.png)",
+            background: "linear-gradient(90deg,rgba(20,20,20,1) 0%,rgba(20,20,20,0) 70%), url(/images/bonanzafactory.png)",
             backgroundSize: "cover",
             backgroundPosition: "center",
             color: "#fff",
@@ -487,9 +500,8 @@ export default function GroupIntro() {
         >
           <div style={{ flex: "1 1 420px", minWidth: 0 }}>
             <h2 style={{ margin: 0, fontWeight: 800, fontSize: 32, letterSpacing: "-0.02em" }}>보난자팩토리</h2>
-            <p style={{ margin: "20px 0 0", maxWidth: 480, fontSize: 15, lineHeight: 1.75, color: "rgba(255,255,255,.65)" }}>
-              보난자팩토리는 고객이 가상자산 거래를 보다 안전하게 할 수 있도록 투명한 디지털자산 생태계를 만들어가는 컴플라이언스
-              기업입니다. 그룹의 자회사들과 함께 데이터·보안·인프라 기술 시너지를 이끌어갑니다.
+            <p style={{ margin: "20px 0 0", maxWidth: 500, fontSize: 14, lineHeight: 1.7, color: "rgba(255,255,255,.85)" }}>
+              {PARENT_DESC}
             </p>
           </div>
           <div className="bf-affcard-overlay">
@@ -505,7 +517,7 @@ export default function GroupIntro() {
 
         <div
           className="bf-reveal bf-affgrid"
-          style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 24 }}
+          style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(580px, 1fr))", gap: 24 }}
         >
           {subsidiaries.map((sub) => (
             <div
@@ -527,8 +539,8 @@ export default function GroupIntro() {
             >
               <div>
                 <div style={{ fontWeight: 800, fontSize: 32, letterSpacing: "-0.02em", marginBottom: 12 }}>{sub.name}</div>
-                <p style={{ margin: 0, maxWidth: 480, fontSize: 14, lineHeight: 1.7, color: sub.descColor }}>
-                  {sub.descLong}
+                <p style={{ margin: 0, maxWidth: 500, fontSize: 14, lineHeight: 1.7, color: sub.descColor }}>
+                  {sub.key === "lab" ? sub.descLong : renderDesc(sub.descLong)}
                 </p>
               </div>
               <div className="bf-affcard-overlay">

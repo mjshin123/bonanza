@@ -20,8 +20,8 @@ const megaGroups = [
     ),
     items: [
       { label: "회사 소개", href: "/회사소개", route: true },
-      { label: "연혁", href: "/연혁", route: true },
       { label: "보난자 그룹", href: "/계열사-소개", route: true },
+      { label: "연혁", href: "/연혁", route: true },
     ],
     image: "/images/nav/menu-1.jpg",
   },

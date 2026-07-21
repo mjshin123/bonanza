@@ -7,8 +7,8 @@ const menuGroups = [
     label: "기업 개요",
     items: [
       { label: "회사 소개", href: "/회사소개" },
-      { label: "연혁", href: "/연혁" },
       { label: "보난자 그룹", href: "/계열사-소개" },
+      { label: "연혁", href: "/연혁" },
     ],
   },
   {
