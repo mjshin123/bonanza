@@ -6,7 +6,7 @@ import { subsidiaries } from "../data/subsidiaries.js";
 import InquiryModal from "../components/InquiryModal.jsx";
 import Orb from "../components/Orb/Orb.jsx";
 
-const PARENT_COMPANY = { name: "보난자팩토리", email: "contact@bonanzafactory.co.kr" };
+const PARENT_COMPANY = { name: "보난자팩토리", email: "contact@bonanza-factory.co.kr" };
 
 const solutionItems = [
   {

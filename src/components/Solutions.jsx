@@ -92,6 +92,13 @@ export default function Solutions() {
   const boxHeightPx = dims.vh && dims.contentH ? dims.vh - centerTop : 0;
   const outerHeightPx = boxHeightPx ? boxHeightPx + runwayPx : 0;
   const totalDistance = dims.vh - centerTop + runwayPx;
+  // The pinned/sticky box can only ever show `boxHeightPx` worth of content before
+  // the viewport edge cuts it off — if the cards' natural height doesn't fit within
+  // that (short window, zoomed-in browser, etc.), pinning would clip their bottom.
+  // Fall back to normal document flow instead, same as the narrow-width case below,
+  // so the full card is always reachable by scrolling rather than hidden by overflow.
+  const contentFits = !dims.vh || !dims.contentH || dims.contentH <= dims.vh - NAV_HEIGHT;
+  const usePin = !isMobile && contentFits;
   // Fraction of `progress` spent just approaching the section before it actually
   // settles into its pinned position — the card bars must stay empty for all of it,
   // otherwise the first card reads as already filled the instant the section appears.
@@ -146,9 +153,9 @@ export default function Solutions() {
       style={{
         position: "relative",
         background: "#fff",
-        ...(isMobile
-          ? { paddingBottom: 80 }
-          : { height: outerHeightPx ? `${outerHeightPx}px` : `${100 + cards.length * SEGMENT_VH}vh` }),
+        ...(usePin
+          ? { height: outerHeightPx ? `${outerHeightPx}px` : `${100 + cards.length * SEGMENT_VH}vh` }
+          : {}),
       }}
     >
       <div
@@ -156,17 +163,17 @@ export default function Solutions() {
         style={{
           background: "#fff",
           padding: "0 40px",
-          ...(isMobile
-            ? {}
-            : {
+          ...(usePin
+            ? {
                 position: "sticky",
                 top: centerTop,
                 height: boxHeightPx ? `${boxHeightPx}px` : `calc(100vh - ${NAV_HEIGHT}px)`,
                 overflow: "hidden",
-              }),
+              }
+            : {}),
         }}
       >
-        <div ref={contentRef} style={{ maxWidth: 1400, margin: "0 auto", width: "100%", padding: "48px 0 0" }}>
+        <div ref={contentRef} style={{ maxWidth: 1400, margin: "0 auto", width: "100%", padding: "48px 0 64px" }}>
           <div className="bf-reveal" style={{ position: "relative", display: "inline-block", marginBottom: 64 }}>
             <h2
               style={{

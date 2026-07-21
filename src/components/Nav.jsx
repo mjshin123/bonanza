@@ -6,7 +6,7 @@ import { scrollToAnchor } from "../lib/scroll.js";
 import { useNavTheme } from "../context/NavThemeContext.jsx";
 import InquiryModal from "./InquiryModal.jsx";
 
-const PARENT_COMPANY = { name: "보난자팩토리", email: "contact@bonanzafactory.co.kr" };
+const PARENT_COMPANY = { name: "보난자팩토리", email: "contact@bonanza-factory.co.kr" };
 
 const megaGroups = [
   {

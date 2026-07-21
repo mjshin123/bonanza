@@ -65,8 +65,9 @@ export default function Footer() {
             <div style={{ fontWeight: 700, fontSize: 13, color: "#fff", marginBottom: 16 }}>문의</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 10, fontSize: 13, color: "#9a9a9a" }}>
               <span>서울특별시 영등포구 양평로 12, 정오빌딩 7층</span>
-              <span>contact@bonanzafactory.co.kr</span>
-              <span>02-000-0000</span>
+              <span>사업자등록번호: 818-88-00715</span>
+              <span>대표이사: 김영석 ㅣ 개인정보책임자: 이찬행</span>
+              <span>contact@bonanza-factory.co.kr</span>
             </div>
           </div>
         </div>
