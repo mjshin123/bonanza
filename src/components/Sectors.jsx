@@ -1,9 +1,29 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import useNavDarkZone from "../hooks/useNavDarkZone.js";
+
+// Width the mobile diagram's fixed-px values (fonts, label offsets) were tuned
+// at. Everything below is rendered at this fixed size, then the whole block is
+// scaled by (actual rendered width / this) — so on narrower phones the text and
+// offsets shrink right along with the circles/lines instead of staying fixed
+// size and overflowing/colliding.
+const MOBILE_DESIGN_WIDTH = 420;
+const MOBILE_DESIGN_HEIGHT = (MOBILE_DESIGN_WIDTH * 860) / 1400;
 
 export default function Sectors() {
   const darkZoneRef = useRef(null);
   useNavDarkZone(darkZoneRef);
+  const mobileWrapRef = useRef(null);
+  const [mobileScale, setMobileScale] = useState(1);
+
+  useEffect(() => {
+    const el = mobileWrapRef.current;
+    if (!el) return undefined;
+    const ro = new ResizeObserver(([entry]) => {
+      setMobileScale(entry.contentRect.width / MOBILE_DESIGN_WIDTH);
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   return (
     <section ref={darkZoneRef} id="sectors" className="bf-pad" style={{ position: "relative", background: "#0A0A0A", padding: "96px 40px 104px", overflow: "hidden" }}>
@@ -66,11 +86,27 @@ export default function Sectors() {
 
         {/* ================= MOBILE diagram — hand-tuned separately from the desktop
             spec above (bigger circles, wider-spread petals, extended Legal point),
-            shown only below the mobile breakpoint. Every position/size is a
-            percentage of this box's own width/height, and the box's aspect-ratio
-            is pinned to the SVG's viewBox (1400:860) so the whole diagram scales
-            fluidly at any phone width with no clipping or shrink-transform. */}
-        <div className="bf-revealF bf-sectors-mobile-graphic" style={{ position: "relative", aspectRatio: "1400 / 860", marginTop: 24 }}>
+            shown only below the mobile breakpoint. Every position/size below is a
+            percentage of the fixed MOBILE_DESIGN_WIDTH/HEIGHT box; that box is then
+            scaled as a whole (via mobileScale) to match the actual rendered width,
+            so text and offsets shrink/grow together with the circles/lines instead
+            of staying fixed size and overflowing on narrow phones. */}
+        <div
+          ref={mobileWrapRef}
+          className="bf-revealF bf-sectors-mobile-graphic"
+          style={{ position: "relative", aspectRatio: "1400 / 860", marginTop: 24 }}
+        >
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: MOBILE_DESIGN_WIDTH,
+            height: MOBILE_DESIGN_HEIGHT,
+            transform: `scale(${mobileScale})`,
+            transformOrigin: "top left",
+          }}
+        >
           {/* downward triangle — its own viewBox is taller than the stage (122.09% of
               stage height) so the point can extend well below the stage box without
               stretching the stage itself (which would distort the circles below,
@@ -91,13 +127,13 @@ export default function Sectors() {
           </svg>
 
           {/* corner labels */}
-          <div style={{ position: "absolute", left: "0.6%", top: "4.2%", zIndex: 4, fontWeight: 500, fontSize: 16, color: "#fff" }}>
+          <div style={{ position: "absolute", left: "0.6%", top: "4.2%", zIndex: 4, fontWeight: 500, fontSize: 13, color: "#E5E5E5" }}>
             Blockchain
           </div>
-          <div style={{ position: "absolute", right: "0.6%", top: "4.2%", zIndex: 4, fontWeight: 500, fontSize: 16, color: "#fff" }}>
+          <div style={{ position: "absolute", right: "0.6%", top: "4.2%", zIndex: 4, fontWeight: 500, fontSize: 13, color: "#E5E5E5" }}>
             Finance
           </div>
-          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", bottom: "-19.42%", zIndex: 4, fontWeight: 500, fontSize: 16, color: "#fff" }}>
+          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", bottom: "-19.42%", zIndex: 4, fontWeight: 500, fontSize: 13, color: "#E5E5E5" }}>
             Legal
           </div>
 
@@ -108,10 +144,10 @@ export default function Sectors() {
               className="bf-petal-c1"
               style={{
                 position: "absolute",
-                left: "19.95%",
-                top: "-3.46%",
-                width: "60.11%",
-                height: "66.50%",
+                left: "10.02%",
+                top: "-14.48%",
+                width: "80.00%",
+                height: "88.52%",
                 borderRadius: "50%",
                 background: "linear-gradient(180deg, #0A0A0A 0%, rgba(10,10,10,0.8) 19.23%, rgba(22,64,219,0.8) 100%)",
               }}
@@ -121,10 +157,10 @@ export default function Sectors() {
               className="bf-petal-c2"
               style={{
                 position: "absolute",
-                left: "-6.02%",
-                bottom: "-13.03%",
-                width: "60.11%",
-                height: "66.50%",
+                left: "-15.98%",
+                bottom: "-24.05%",
+                width: "80.00%",
+                height: "88.52%",
                 borderRadius: "50%",
                 background: "linear-gradient(180deg, #0A0A0A 0%, rgba(10,10,10,0.8) 19.23%, rgba(22,64,219,0.8) 100%)",
               }}
@@ -134,23 +170,23 @@ export default function Sectors() {
               className="bf-petal-c3"
               style={{
                 position: "absolute",
-                right: "-6.02%",
-                bottom: "-13.03%",
-                width: "60.11%",
-                height: "66.50%",
+                right: "-15.98%",
+                bottom: "-24.05%",
+                width: "80.00%",
+                height: "88.52%",
                 borderRadius: "50%",
                 background: "linear-gradient(180deg, #0A0A0A 0%, rgba(10,10,10,0.8) 19.23%, rgba(22,64,219,0.8) 100%)",
               }}
             />
 
             {/* petal labels — centered on each circle's geometric center */}
-            <div className="bf-petal-l1" style={{ position: "absolute", left: "50%", top: "29.79%", transform: "translate(-50%, calc(-50% - 10px))", textAlign: "center", whiteSpace: "nowrap", zIndex: 3, fontWeight: 400, fontSize: 15, lineHeight: 1.25, color: "#A2B3F1" }}>
+            <div className="bf-petal-l1" style={{ position: "absolute", left: "50.02%", top: "29.79%", transform: "translate(-50%,-50%)", textAlign: "center", whiteSpace: "nowrap", zIndex: 3, fontWeight: 400, fontSize: 12, lineHeight: 1.25, color: "#A2B3F1" }}>
               Risk Data
             </div>
-            <div className="bf-petal-l2" style={{ position: "absolute", left: "24.04%", top: "79.79%", transform: "translate(-50%, calc(-50% + 10px))", width: "28.85%", textAlign: "center", zIndex: 3, fontWeight: 400, fontSize: 15, lineHeight: 1.25, color: "#A2B3F1" }}>
+            <div className="bf-petal-l2" style={{ position: "absolute", left: "24.03%", top: "79.79%", transform: "translate(-50%,-50%)", width: "28.85%", textAlign: "center", zIndex: 3, fontWeight: 400, fontSize: 12, lineHeight: 1.25, color: "#A2B3F1" }}>
               Blockchain Technology
             </div>
-            <div className="bf-petal-l3" style={{ position: "absolute", left: "75.96%", top: "79.79%", transform: "translate(-50%, calc(-50% + 10px))", width: "32.69%", textAlign: "center", zIndex: 3, fontWeight: 400, fontSize: 15, lineHeight: 1.25, color: "#A2B3F1" }}>
+            <div className="bf-petal-l3" style={{ position: "absolute", left: "75.98%", top: "79.79%", transform: "translate(-50%,-50%)", width: "32.69%", textAlign: "center", zIndex: 3, fontWeight: 400, fontSize: 12, lineHeight: 1.25, color: "#A2B3F1" }}>
               RegTech
             </div>
 
@@ -173,6 +209,7 @@ export default function Sectors() {
               Digital Asset Compliance
             </div>
           </div>
+        </div>
         </div>
       </div>
     </section>

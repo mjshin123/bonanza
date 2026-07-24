@@ -29,8 +29,8 @@ const bottomLogos = [
 
 function LogoTile({ src, alt }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "0 56px", height: 96, flex: "none" }}>
-      <div style={{ width: 168, height: 56, overflow: "hidden", borderRadius: 4, flex: "none", display: "flex", alignItems: "center", justifyContent: "center" }}>
+    <div className="bf-logo-tile">
+      <div className="bf-logo-box">
         <img
           src={src}
           alt={alt}
@@ -65,7 +65,7 @@ export default function Network() {
           <h2 style={{ margin: 0, fontWeight: 700, fontSize: "clamp(26px,3.2vw,36px)", lineHeight: 1.35, letterSpacing: "-0.02em", color: "var(--text-strong)" }}>
             국내 및 글로벌 기업·기관의
             <br />
-            신뢰를 받고 있습니다
+            신뢰를 받고 있습니다.
           </h2>
         </div>
       </div>

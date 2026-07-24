@@ -103,6 +103,8 @@ nav[data-theme="dark"] .bf-megaitem:hover{color:#fff;}
   .bf-navcta{display:none !important;}
 }
 @media (max-width:860px){
+  .bf-hero-zone{padding:0 !important;position:relative !important;}
+  .bf-hero-box{position:absolute !important;inset:0 !important;width:100% !important;height:100% !important;aspect-ratio:auto !important;border-radius:0 !important;}
   .bf-hero-h{font-size:30px !important;}
   .bf-split{grid-template-columns:1fr !important;}
   .bf-stats{grid-template-columns:repeat(2,1fr) !important;}
@@ -201,3 +203,20 @@ nav[data-theme="dark"] .bf-megaitem:hover{color:#fff;}
 .bf-marquee-viewport:hover .bf-marquee-row{animation-play-state:paused;}
 @keyframes bf-marqueeLeft{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 @keyframes bf-marqueeRight{from{transform:translateX(-50%);}to{transform:translateX(0);}}
+
+.bf-logo-tile{display:flex;align-items:center;justify-content:center;padding:0 56px;height:96px;flex:none;}
+.bf-logo-box{width:168px;height:56px;overflow:hidden;border-radius:4px;flex:none;display:flex;align-items:center;justify-content:center;}
+@media(max-width:640px){
+  .bf-logo-tile{padding:0 20px;height:64px;}
+  .bf-logo-box{width:96px;height:36px;}
+}
+
+/* ── Award cards marquee (CompanyIntro.jsx) ──────────────────────── */
+.bf-award-card{flex:none;width:320px;margin:0 12px;padding:34px 28px;border-radius:12px;text-align:center;}
+.bf-award-title{font-weight:700;font-size:16px;line-height:1.5;letter-spacing:-0.01em;white-space:pre-line;}
+.bf-award-divider{width:20px;height:1px;margin:18px auto;}
+@media(max-width:640px){
+  .bf-award-card{width:196px;margin:0 9px;padding:23px 18px;border-radius:12px;}
+  .bf-award-title{font-size:15px;line-height:1.4;}
+  .bf-award-divider{margin:14px auto;}
+}

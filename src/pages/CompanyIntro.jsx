@@ -65,22 +65,17 @@ const awards = [
 function AwardCard({ org, title, date, tinted }) {
   return (
     <div
+      className="bf-award-card"
       style={{
-        flex: "none",
-        width: 320,
-        margin: "0 12px",
-        padding: "34px 28px",
-        borderRadius: 12,
         background: tinted ? "#E7ECFB" : "#FAFAFB",
         border: "1px solid " + (tinted ? "#DAE2F8" : "var(--border)"),
         boxShadow: "0 1px 3px rgba(16,24,64,.05)",
-        textAlign: "center",
       }}
     >
-      <div style={{ fontWeight: 700, fontSize: 16, lineHeight: 1.5, letterSpacing: "-0.01em", color: "var(--text-strong)", whiteSpace: "pre-line" }}>
+      <div className="bf-award-title" style={{ color: "var(--text-strong)" }}>
         {title}
       </div>
-      <div style={{ width: 20, height: 1, background: tinted ? "#B7C4EE" : "var(--border-strong)", margin: "18px auto" }} />
+      <div className="bf-award-divider" style={{ background: tinted ? "#B7C4EE" : "var(--border-strong)" }} />
       <div style={{ fontSize: 13, fontWeight: 500, color: "var(--text-muted)" }}>{org}</div>
       <div style={{ marginTop: 6, fontSize: 12, fontWeight: 500, color: "var(--text-subtle)" }}>{date}</div>
     </div>

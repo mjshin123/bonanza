@@ -9,6 +9,7 @@ export default function Hero() {
     <header id="home" style={{ position: "relative", background: "#fff", paddingTop: 64 }}>
       <div
         ref={darkZoneRef}
+        className="bf-hero-zone"
         style={{
           background: "#0A0A0A",
           minHeight: "calc(100vh - 64px)",
@@ -19,6 +20,7 @@ export default function Hero() {
         }}
       >
         <div
+          className="bf-hero-box"
           style={{
             position: "relative",
             width: "min(92vw, 2200px, calc((100vh - 264px) * 1460 / 660))",

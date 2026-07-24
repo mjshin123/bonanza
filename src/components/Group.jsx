@@ -49,7 +49,7 @@ export default function Group() {
           <h2 style={{ margin: 0, fontWeight: 700, fontSize: "clamp(26px,3.2vw,36px)", lineHeight: 1.3, letterSpacing: "-0.02em", color: "var(--text-strong)" }}>
             보난자 그룹의 모회사로서
             <br />
-            자회사들과 시너지를 이끌어갑니다
+            자회사들과 시너지를 이끌어갑니다.
           </h2>
         </div>
 
