@@ -34,7 +34,8 @@ const INACTIVE_COLOR = "var(--grey-400)";
 const ACTIVE_COLOR = "var(--primary)";
 const NAV_HEIGHT = 64;
 const SEGMENT_VH = 10; // extra scroll (in vh), per card, dedicated to the fill animation while pinned
-const OC_ANIM_MS = 1350; // on-chain/off-chain divider reveal duration (line + arrows + labels), see page.css .bf-oc-*
+const OC_ANIM_MS = 900; // on-chain/off-chain divider reveal duration (line + arrows + labels), see page.css .bf-oc-*
+const CATCHUP_MS = 500; // transition applied only for the reveal catch-up, so bars ease in instead of snapping to whatever scroll already advanced past
 const MOBILE_QUERY = "(max-width:860px)"; // same breakpoint the rest of the site stacks on
 
 export default function Solutions() {
@@ -44,6 +45,7 @@ export default function Solutions() {
   const [progress, setProgress] = useState(0);
   const [dims, setDims] = useState({ vh: 0, contentH: 0 });
   const [barsReady, setBarsReady] = useState(false);
+  const [catchingUp, setCatchingUp] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   // Below the stack breakpoint the cards render in normal document flow instead
@@ -126,7 +128,11 @@ export default function Solutions() {
       // the card bars stay empty until that animation has had time to finish.
       if (!hasSettledRef.current && p >= pinPoint) {
         hasSettledRef.current = true;
-        setTimeout(() => setBarsReady(true), OC_ANIM_MS);
+        setTimeout(() => {
+          setBarsReady(true);
+          setCatchingUp(true);
+          setTimeout(() => setCatchingUp(false), CATCHUP_MS);
+        }, OC_ANIM_MS);
       }
     }
 
@@ -279,7 +285,11 @@ export default function Solutions() {
                   </p>
                   <div
                     className="bf-bar"
-                    style={{ marginBottom: 34, transform: `scaleX(${cardProgress})`, transition: "none" }}
+                    style={{
+                      marginBottom: 34,
+                      transform: `scaleX(${cardProgress})`,
+                      transition: catchingUp ? "transform .5s cubic-bezier(.4,0,.2,1)" : "none",
+                    }}
                   />
                   <h3
                     className="bf-soltitle"

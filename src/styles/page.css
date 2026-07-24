@@ -97,8 +97,6 @@ nav[data-theme="dark"] .bf-megaitem:hover{color:#fff;}
 .bf-reveal.bf-in{opacity:1;transform:none;}
 .bf-revealF{opacity:0;transition:opacity .6s ease;}
 .bf-revealF.bf-in{opacity:1;}
-.bf-fbar{transform:scaleY(0);transform-origin:bottom;transition:transform .6s cubic-bezier(.4,0,.2,1);}
-.bf-finance.bf-in .bf-fbar{transform:scaleY(1);}
 @media (max-width:1100px){
   .bf-desktopnav{display:none !important;}
   .bf-burger{display:inline-flex !important;}
@@ -198,8 +196,8 @@ nav[data-theme="dark"] .bf-megaitem:hover{color:#fff;}
   mask-image:linear-gradient(90deg, transparent 0, #000 64px, #000 calc(100% - 64px), transparent 100%);
 }
 .bf-marquee-row{display:flex;width:max-content;will-change:transform;}
-.bf-marquee-left{animation:bf-marqueeLeft 34s linear infinite;}
-.bf-marquee-right{animation:bf-marqueeRight 34s linear infinite;}
+.bf-marquee-left{animation:bf-marqueeLeft 60s linear infinite;}
+.bf-marquee-right{animation:bf-marqueeRight 60s linear infinite;}
 .bf-marquee-viewport:hover .bf-marquee-row{animation-play-state:paused;}
 @keyframes bf-marqueeLeft{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 @keyframes bf-marqueeRight{from{transform:translateX(-50%);}to{transform:translateX(0);}}

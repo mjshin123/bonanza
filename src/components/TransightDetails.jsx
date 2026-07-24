@@ -1,3 +1,5 @@
+import { ArrowRight } from "lucide-react";
+
 const SECTIONS = [
   {
     tag: "DATA & KYT API",
@@ -26,6 +28,8 @@ const SECTIONS = [
     items: ["복잡한 온체인 분석 요청", "실시간 범죄 대응 파트너", "가상자산 범죄 트렌드 리포트 발간"],
   },
 ];
+
+const SITE_URL = "https://www.transight.io/";
 
 function renderHeading(text) {
   const idx = text.indexOf(",");
@@ -103,6 +107,30 @@ export default function TransightDetails() {
             </div>
           </div>
         ))}
+
+        <div
+          className="bf-reveal"
+          style={{ display: "flex", justifyContent: "center", transitionDelay: `${0.3 + SECTIONS.length * 0.1}s` }}
+        >
+          <a
+            href={SITE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "14px 28px",
+              borderRadius: 6,
+              background: "#1640DB",
+              color: "#fff",
+              fontWeight: 600,
+              fontSize: 15,
+            }}
+          >
+            더 알아보기 <ArrowRight width={16} height={16} />
+          </a>
+        </div>
       </div>
     </section>
   );

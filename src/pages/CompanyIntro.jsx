@@ -48,6 +48,45 @@ const achievementSections = [
   },
 ];
 
+// 날짜 내림차순(최신순)이되, 가로스크롤 시작 시 가장 최신 카드가 2번째로 보이도록
+// 맨 앞 카드 한 장을 뒤로 돌려 배치한다.
+const awards = [
+  { org: "중소벤처기업부", title: "벤처창업진흥 유공\n중기부 장관상 수상", date: "2024.12" },
+  { org: "중소벤처기업부", title: "'아기유니콘 육성사업\n수익성장형 트랙 기업' 선정", date: "2025.09" },
+  { org: "EURO CERT", title: "국제표준인증획득\nISO9001·14001", date: "2024.11" },
+  { org: "한국인터넷진흥원", title: "ISMS 인증획득\n통합입출금 서비스 외", date: "2024.01" },
+  { org: "중소벤처기업부", title: "기술혁신형 중소기업\n인증 획득 AA등급", date: "2022.05" },
+  { org: "서울핀테크랩", title: "핀테크기업 매출부문\n최우수상 수상", date: "2021.12" },
+  { org: "과학기술정보통신부", title: "혁신성장형\n벤처기업 인증 획득", date: "2021.10" },
+  { org: "경찰청", title: "행사발전 기여\n감사장 수상", date: "2021.10" },
+  { org: "금융위원회", title: "규제샌드박스\n위탁테스트 선정", date: "2019.08" },
+];
+
+function AwardCard({ org, title, date, tinted }) {
+  return (
+    <div
+      style={{
+        flex: "none",
+        width: 320,
+        margin: "0 12px",
+        padding: "34px 28px",
+        borderRadius: 12,
+        background: tinted ? "#E7ECFB" : "#FAFAFB",
+        border: "1px solid " + (tinted ? "#DAE2F8" : "var(--border)"),
+        boxShadow: "0 1px 3px rgba(16,24,64,.05)",
+        textAlign: "center",
+      }}
+    >
+      <div style={{ fontWeight: 700, fontSize: 16, lineHeight: 1.5, letterSpacing: "-0.01em", color: "var(--text-strong)", whiteSpace: "pre-line" }}>
+        {title}
+      </div>
+      <div style={{ width: 20, height: 1, background: tinted ? "#B7C4EE" : "var(--border-strong)", margin: "18px auto" }} />
+      <div style={{ fontSize: 13, fontWeight: 500, color: "var(--text-muted)" }}>{org}</div>
+      <div style={{ marginTop: 6, fontSize: 12, fontWeight: 500, color: "var(--text-subtle)" }}>{date}</div>
+    </div>
+  );
+}
+
 const REVEAL_STAGGER = 0.12;
 
 export default function CompanyIntro() {
@@ -280,8 +319,8 @@ export default function CompanyIntro() {
             주요 성과
           </div>
           {achievementSections.map((section, i) => (
-            <div key={section.key} className="bf-reveal" style={{ marginBottom: 48, transitionDelay: `${(i + 1) * REVEAL_STAGGER}s` }}>
-              <h2 style={{ margin: "0 0 32px", fontWeight: 800, fontSize: 28, letterSpacing: "-0.02em", color: "var(--text-strong)" }}>
+            <div key={section.key} className="bf-reveal" style={{ marginBottom: 72, transitionDelay: `${(i + 1) * REVEAL_STAGGER}s` }}>
+              <h2 style={{ margin: "0 0 16px", fontWeight: 800, fontSize: 28, letterSpacing: "-0.02em", color: "#171717" }}>
                 {section.title}
               </h2>
               <div className="bf-achstats" style={{ display: "grid", gridTemplateColumns: `repeat(${section.stats.length},1fr)`, gap: 72 }}>
@@ -303,12 +342,33 @@ export default function CompanyIntro() {
           <div className="bf-reveal" style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.1em", color: "var(--primary)", marginTop: 120, marginBottom: 14, transitionDelay: `${(achievementSections.length + 1) * REVEAL_STAGGER}s` }}>
             재무 구조
           </div>
-          <h2 className="bf-reveal" style={{ margin: "0 0 32px", fontWeight: 800, fontSize: 28, letterSpacing: "-0.02em", color: "var(--text-strong)", transitionDelay: `${(achievementSections.length + 2) * REVEAL_STAGGER}s` }}>
+          <h2 className="bf-reveal" style={{ margin: "0 0 32px", fontWeight: 800, fontSize: 28, letterSpacing: "-0.02em", color: "#171717", transitionDelay: `${(achievementSections.length + 2) * REVEAL_STAGGER}s` }}>
             건실한 재무 구조와 고성장 자회사의 시너지를 바탕으로 안정적인 성장 곡선을 만들어내고 있습니다.
           </h2>
           <div className="bf-reveal bf-finance" style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 24, transitionDelay: `${(achievementSections.length + 3) * REVEAL_STAGGER}s` }}>
             <FinanceChart title="매출" unit="억원" data={revenueData} />
             <FinanceChart title="자산총계" unit="억원" data={assetsData} />
+          </div>
+        </div>
+      </section>
+
+      <section className="bf-pad" style={{ background: "#fff", padding: "0 48px 120px" }}>
+        <div style={{ maxWidth: 1400, margin: "0 auto" }}>
+          <div className="bf-reveal" style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.1em", color: "var(--primary)", marginBottom: 14 }}>
+            주요 인증 및 수상
+          </div>
+          <h2 style={{ margin: "0 0 48px", fontWeight: 800, fontSize: 28, letterSpacing: "-0.02em", color: "#171717" }}>
+            공신력 있는 기관으로부터 기술력과 성장성을 인정받았습니다.
+          </h2>
+        </div>
+
+        <div className="bf-reveal" style={{ width: "100vw", marginLeft: "calc(50% - 50vw)" }}>
+          <div className="bf-marquee-viewport">
+            <div className="bf-marquee-row bf-marquee-left">
+              {[...awards, ...awards].map((award, i) => (
+                <AwardCard key={i} {...award} tinted={i % 2 === 1} />
+              ))}
+            </div>
           </div>
         </div>
       </section>

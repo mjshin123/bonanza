@@ -1,39 +1,53 @@
-const logos = Array.from({ length: 12 }, (_, i) => String.fromCharCode(65 + i));
+const topLogos = [
+  { src: "/images/network/top/bybit.jpg", alt: "Bybit" },
+  { src: "/images/network/top/dwf-labs.jpg", alt: "DWF Labs" },
+  { src: "/images/network/top/mexc.png", alt: "MEXC" },
+  { src: "/images/network/top/weex.avif", alt: "WEEX" },
+  { src: "/images/network/top/광주은행.jpg", alt: "광주은행" },
+  { src: "/images/network/top/국민은행.jpg", alt: "국민은행" },
+  { src: "/images/network/top/두나무.png", alt: "두나무" },
+  { src: "/images/network/top/미래에셋.jpg", alt: "미래에셋" },
+  { src: "/images/network/top/신한은행.png", alt: "신한은행" },
+  { src: "/images/network/top/카카오뱅크.png", alt: "카카오뱅크" },
+  { src: "/images/network/top/카카오페이.avif", alt: "카카오페이" },
+  { src: "/images/network/top/케이뱅크.png", alt: "케이뱅크" },
+  { src: "/images/network/top/코인원.png", alt: "코인원" },
+  { src: "/images/network/top/하나은행.png", alt: "하나은행" },
+];
 
-function LogoChip({ mark }) {
+const bottomLogos = [
+  { src: "/images/network/bottom/kpmg.png", alt: "KPMG" },
+  { src: "/images/network/bottom/lgcns.png", alt: "LG CNS" },
+  { src: "/images/network/bottom/네이버.png", alt: "네이버" },
+  { src: "/images/network/bottom/쿠콘.png", alt: "쿠콘" },
+  { src: "/images/network/bottom/국세청.png", alt: "국세청" },
+  { src: "/images/network/bottom/국방부.jpg", alt: "국방부" },
+  { src: "/images/network/bottom/경찰청.jpg", alt: "경찰청" },
+  { src: "/images/network/bottom/고려대학교.gif", alt: "고려대학교" },
+  { src: "/images/network/bottom/취리히대학.png", alt: "취리히대학" },
+];
+
+function LogoTile({ src, alt }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 14, padding: "0 44px", height: 96, flex: "none" }}>
-      <div
-        style={{
-          width: 34,
-          height: 34,
-          borderRadius: 0,
-          background: "var(--grey-100)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "var(--grey-400)",
-          fontWeight: 800,
-          fontSize: 14,
-          flex: "none",
-        }}
-      >
-        {mark}
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "0 56px", height: 96, flex: "none" }}>
+      <div style={{ width: 168, height: 56, overflow: "hidden", borderRadius: 4, flex: "none", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <img
+          src={src}
+          alt={alt}
+          style={{ width: "100%", height: "auto", flex: "none", display: "block" }}
+        />
       </div>
-      <span style={{ fontSize: 16, fontWeight: 700, color: "var(--grey-400)", letterSpacing: "0.02em", whiteSpace: "nowrap" }}>
-        LOGO
-      </span>
     </div>
   );
 }
 
-function MarqueeRow({ direction }) {
+function MarqueeRow({ direction, logos }) {
   const doubled = [...logos, ...logos];
   return (
     <div className="bf-marquee-viewport">
       <div className={direction === "left" ? "bf-marquee-row bf-marquee-left" : "bf-marquee-row bf-marquee-right"}>
-        {doubled.map((mark, i) => (
-          <LogoChip key={i} mark={mark} />
+        {doubled.map((logo, i) => (
+          <LogoTile key={i} {...logo} />
         ))}
       </div>
     </div>
@@ -58,17 +72,11 @@ export default function Network() {
 
       <div className="bf-reveal" style={{ width: "100vw", marginLeft: "calc(50% - 50vw)" }}>
         <div style={{ borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
-          <MarqueeRow direction="left" />
+          <MarqueeRow direction="left" logos={topLogos} />
         </div>
         <div style={{ borderBottom: "1px solid var(--border)" }}>
-          <MarqueeRow direction="right" />
+          <MarqueeRow direction="right" logos={bottomLogos} />
         </div>
-      </div>
-
-      <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px" }}>
-        <p className="bf-reveal" style={{ textAlign: "center", fontSize: 12, color: "var(--text-subtle)", marginTop: 20 }}>
-          * 로고는 배치용 플레이스홀더입니다. 실제 파트너 로고로 교체해 주세요.
-        </p>
       </div>
     </section>
   );

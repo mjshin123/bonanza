@@ -28,7 +28,7 @@ export default function Sectors() {
             style={{ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 2 }}
           >
             <polygon
-              points="128.55,76.28 1815,76.28 971.775,1024.75"
+              points="212.87,107.90 1730.68,107.90 971.78,961.52"
               fill="none"
               stroke="rgba(22,64,219,0.7)"
               strokeWidth="1"
@@ -36,30 +36,30 @@ export default function Sectors() {
             />
           </svg>
 
-          <div style={{ position: "absolute", left: "3.88%", top: "3.73%", width: "5.16%", height: "2.22%", zIndex: 4, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 500, fontSize: 20, color: "#fff" }}>
+          <div style={{ position: "absolute", left: "8.27%", top: "6.66%", width: "5.16%", height: "2.22%", zIndex: 4, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 500, fontSize: 14, color: "var(--grey-200)" }}>
             Blockchain
           </div>
-          <div style={{ position: "absolute", left: "92.72%", top: "3.73%", width: "3.75%", height: "2.22%", zIndex: 4, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 500, fontSize: 20, color: "#fff" }}>
+          <div style={{ position: "absolute", left: "88.33%", top: "6.66%", width: "3.75%", height: "2.22%", zIndex: 4, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 500, fontSize: 14, color: "var(--grey-200)" }}>
             Finance
           </div>
-          <div style={{ position: "absolute", left: "49.32%", top: "95.99%", width: "2.60%", height: "2.22%", zIndex: 4, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 500, fontSize: 20, color: "#fff" }}>
+          <div style={{ position: "absolute", left: "49.32%", top: "90.14%", width: "2.60%", height: "2.22%", zIndex: 4, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 500, fontSize: 14, color: "var(--grey-200)" }}>
             Legal
           </div>
 
-          <div aria-hidden="true" style={{ position: "absolute", left: "39.71%", top: "7.62%", width: "20.59%", height: "36.60%", borderRadius: "50%", background: "linear-gradient(180deg, #0A0A0A 0%, rgba(10,10,10,0.8) 19.23%, rgba(22,64,219,0.8) 100%)", zIndex: 1 }} />
-          <div aria-hidden="true" style={{ position: "absolute", left: "48.45%", top: "30.02%", width: "20.59%", height: "36.60%", borderRadius: "50%", background: "linear-gradient(180deg, #0A0A0A 0%, rgba(10,10,10,0.8) 19.23%, rgba(22,64,219,0.8) 100%)", transform: "translateY(20px) rotate(130deg)", zIndex: 1 }} />
-          <div aria-hidden="true" style={{ position: "absolute", left: "31.54%", top: "30.02%", width: "20.59%", height: "36.60%", borderRadius: "50%", background: "linear-gradient(180deg, #0A0A0A 0%, rgba(10,10,10,0.8) 19.23%, rgba(22,64,219,0.8) 100%)", transform: "translateY(20px) rotate(-130deg)", zIndex: 1 }} />
+          <div aria-hidden="true" style={{ position: "absolute", left: "40.74%", top: "9.45%", width: "18.53%", height: "32.94%", borderRadius: "50%", background: "linear-gradient(180deg, #0A0A0A 0%, rgba(10,10,10,0.8) 19.23%, rgba(22,64,219,0.8) 100%)", transform: "translateY(6px)", zIndex: 1 }} />
+          <div aria-hidden="true" style={{ position: "absolute", left: "49.48%", top: "31.85%", width: "18.53%", height: "32.94%", borderRadius: "50%", background: "linear-gradient(180deg, #0A0A0A 0%, rgba(10,10,10,0.8) 19.23%, rgba(22,64,219,0.8) 100%)", transform: "translate(-8px,16px) rotate(130deg)", zIndex: 1 }} />
+          <div aria-hidden="true" style={{ position: "absolute", left: "32.57%", top: "31.85%", width: "18.53%", height: "32.94%", borderRadius: "50%", background: "linear-gradient(180deg, #0A0A0A 0%, rgba(10,10,10,0.8) 19.23%, rgba(22,64,219,0.8) 100%)", transform: "translate(8px,16px) rotate(-130deg)", zIndex: 1 }} />
 
-          <div style={{ position: "absolute", left: "47.21%", top: "24.58%", width: "5.57%", height: "2.69%", zIndex: 3, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", fontWeight: 400, fontSize: 18, lineHeight: "22px", color: "#A2B3F1", transform: "translateY(-10px)" }}>
+          <div style={{ position: "absolute", left: "50%", top: "26.48%", width: "5.57%", transform: "translate(-50%,-50%)", zIndex: 3, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", fontWeight: 400, fontSize: 18, lineHeight: "22px", color: "#A2B3F1" }}>
             Risk Data
           </div>
-          <div style={{ position: "absolute", left: "50%", top: "38.13%", transform: "translateX(-50%)", zIndex: 3, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", whiteSpace: "nowrap", fontWeight: 500, fontSize: 48, lineHeight: "57px", color: "#fff" }}>
+          <div style={{ position: "absolute", left: "50%", top: "38.13%", transform: "translateX(-50%)", zIndex: 3, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", whiteSpace: "nowrap", fontWeight: 500, fontSize: 42, lineHeight: "50px", color: "#fff" }}>
             Digital Asset Compliance
           </div>
-          <div style={{ position: "absolute", left: "35.40%", top: "46.98%", width: "12.86%", height: "2.69%", zIndex: 3, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", fontWeight: 400, fontSize: 18, lineHeight: "22px", color: "#A2B3F1", transform: "translateY(30px)" }}>
+          <div style={{ position: "absolute", left: "42.26%", top: "49.80%", width: "12.86%", transform: "translate(-50%,-50%)", zIndex: 3, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", fontWeight: 400, fontSize: 18, lineHeight: "22px", color: "#A2B3F1" }}>
             Blockchain Technology
           </div>
-          <div style={{ position: "absolute", left: "56.17%", top: "46.98%", width: "5.16%", height: "2.69%", zIndex: 3, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", fontWeight: 400, fontSize: 18, lineHeight: "22px", color: "#A2B3F1", transform: "translateY(30px)" }}>
+          <div style={{ position: "absolute", left: "58.33%", top: "49.80%", width: "5.16%", transform: "translate(-50%,-50%)", zIndex: 3, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", fontWeight: 400, fontSize: 18, lineHeight: "22px", color: "#A2B3F1" }}>
             RegTech
           </div>
         </div>
@@ -108,10 +108,10 @@ export default function Sectors() {
               className="bf-petal-c1"
               style={{
                 position: "absolute",
-                left: "16.61%",
-                top: "-7.16%",
-                width: "66.79%",
-                height: "73.89%",
+                left: "19.95%",
+                top: "-3.46%",
+                width: "60.11%",
+                height: "66.50%",
                 borderRadius: "50%",
                 background: "linear-gradient(180deg, #0A0A0A 0%, rgba(10,10,10,0.8) 19.23%, rgba(22,64,219,0.8) 100%)",
               }}
@@ -121,10 +121,10 @@ export default function Sectors() {
               className="bf-petal-c2"
               style={{
                 position: "absolute",
-                left: "-9.36%",
-                bottom: "-16.73%",
-                width: "66.79%",
-                height: "73.89%",
+                left: "-6.02%",
+                bottom: "-13.03%",
+                width: "60.11%",
+                height: "66.50%",
                 borderRadius: "50%",
                 background: "linear-gradient(180deg, #0A0A0A 0%, rgba(10,10,10,0.8) 19.23%, rgba(22,64,219,0.8) 100%)",
               }}
@@ -134,10 +134,10 @@ export default function Sectors() {
               className="bf-petal-c3"
               style={{
                 position: "absolute",
-                right: "-9.36%",
-                bottom: "-16.73%",
-                width: "66.79%",
-                height: "73.89%",
+                right: "-6.02%",
+                bottom: "-13.03%",
+                width: "60.11%",
+                height: "66.50%",
                 borderRadius: "50%",
                 background: "linear-gradient(180deg, #0A0A0A 0%, rgba(10,10,10,0.8) 19.23%, rgba(22,64,219,0.8) 100%)",
               }}
@@ -164,7 +164,7 @@ export default function Sectors() {
                 zIndex: 3,
                 whiteSpace: "nowrap",
                 fontWeight: 600,
-                fontSize: 32,
+                fontSize: 28,
                 lineHeight: 1.2,
                 color: "#fff",
                 letterSpacing: "-0.01em",
