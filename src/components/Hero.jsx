@@ -6,13 +6,13 @@ export default function Hero() {
   useNavDarkZone(darkZoneRef);
 
   return (
-    <header id="home" style={{ position: "relative", background: "#fff", paddingTop: 64 }}>
+    <header style={{ position: "relative", background: "#0A0A0A" }}>
       <div
         ref={darkZoneRef}
         className="bf-hero-zone"
         style={{
           background: "#0A0A0A",
-          minHeight: "calc(100vh - 64px)",
+          minHeight: "100vh",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
