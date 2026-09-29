@@ -13,6 +13,10 @@ const SHOW_CONTENT = false; // coins inside + printed logos/code/arrows (true �
 const USE_BLOOM = true; // neon bloom post-process (false → turn it off entirely)
 const BUFFER_SCALE = 0.5; // see-through buffer resolution vs. canvas (lower = faster, softer)
 const CORNER_BLUR_PX = 5.5; // max screen blur (px) at each cube's far top corner (0 = off)
+// dev only: /?capture-poster renders the idle field and dumps the canvas as PNG into #poster-data
+// (used to regenerate public/images/hero/blocks-poster-*.webp, the placeholder shown while WebGL starts)
+const CAPTURE_POSTER =
+  import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).has("capture-poster");
 
 /* ── grid config ───────────────────────────────────────────── */
 const COLS = 22;
@@ -946,7 +950,8 @@ function CameraRig() {
   useEffect(() => {
     const aspect = size.width / size.height;
     // ÷1.3 → blocks appear ~130% larger
-    const dist = (aspect < 0.8 ? 16 : aspect < 1.3 ? 13 : 11) / 1.3;
+    // phones (aspect < 0.8) sit closer than before (16 → 12.5) so the blocks read larger
+    const dist = (aspect < 0.8 ? 12.5 : aspect < 1.3 ? 13 : 11) / 1.3;
     // low elevation (~30°) so only a sliver of each block's top face shows
     const elev = THREE.MathUtils.degToRad(30);
     camera.position.set(0, dist * Math.sin(elev), dist * Math.cos(elev));
@@ -972,6 +977,24 @@ function isLowEndDevice() {
   if (nav.hardwareConcurrency && nav.hardwareConcurrency <= 4) return true;
   if (window.matchMedia?.("(pointer: coarse)").matches) return true; // phones / tablets
   return false;
+}
+
+/* Fires onReady once a few frames are on screen (shaders compiled, env map baked), so the canvas
+   can fade in over the poster instead of popping in. Runs after the composer's render (priority 2). */
+function FirstFrames({ onReady }) {
+  const n = useRef(0);
+  const { gl } = useThree();
+  useFrame(() => {
+    n.current += 1;
+    if (n.current === 3) onReady();
+    if (CAPTURE_POSTER && n.current === 30) {
+      const out = document.createElement("textarea");
+      out.id = "poster-data";
+      out.textContent = gl.domElement.toDataURL("image/png");
+      document.body.appendChild(out);
+    }
+  }, 2);
+  return null;
 }
 
 function Scene({ pointerRef, quality }) {
@@ -1014,11 +1037,13 @@ function Scene({ pointerRef, quality }) {
 /* ── section ───────────────────────────────────────────────── */
 export default function CrystalCubeField3D() {
   const wrapRef = useRef(null);
-  const pointerRef = useRef({ x: 0, y: 0, active: false, last: 0 });
+  // capture: last = Infinity keeps the idle wander off, so every block stays dark
+  const pointerRef = useRef({ x: 0, y: 0, active: false, last: CAPTURE_POSTER ? Infinity : 0 });
+  const [ready, setReady] = useState(false);
   const [visible, setVisible] = useState(true);
   const [tabHidden, setTabHidden] = useState(() => typeof document !== "undefined" && document.hidden);
   const lowEnd = useMemo(isLowEndDevice, []);
-  const [quality, setQuality] = useState(lowEnd ? "low" : "high");
+  const [quality, setQuality] = useState(lowEnd && !CAPTURE_POSTER ? "low" : "high");
   const copyRef = useRef(null);
   useNavDarkZone(wrapRef);
 
@@ -1091,8 +1116,10 @@ export default function CrystalCubeField3D() {
       onPointerLeave={leave}
       onPointerCancel={leave}
     >
+      {/* static render of the idle field, shown until the live canvas fades in over it */}
+      <div aria-hidden="true" className="bf-hero3d-poster pointer-events-none absolute inset-0" />
       <Canvas
-        style={{ position: "absolute", inset: 0 }}
+        style={{ position: "absolute", inset: 0, opacity: ready ? 1 : 0, transition: "opacity .9s ease" }}
         frameloop={visible && !tabHidden ? "always" : "never"}
         dpr={DPR[quality]}
         camera={{ fov: 34, near: 0.1, far: 80, position: [0, 5, 8.7] }}
@@ -1100,11 +1127,12 @@ export default function CrystalCubeField3D() {
       >
         {/* frames dropping → switch to the low tier; low-end devices never go back up.
             After a few flip-flops it stays low for good. */}
+        <FirstFrames onReady={() => setReady(true)} />
         <PerformanceMonitor
           flipflops={3}
-          onDecline={() => setQuality("low")}
+          onDecline={() => !CAPTURE_POSTER && setQuality("low")}
           onIncline={() => !lowEnd && setQuality("high")}
-          onFallback={() => setQuality("low")}
+          onFallback={() => !CAPTURE_POSTER && setQuality("low")}
         />
         <Scene pointerRef={pointerRef} quality={quality} />
       </Canvas>

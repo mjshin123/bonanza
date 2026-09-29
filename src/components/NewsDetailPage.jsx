@@ -50,7 +50,7 @@ export default function NewsDetailPage({ items, listPath, documentTitleSuffix })
           </div>
           <h1
             className="bf-accent bf-reveal"
-            style={{ margin: 0, fontWeight: 500, fontSize: "clamp(26px,3.4vw,42px)", lineHeight: 1.3, letterSpacing: "-0.01em", color: "#fff", maxWidth: 920 }}
+            style={{ margin: 0, fontWeight: 500, fontSize: "clamp(26px,3.4vw,42px)", lineHeight: 1.3, letterSpacing: "-0.01em", color: "#fff" }}
           >
             {accentNums(item.title)}
           </h1>

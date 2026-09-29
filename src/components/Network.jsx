@@ -19,7 +19,6 @@ const bottomLogos = [
   { src: "/images/network/bottom/kpmg.png", alt: "KPMG" },
   { src: "/images/network/bottom/lgcns.png", alt: "LG CNS" },
   { src: "/images/network/bottom/네이버.png", alt: "네이버" },
-  { src: "/images/network/bottom/쿠콘.png", alt: "쿠콘" },
   { src: "/images/network/bottom/국세청.png", alt: "국세청" },
   { src: "/images/network/bottom/국방부.jpg", alt: "국방부" },
   { src: "/images/network/bottom/경찰청.jpg", alt: "경찰청" },

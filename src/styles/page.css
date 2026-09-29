@@ -243,6 +243,8 @@ nav[data-theme="dark"] .bf-megaitem:hover{color:#fff;}
 @font-face{font-family:'BF Accent Num';src:url('/fonts/esamanru-Medium.digits.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap;
   unicode-range:U+0030-0039,U+002B-002E,U+0025,U+C870,U+C5B5,U+B9CC,U+CC9C,U+BC31,U+C2ED,U+C6D0,U+AC74,U+BD84,U+CD08,U+C2DC,U+AC1C,U+B144,U+C6D4,U+C77C,U+BA85,U+ACF3,U+BC30,U+C704,U+BC88,U+CE35,U+CC28,U+D68C,U+D638,U+B300,U+B4F1,U+C8FC,U+C138,U+C885,U+C810,U+C740,U+B294,U+C774,U+AC00,U+C744,U+B97C,U+C758,U+C5D0,U+B85C,U+B3C4;}
 .bf-accent-num{font-family:'BF Accent Num','BF Accent',var(--font-sans) !important;}
+.bf-hero3d-poster{background:#0b0c11 url(/images/hero/blocks-poster-desktop.webp) center/cover no-repeat;}
+@media (max-aspect-ratio:4/5){.bf-hero3d-poster{background-image:url(/images/hero/blocks-poster-mobile.webp);}}
 .bf-hero3d-main{position:absolute;left:0;right:0;top:44%;transform:translateY(-50%);text-align:center;}
 .bf-hero3d-h{margin:0;color:#fff;font-family:'esamanru',var(--font-sans);font-weight:300;font-synthesis:none;font-size:clamp(28px,3.35vw,52px);line-height:1.25;letter-spacing:-0.025em;text-shadow:0 2px 24px rgba(0,0,0,.35);word-break:keep-all;white-space:nowrap;}
 .bf-hero3d-desc{margin:clamp(20px,2vw,28px) auto 0;max-width:920px;color:rgba(255,255,255,.82);font-size:clamp(15px,1.15vw,17px);line-height:1.75;letter-spacing:-0.01em;word-break:keep-all;}
