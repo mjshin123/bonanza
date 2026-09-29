@@ -73,50 +73,61 @@ function PlaylistVideo({ src, poster, className, crop }) {
   );
 }
 
-/* Scroll-pinned, scroll-scrubbed entrance — no scroll hijacking.
+/* Scroll-pinned, time-based entrance.
    The section is `position: sticky` inside a wrapper that is `pinVh` taller than the viewport, so it
-   holds still while the user scrolls through that extra distance. Over the first `revealEnd` of it
-   the [data-seq] items (title → lines → video → button) fade/slide in *in step with the scroll*;
-   the rest of the distance they simply stay put. The section therefore can't move on before
-   everything is shown, and scrolling back up plays it in reverse (so it replays every pass). */
-const SEQ_STAGGER = 0.2; // item i starts at i × stagger of the reveal
-const SEQ_SPAN = 0.4; // each item takes this share of the reveal
-const easeOut = (t) => 1 - (1 - t) ** 3;
+   holds still for that extra scroll distance. Once the section is mostly on screen, the [data-seq]
+   items (title → lines → video → button) fade/slide in one after another on a timer — no further
+   scrolling needed. They play once and stay shown. */
+const SEQ_STAGGER = 0.3; // s between items
+const SEQ_DURATION = 0.9; // s per item
+const TRIGGER = 0.4; // play when the section's top is within this share of the viewport height
 
-function useScrubbedReveal(wrapRef, sectionRef, revealEnd) {
+function useTimedReveal(wrapRef, sectionRef) {
   useEffect(() => {
     const wrap = wrapRef.current;
     const section = sectionRef.current;
     if (!wrap || !section) return undefined;
     const items = [...section.querySelectorAll("[data-seq]")];
     const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    let raf = 0;
-    const apply = () => {
-      raf = 0;
-      const dist = Math.max(1, wrap.offsetHeight - window.innerHeight);
-      const prog = Math.min(1, Math.max(0, -wrap.getBoundingClientRect().top / dist)); // 0 = just pinned
-      const r = reduce ? 1 : Math.min(1, prog / revealEnd);
+    items.forEach((item) => {
+      item.style.opacity = "0";
+      item.style.transform = `translateY(28px)${"seqScale" in item.dataset ? " scale(0.97)" : ""}`;
+    });
+    const play = () => {
       items.forEach((item) => {
         // reveal order comes from data-seq (1, 2, 3…), not from DOM order
         const i = Number(item.dataset.seq) - 1;
-        const t = easeOut(Math.min(1, Math.max(0, (r - i * SEQ_STAGGER) / SEQ_SPAN)));
-        const isVideo = "seqScale" in item.dataset;
-        item.style.opacity = String(t);
-        item.style.transform = `translateY(${(1 - t) * 28}px)${isVideo ? ` scale(${0.97 + 0.03 * t})` : ""}`;
+        item.style.transition = reduce
+          ? "none"
+          : `opacity ${SEQ_DURATION}s ease-out ${i * SEQ_STAGGER}s, transform ${SEQ_DURATION}s cubic-bezier(.22,1,.36,1) ${i * SEQ_STAGGER}s`;
+        item.style.opacity = "1";
+        item.style.transform = "none";
       });
     };
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(apply);
+    let raf = 0;
+    let done = false;
+    const check = () => {
+      raf = 0;
+      if (done || wrap.getBoundingClientRect().top > window.innerHeight * TRIGGER) return;
+      done = true;
+      play();
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
     };
-    apply();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(check);
+    };
+    check();
+    if (!done) {
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", onScroll);
+    }
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, [wrapRef, sectionRef, revealEnd]);
+  }, [wrapRef, sectionRef]);
 }
 
 /* Fixed "SCROLL" cue at the bottom centre. Stays on screen from the top of the page for as long as
@@ -172,7 +183,6 @@ export function HeroWithVideo({
   className,
   sectionRef,
   pinVh = 120, // extra scroll distance the section stays pinned for
-  revealEnd = 0.75, // share of that distance over which the items appear
   scrollHint = false, // fixed bottom-centre "SCROLL" cue, shown until this section's pin releases
 }) {
   const wrapRef = useRef(null);
@@ -182,7 +192,7 @@ export function HeroWithVideo({
     if (typeof sectionRef === "function") sectionRef(el);
     else if (sectionRef) sectionRef.current = el;
   };
-  useScrubbedReveal(wrapRef, innerRef, revealEnd);
+  useTimedReveal(wrapRef, innerRef);
   return (
     <div ref={wrapRef} className="relative bg-[#0A0A0A]" style={{ height: `calc(100vh + ${pinVh}vh)` }}>
     {scrollHint && <ScrollHint wrapRef={wrapRef} />}

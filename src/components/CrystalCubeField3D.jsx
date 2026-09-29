@@ -958,7 +958,24 @@ function CameraRig() {
 
 const MASK_LAYER = 5;
 
-function Scene({ pointerRef }) {
+/* Quality tiers. "low" drops the corner-blur mask pass and bloom and renders at dpr 1,
+   so weak GPUs only pay for the see-through pre-pass + the main pass. */
+const DPR = { high: 1.5, low: 1 };
+
+// devices we start on "low" right away (PerformanceMonitor can still drop "high" → "low" later)
+function isLowEndDevice() {
+  if (typeof window === "undefined") return false;
+  const nav = navigator;
+  if (nav.connection?.saveData) return true;
+  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return true;
+  if (nav.deviceMemory && nav.deviceMemory <= 4) return true; // Chromium only
+  if (nav.hardwareConcurrency && nav.hardwareConcurrency <= 4) return true;
+  if (window.matchMedia?.("(pointer: coarse)").matches) return true; // phones / tablets
+  return false;
+}
+
+function Scene({ pointerRef, quality }) {
+  const high = quality === "high";
   const glowMap = useGlowMap();
   const { size, viewport } = useThree();
   const maskTarget = useFBO(
@@ -982,12 +999,12 @@ function Scene({ pointerRef }) {
       </Environment>
       <group rotation-y={Math.PI / 4}>
         <Floor glowMap={glowMap} spill={spill} />
-        <Blocks pointerRef={pointerRef} glowMap={glowMap} maskTarget={maskTarget} spill={spill} />
+        <Blocks pointerRef={pointerRef} glowMap={glowMap} maskTarget={high ? maskTarget : null} spill={spill} />
       </group>
       <CameraRig />
       <EffectComposer multisampling={0} disableNormalPass>
-        {CORNER_BLUR_PX > 0 && <primitive object={cornerBlur} />}
-        {USE_BLOOM && <Bloom mipmapBlur luminanceThreshold={0.22} luminanceSmoothing={0.2} intensity={0.45} radius={0.35} />}
+        {high && CORNER_BLUR_PX > 0 && <primitive object={cornerBlur} />}
+        {high && USE_BLOOM && <Bloom mipmapBlur luminanceThreshold={0.22} luminanceSmoothing={0.2} intensity={0.45} radius={0.35} />}
         <ToneMapping mode={ToneMappingMode.NEUTRAL} />
       </EffectComposer>
     </>
@@ -999,7 +1016,9 @@ export default function CrystalCubeField3D() {
   const wrapRef = useRef(null);
   const pointerRef = useRef({ x: 0, y: 0, active: false, last: 0 });
   const [visible, setVisible] = useState(true);
-  const [dpr, setDpr] = useState(1.75);
+  const [tabHidden, setTabHidden] = useState(() => typeof document !== "undefined" && document.hidden);
+  const lowEnd = useMemo(isLowEndDevice, []);
+  const [quality, setQuality] = useState(lowEnd ? "low" : "high");
   const copyRef = useRef(null);
   useNavDarkZone(wrapRef);
 
@@ -1041,6 +1060,13 @@ export default function CrystalCubeField3D() {
     return () => io.disconnect();
   }, []);
 
+  // and while another tab is in front
+  useEffect(() => {
+    const onVisibility = () => setTabHidden(document.hidden);
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => document.removeEventListener("visibilitychange", onVisibility);
+  }, []);
+
   const updatePointer = (e) => {
     const rect = wrapRef.current.getBoundingClientRect();
     const p = pointerRef.current;
@@ -1067,14 +1093,20 @@ export default function CrystalCubeField3D() {
     >
       <Canvas
         style={{ position: "absolute", inset: 0 }}
-        frameloop={visible ? "always" : "never"}
-        dpr={dpr}
+        frameloop={visible && !tabHidden ? "always" : "never"}
+        dpr={DPR[quality]}
         camera={{ fov: 34, near: 0.1, far: 80, position: [0, 5, 8.7] }}
-        gl={{ antialias: true, powerPreference: "high-performance", toneMapping: THREE.NeutralToneMapping }}
+        gl={{ antialias: false, powerPreference: "high-performance", toneMapping: THREE.NeutralToneMapping }}
       >
-        {/* drop resolution on slower GPUs instead of dropping frames */}
-        <PerformanceMonitor onDecline={() => setDpr(1)} onIncline={() => setDpr(1.75)} />
-        <Scene pointerRef={pointerRef} />
+        {/* frames dropping → switch to the low tier; low-end devices never go back up.
+            After a few flip-flops it stays low for good. */}
+        <PerformanceMonitor
+          flipflops={3}
+          onDecline={() => setQuality("low")}
+          onIncline={() => !lowEnd && setQuality("high")}
+          onFallback={() => setQuality("low")}
+        />
+        <Scene pointerRef={pointerRef} quality={quality} />
       </Canvas>
 
       {/* thin dim layer so the centred headline reads over the blocks */}
