@@ -245,7 +245,7 @@ nav[data-theme="dark"] .bf-megaitem:hover{color:#fff;}
 .bf-accent-num{font-family:'BF Accent Num','BF Accent',var(--font-sans) !important;}
 .bf-hero3d-main{position:absolute;left:0;right:0;top:44%;transform:translateY(-50%);text-align:center;}
 .bf-hero3d-h{margin:0;color:#fff;font-family:'esamanru',var(--font-sans);font-weight:300;font-synthesis:none;font-size:clamp(28px,3.6vw,56px);line-height:1.25;letter-spacing:-0.025em;text-shadow:0 2px 24px rgba(0,0,0,.35);word-break:keep-all;white-space:nowrap;}
-.bf-hero3d-desc{margin:clamp(20px,2vw,28px) auto 0;max-width:560px;color:rgba(255,255,255,.82);font-size:clamp(15px,1.15vw,17px);line-height:1.75;letter-spacing:-0.01em;word-break:keep-all;}
+.bf-hero3d-desc{margin:clamp(20px,2vw,28px) auto 0;max-width:760px;text-wrap:balance;color:rgba(255,255,255,.82);font-size:clamp(15px,1.15vw,17px);line-height:1.75;letter-spacing:-0.01em;word-break:keep-all;}
 @media (max-width:860px){
   .bf-hero3d-main{top:40%;}
   .bf-hero3d-h{font-size:30px;white-space:normal;text-wrap:balance;}
