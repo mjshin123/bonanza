@@ -4,6 +4,7 @@ import { ArrowRight, Image as ImageIcon } from "lucide-react";
 import { historyEntries } from "../data/history.js";
 import DiamondSvg from "./DiamondSvg.jsx";
 import useNavDarkZone from "../hooks/useNavDarkZone.js";
+import { accentNums } from "../lib/accentNums.jsx";
 
 // 연혁 페이지와 동일한 데이터에서 "홈 화면에 보이기"로 표시된 항목만 사용한다.
 const milestones = historyEntries.filter((entry) => entry.showOnHome);
@@ -32,7 +33,7 @@ export default function Tech() {
     <section ref={darkZoneRef} id="tech" className="bf-pad" style={{ position: "relative", zIndex: 0, background: "#0A0A0A", padding: "96px 40px 84px", overflow: "hidden" }}>
       <div style={{ maxWidth: 1400, margin: "0 auto" }}>
         <h2
-          className="bf-reveal"
+          className="bf-accent bf-reveal"
           style={{
             margin: "0 auto",
             fontWeight: 700,
@@ -103,7 +104,7 @@ export default function Tech() {
                     left: -40,
                     width: 290,
                     top: cy,
-                    color: isSel ? "#738DE9" : "#ffffff",
+                    color: isSel ? "#5E8EFF" : "#ffffff",
                   }}
                 >
                   {m.title}
@@ -115,8 +116,8 @@ export default function Tech() {
               <div style={{ color: "#BFBFBF", fontSize: 14, fontWeight: 400, marginBottom: 26 }}>
                 {picked.year}년 {picked.month}월
               </div>
-              <div style={{ color: "#738DE9", fontSize: 26, fontWeight: 700, lineHeight: 1.3, marginBottom: 22 }}>
-                {picked.title}
+              <div className="bf-accent" style={{ color: "#5E8EFF", fontSize: 21, fontWeight: 700, lineHeight: 1.4, marginBottom: 18 }}>
+                {accentNums(picked.title)}
               </div>
               <div style={{ color: "#ffffff", fontSize: 13, fontWeight: 400, lineHeight: 1.6 }}>{picked.detail}</div>
               {picked.image && (
@@ -133,7 +134,7 @@ export default function Tech() {
                     justifyContent: "center",
                     flexDirection: "column",
                     gap: 8,
-                    color: "#A2B3F1",
+                    color: "#9DBBFF",
                   }}
                 >
                   <ImageIcon width={28} height={28} />
@@ -146,7 +147,7 @@ export default function Tech() {
           <div className="bf-stack-mobile">
             {milestones.map((m, i) => (
               <div className="bf-stack-mobile-item" key={`mobile-${i}`}>
-                <div style={{ color: "#738DE9", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>
+                <div style={{ color: "#5E8EFF", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>
                   {m.year}년 {m.month}월
                 </div>
                 <div style={{ color: "#fff", fontSize: 16, fontWeight: 700, marginBottom: 8 }}>{m.title}</div>
@@ -165,7 +166,7 @@ export default function Tech() {
                       justifyContent: "center",
                       flexDirection: "column",
                       gap: 8,
-                      color: "#A2B3F1",
+                      color: "#9DBBFF",
                     }}
                   >
                     <ImageIcon width={26} height={26} />
@@ -185,10 +186,10 @@ export default function Tech() {
               display: "inline-flex",
               alignItems: "center",
               gap: 10,
-              padding: "10px 22px",
-              border: "1px solid #738DE9",
-              borderRadius: 30,
-              color: "#738DE9",
+              padding: "12px 20px",
+              border: "1px solid #5E8EFF",
+              borderRadius: 4,
+              color: "#5E8EFF",
               fontWeight: 600,
               fontSize: 14,
               transition: "background .2s ease",

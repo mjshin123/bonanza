@@ -82,7 +82,7 @@ nav[data-theme="dark"] .bf-megaitem:hover{color:#fff;}
 .bf-histrow[data-clickable="1"]:hover{background:var(--surface-subtle);}
 .bf-histrow[data-clickable="1"]:hover .bf-histttl{color:var(--primary);}
 @media(max-width:720px){
-  .bf-year{font-size:40px !important;}
+  .bf-year{font-size:32px !important;}
   .bf-histrow{grid-template-columns:64px 1fr 24px !important;column-gap:12px !important;}
   .bf-histdetail{grid-column:1 / -1 !important;}
 }
@@ -138,7 +138,7 @@ nav[data-theme="dark"] .bf-megaitem:hover{color:#fff;}
 /* ── Hover states (handled by the DC runtime's style-hover attribute
    in the source design; expressed as real CSS here) ───────────────── */
 .bf-cta:hover{background:#1235b0;}
-.bf-ghostlink:hover{background:rgba(115,141,233,.12);}
+.bf-ghostlink:hover{background:rgba(94,142,255,.12);}
 
 /* ── "전체 보기" button (design-system Button, variant=outline size=sm) */
 .bf-btn-outline{display:inline-flex;align-items:center;justify-content:center;height:36px;padding:0 20px;border:1px solid var(--primary);border-radius:var(--radius-full);color:var(--primary);font-weight:600;font-size:14px;transition:background .18s ease, color .18s ease;}
@@ -182,7 +182,7 @@ nav[data-theme="dark"] .bf-megaitem:hover{color:#fff;}
 .bf-bento-card:hover{background:#1a1a1a;}
 .bf-bento-glow{position:absolute;inset:0;background:radial-gradient(circle at 85% 0%,rgba(42,91,255,.5) 0%,rgba(42,91,255,.15) 45%,rgba(20,20,20,0) 78%);pointer-events:none;opacity:.85;transition:opacity .3s ease;}
 .bf-bento-card:hover .bf-bento-glow{opacity:1;}
-.bf-bento-card .bf-bento-tag{color:#738DE9;}
+.bf-bento-card .bf-bento-tag{color:#5E8EFF;}
 .bf-bento-card .bf-bento-title{color:#fff;}
 .bf-bento-card .bf-bento-desc{color:rgba(255,255,255,.6);}
 @media(max-width:860px){
@@ -220,3 +220,37 @@ nav[data-theme="dark"] .bf-megaitem:hover{color:#fff;}
   .bf-award-title{font-size:15px;line-height:1.4;}
   .bf-award-divider{margin:14px auto;}
 }
+
+/* ── home 3D hero: centred headline + description ── */
+/* 이사만루(esamanru) Light, self-hosted woff2 subset (KS X 1001 2,350 Hangul + ASCII + jamo, ~93KB;
+   source: noonnu GongGothicLight.woff). A rare syllable outside the subset falls back to Pretendard.
+   에이투지체 Medium is subset to Latin only (~6KB) since it only draws Latin here.
+   Rebuild all subsets with: python scripts/subset-fonts.py */
+@font-face{font-family:'esamanru';src:url('/fonts/esamanru-Light.subset.woff2') format('woff2');font-weight:300;font-style:normal;font-display:swap;}
+/* accent text (section headlines, stat figures, "Digital Asset Compliance"): one family that picks
+   a face per script via unicode-range — Hangul (+ spaces) → esamanru Light, Latin letters →
+   에이투지체 Medium, digits and number punctuation → esamanru Medium.
+   Files are subsets built by scripts/subset-fonts.py */
+@font-face{font-family:'BF Accent';src:url('/fonts/esamanru-Light.subset.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap;
+  unicode-range:U+0020,U+1100-11FF,U+3130-318F,U+AC00-D7A3;}
+@font-face{font-family:'BF Accent';src:url('/fonts/esamanru-Medium.digits.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap;
+  unicode-range:U+0030-0039,U+002B-002E,U+0025;}
+@font-face{font-family:'BF Accent';src:url('/fonts/A2Z-Medium.latin.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap;
+  unicode-range:U+0021-0024,U+0026-002A,U+002F,U+003A-007E,U+00A0-00FF,U+2010-205E;}
+.bf-accent{font-family:'BF Accent',var(--font-sans) !important;font-weight:400 !important;font-synthesis:none;}
+/* stat figures (1,026조 …): digits AND the unit word beside them in esamanru Medium so they read as
+   one weight; everything else falls through to BF Accent. Unit list = UNITS in scripts/subset-fonts.py */
+@font-face{font-family:'BF Accent Num';src:url('/fonts/esamanru-Medium.digits.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap;
+  unicode-range:U+0030-0039,U+002B-002E,U+0025,U+C870,U+C5B5,U+B9CC,U+CC9C,U+BC31,U+C2ED,U+C6D0,U+AC74,U+BD84,U+CD08,U+C2DC,U+AC1C,U+B144,U+C6D4,U+C77C,U+BA85,U+ACF3,U+BC30,U+C704,U+BC88,U+CE35,U+CC28,U+D68C,U+D638,U+B300,U+B4F1,U+C8FC,U+C138,U+C885,U+C810,U+C740,U+B294,U+C774,U+AC00,U+C744,U+B97C,U+C758,U+C5D0,U+B85C,U+B3C4;}
+.bf-accent-num{font-family:'BF Accent Num','BF Accent',var(--font-sans) !important;}
+.bf-hero3d-main{position:absolute;left:0;right:0;top:44%;transform:translateY(-50%);text-align:center;}
+.bf-hero3d-h{margin:0;color:#fff;font-family:'esamanru',var(--font-sans);font-weight:300;font-synthesis:none;font-size:clamp(28px,3.6vw,56px);line-height:1.25;letter-spacing:-0.025em;text-shadow:0 2px 24px rgba(0,0,0,.35);word-break:keep-all;white-space:nowrap;}
+.bf-hero3d-desc{margin:clamp(20px,2vw,28px) auto 0;max-width:560px;color:rgba(255,255,255,.82);font-size:clamp(15px,1.15vw,17px);line-height:1.75;letter-spacing:-0.01em;word-break:keep-all;}
+@media (max-width:860px){
+  .bf-hero3d-main{top:40%;}
+  .bf-hero3d-h{font-size:30px;white-space:normal;text-wrap:balance;}
+  .bf-hero3d-desc{font-size:14px;}
+}
+
+/* HeroWithVideo items: opacity/transform are scrubbed from scroll in JS (useScrubbedReveal); start hidden */
+.bf-seq [data-seq]{opacity:0;will-change:opacity,transform;}

@@ -8,7 +8,7 @@ export default function CoopIcon({ width: _width, height = 40, ...props }) {
       <defs>
         <linearGradient id="paint0_linear_92_72" x1="-7.69473e-08" y1="88.4488" x2="324.666" y2="88.4488" gradientUnits="userSpaceOnUse">
           <stop stopColor="white" stopOpacity="0.5" />
-          <stop offset="1" stopColor="#A2B3F1" stopOpacity="0.7" />
+          <stop offset="1" stopColor="#9DBBFF" stopOpacity="0.7" />
         </linearGradient>
       </defs>
     </svg>

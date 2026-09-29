@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { useParams, Navigate } from "react-router-dom";
 import { Image as ImageIcon } from "lucide-react";
 import useNavDarkZone from "../hooks/useNavDarkZone.js";
+import { accentNums } from "../lib/accentNums.jsx";
 
 function PlaceholderImage() {
   return (
@@ -48,10 +49,10 @@ export default function NewsDetailPage({ items, listPath, documentTitleSuffix })
             {item.category}
           </div>
           <h1
-            className="bf-reveal"
+            className="bf-accent bf-reveal"
             style={{ margin: 0, fontWeight: 500, fontSize: "clamp(26px,3.4vw,42px)", lineHeight: 1.3, letterSpacing: "-0.01em", color: "#fff", maxWidth: 920 }}
           >
-            {item.title}
+            {accentNums(item.title)}
           </h1>
           <div style={{ marginTop: 40 }}>
             <span style={{ fontSize: 14, color: "#8a97c9", fontWeight: 500 }}>{item.date}</span>

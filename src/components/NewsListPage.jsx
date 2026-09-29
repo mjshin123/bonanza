@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronRight, ChevronDown, Search, Image as ImageIcon, ArrowLeft, ArrowRight } from "lucide-react";
+import { accentNums } from "../lib/accentNums.jsx";
 
 const PAGE_SIZE = 10;
 const ALL_COMPANIES = "전체 계열사";
@@ -36,7 +37,7 @@ function FilterBar({ companies, company, onCompanyChange, query, onQueryChange, 
                   textAlign: "left",
                   padding: "10px 14px",
                   border: "none",
-                  borderRadius: 6,
+                  borderRadius: 4,
                   background: c === company ? "var(--blue-50)" : "transparent",
                   color: c === company ? "var(--primary)" : "var(--text-strong)",
                   fontSize: 14,
@@ -146,8 +147,8 @@ export default function NewsListPage({ documentTitle, breadcrumbLabel, heading, 
           <ChevronRight width={15} height={15} />
           <span style={{ color: "var(--text-strong)" }}>{breadcrumbLabel}</span>
         </div>
-        <h1 className="bf-reveal" style={{ margin: 0, fontWeight: 500, fontSize: "clamp(26px,3.4vw,42px)", lineHeight: 1.3, letterSpacing: "-0.01em", color: "var(--text-strong)" }}>
-          {heading}
+        <h1 className="bf-accent bf-reveal" style={{ margin: 0, fontWeight: 500, fontSize: "clamp(26px,3.4vw,42px)", lineHeight: 1.3, letterSpacing: "-0.01em", color: "var(--text-strong)" }}>
+          {accentNums(heading)}
         </h1>
       </header>
 

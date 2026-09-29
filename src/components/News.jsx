@@ -12,7 +12,7 @@ export default function News() {
             <div className="bf-reveal" style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.1em", color: "var(--primary)", marginBottom: 14 }}>
               NEWSROOM
             </div>
-            <h2 className="bf-reveal" style={{ margin: "0 0 16px", fontWeight: 700, fontSize: "clamp(26px,3.2vw,36px)", letterSpacing: "-0.02em", color: "var(--text-strong)" }}>
+            <h2 className="bf-accent bf-reveal" style={{ margin: "0 0 16px", fontWeight: 700, fontSize: "clamp(26px,3.2vw,36px)", letterSpacing: "-0.02em", color: "var(--text-strong)" }}>
               최신 뉴스
             </h2>
             <p className="bf-reveal" style={{ margin: "0 0 28px", fontSize: 13, lineHeight: 1.6, color: "var(--text-muted)", maxWidth: 300 }}>

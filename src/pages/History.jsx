@@ -68,7 +68,7 @@ function HistoryRow({ row }) {
             width: 26,
             height: 26,
             border: "none",
-            borderRadius: 5,
+            borderRadius: 4,
             background: open ? "var(--primary)" : "var(--grey-900)",
             color: "#fff",
             marginTop: 4,
@@ -137,9 +137,9 @@ function HistoryYear({ year, rows, isLast }) {
       style={{ padding: "44px 0 8px", borderBottom: isLast ? "1px solid var(--border)" : "none" }}
     >
       <div
-        className="bf-year"
+        className="bf-accent bf-year"
         style={{
-          fontSize: 52,
+          fontSize: 42,
           fontWeight: 700,
           lineHeight: 1,
           marginBottom: 18,
@@ -180,8 +180,8 @@ export default function History() {
           HISTORY
         </div>
         <h1
-          className="bf-reveal"
-          style={{ margin: 0, fontWeight: 500, fontSize: "clamp(26px,3.4vw,42px)", lineHeight: 1.3, letterSpacing: "-0.01em", color: "var(--text-strong)" }}
+          className="bf-accent bf-reveal"
+          style={{ margin: 0, fontWeight: 500, fontSize: "clamp(24px,3.1vw,38px)", lineHeight: 1.3, letterSpacing: "-0.01em", color: "var(--text-strong)" }}
         >
           하나씩 쌓아온 발자취,<br />보난자팩토리의 연혁
         </h1>

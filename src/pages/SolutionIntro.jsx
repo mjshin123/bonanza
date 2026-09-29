@@ -6,6 +6,7 @@ import TransightRing from "../components/TransightRing.jsx";
 import TransightSolutions from "../components/TransightSolutions.jsx";
 import TransightDetails from "../components/TransightDetails.jsx";
 import TransaferFlow from "../components/TransaferFlow.jsx";
+import { accentNums } from "../lib/accentNums.jsx";
 
 const SOLUTIONS = {
   transight: {
@@ -52,12 +53,12 @@ export default function SolutionIntro({ slug }) {
 
             <div
               className="bf-reveal"
-              style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.14em", color: "#738DE9", marginBottom: 20 }}
+              style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.14em", color: "#5E8EFF", marginBottom: 20 }}
             >
               {solution.tagline}
             </div>
             <h1
-              className="bf-reveal"
+              className="bf-accent bf-reveal"
               style={{
                 margin: 0,
                 fontWeight: 500,
@@ -68,7 +69,7 @@ export default function SolutionIntro({ slug }) {
                 maxWidth: 720,
               }}
             >
-              {solution.name}
+              {accentNums(solution.name)}
             </h1>
             <p
               className="bf-revealF"

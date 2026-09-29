@@ -5,21 +5,11 @@ import useNavDarkZone from "../hooks/useNavDarkZone.js";
 import { subsidiaries } from "../data/subsidiaries.js";
 import InquiryModal from "../components/InquiryModal.jsx";
 import Orb from "../components/Orb/Orb.jsx";
+import { accentNums } from "../lib/accentNums.jsx";
 
 const PARENT_COMPANY = { name: "보난자팩토리", email: "contact@bonanza-factory.co.kr" };
 const PARENT_DESC =
   "보난자팩토리는 고객이 가상자산 거래를 보다 안전하게 할 수 있도록 투명한 디지털자산 생태계를 만들어가는 컴플라이언스 기업입니다. 그룹의 자회사들과 함께 데이터·보안·인프라 기술 시너지를 이끌어갑니다.";
-
-// 문장이 바뀌는 지점(마침표 뒤)마다 줄바꿈해서 보여준다.
-function renderDesc(desc) {
-  const sentences = desc.split(/(?<=\.)\s+/);
-  return sentences.map((sentence, idx) => (
-    <span key={idx}>
-      {sentence}
-      {idx < sentences.length - 1 && <br />}
-    </span>
-  ));
-}
 
 const solutionItems = [
   {
@@ -108,6 +98,7 @@ function AccordionRow({ item, index, open, onOpen }) {
         }}
       >
         <h2
+          className="bf-accent"
           style={{
             margin: 0,
             fontWeight: 700,
@@ -118,7 +109,7 @@ function AccordionRow({ item, index, open, onOpen }) {
             transition: "font-size .32s cubic-bezier(.65,0,.35,1), color .26s ease",
           }}
         >
-          {item.title}
+          {accentNums(item.title)}
         </h2>
         <div
           style={{
@@ -147,8 +138,8 @@ function AccordionRow({ item, index, open, onOpen }) {
               alignItems: "center",
               gap: 8,
               marginTop: 28,
-              padding: "12px 24px",
-              borderRadius: 6,
+              padding: "12px 20px",
+              borderRadius: 4,
               background: "var(--grey-900)",
               color: "#fff",
               fontWeight: 600,
@@ -445,16 +436,16 @@ export default function GroupIntro() {
 
           <div
             className="bf-reveal"
-            style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.14em", color: "#738DE9", marginBottom: 20 }}
+            style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.14em", color: "#5E8EFF", marginBottom: 20 }}
           >
             BONANZA GROUP
           </div>
           <h1
-            className="bf-reveal"
+            className="bf-accent bf-reveal"
             style={{
               margin: 0,
               fontWeight: 500,
-              fontSize: "clamp(26px,3.4vw,42px)",
+              fontSize: "clamp(24px,3.1vw,38px)",
               lineHeight: 1.3,
               letterSpacing: "-0.01em",
               color: "#fff",
@@ -463,7 +454,7 @@ export default function GroupIntro() {
           >
             보난자 그룹은 각 영역의 전문 자회사와
             <br />
-            함께 시너지를 만들어 갑니다
+            함께 시너지를 만들어 갑니다.
           </h1>
           <p
             className="bf-reveal"
@@ -499,7 +490,7 @@ export default function GroupIntro() {
           }}
         >
           <div style={{ flex: "1 1 420px", minWidth: 0 }}>
-            <h2 style={{ margin: 0, fontWeight: 800, fontSize: 32, letterSpacing: "-0.02em" }}>보난자팩토리</h2>
+            <h2 className="bf-accent" style={{ margin: 0, fontWeight: 800, fontSize: 32, letterSpacing: "-0.02em" }}>보난자팩토리</h2>
             <p style={{ margin: "20px 0 0", maxWidth: 500, fontSize: 14, lineHeight: 1.7, color: "rgba(255,255,255,.85)" }}>
               {PARENT_DESC}
             </p>
@@ -538,9 +529,9 @@ export default function GroupIntro() {
               }}
             >
               <div>
-                <div style={{ fontWeight: 800, fontSize: 32, letterSpacing: "-0.02em", marginBottom: 12 }}>{sub.name}</div>
-                <p style={{ margin: 0, maxWidth: 500, fontSize: 14, lineHeight: 1.7, color: sub.descColor }}>
-                  {sub.key === "lab" ? sub.descLong : renderDesc(sub.descLong)}
+                <div className="bf-accent" style={{ fontWeight: 800, fontSize: 32, letterSpacing: "-0.02em", marginBottom: 12 }}>{accentNums(sub.name)}</div>
+                <p style={{ margin: 0, maxWidth: 500, fontSize: 14, lineHeight: 1.7, color: sub.descColor, wordBreak: "keep-all" }}>
+                  {sub.descLong}
                 </p>
               </div>
               <div className="bf-affcard-overlay">
@@ -558,7 +549,7 @@ export default function GroupIntro() {
           <div style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.1em", color: "var(--primary)", marginBottom: 14 }}>
             SOLUTIONS
           </div>
-          <h2 style={{ margin: 0, fontWeight: 800, fontSize: 28, letterSpacing: "-0.02em", color: "var(--text-strong)" }}>
+          <h2 className="bf-accent" style={{ margin: 0, fontWeight: 800, fontSize: 28, letterSpacing: "-0.02em", color: "var(--text-strong)" }}>
             계열사 솔루션
           </h2>
           <p style={{ margin: "16px 0 0", maxWidth: 560, fontSize: 15, lineHeight: 1.7, color: "var(--text-muted)" }}>
@@ -606,8 +597,8 @@ export default function GroupIntro() {
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <div style={{ marginTop: 6, fontSize: 14, fontWeight: 700, color: "var(--primary)" }}>{item.company}</div>
-                  <h2 style={{ margin: "10px 0 0", fontWeight: 700, fontSize: "clamp(22px,7vw,28px)", lineHeight: 1.3, letterSpacing: "-0.01em", color: "var(--text-strong)" }}>
-                    {item.title}
+                  <h2 className="bf-accent" style={{ margin: "10px 0 0", fontWeight: 700, fontSize: "clamp(22px,7vw,28px)", lineHeight: 1.3, letterSpacing: "-0.01em", color: "var(--text-strong)" }}>
+                    {accentNums(item.title)}
                   </h2>
                   <p style={{ margin: "16px 0 0", fontSize: 14, lineHeight: 1.7, color: "var(--text-muted)", fontWeight: 500 }}>
                     {item.desc}
@@ -620,8 +611,8 @@ export default function GroupIntro() {
                       alignItems: "center",
                       gap: 8,
                       marginTop: 24,
-                      padding: "12px 24px",
-                      borderRadius: 6,
+                      padding: "12px 20px",
+                      borderRadius: 4,
                       background: "var(--grey-900)",
                       color: "#fff",
                       fontWeight: 600,

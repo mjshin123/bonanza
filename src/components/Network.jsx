@@ -62,7 +62,7 @@ export default function Network() {
           <div style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.1em", color: "var(--primary)", marginBottom: 14 }}>
             TRUST NETWORK
           </div>
-          <h2 style={{ margin: 0, fontWeight: 700, fontSize: "clamp(26px,3.2vw,36px)", lineHeight: 1.35, letterSpacing: "-0.02em", color: "var(--text-strong)" }}>
+          <h2 className="bf-accent" style={{ margin: 0, fontWeight: 700, fontSize: "clamp(26px,3.2vw,36px)", lineHeight: 1.35, letterSpacing: "-0.02em", color: "var(--text-strong)" }}>
             국내 및 글로벌 기업·기관의
             <br />
             신뢰를 받고 있습니다.

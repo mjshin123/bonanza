@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import { accentNums } from "../lib/accentNums.jsx";
 
 const SECTIONS = [
   {
@@ -33,12 +34,12 @@ const SITE_URL = "https://www.transight.io/";
 
 function renderHeading(text) {
   const idx = text.indexOf(",");
-  if (idx === -1) return text;
+  if (idx === -1) return accentNums(text);
   return (
     <>
-      {text.slice(0, idx + 1)}
+      {accentNums(text.slice(0, idx + 1))}
       <br />
-      {text.slice(idx + 1).trim()}
+      {accentNums(text.slice(idx + 1).trim())}
     </>
   );
 }
@@ -63,7 +64,7 @@ export default function TransightDetails() {
             >
               {sec.tag}
             </span>
-            <h2
+            <h2 className="bf-accent"
               style={{
                 margin: "20px 0 0",
                 maxWidth: 1050,
@@ -120,8 +121,8 @@ export default function TransightDetails() {
               display: "inline-flex",
               alignItems: "center",
               gap: 8,
-              padding: "14px 28px",
-              borderRadius: 6,
+              padding: "12px 20px",
+              borderRadius: 4,
               background: "#1640DB",
               color: "#fff",
               fontWeight: 600,

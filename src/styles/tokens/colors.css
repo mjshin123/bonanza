@@ -6,11 +6,12 @@
 
 :root {
   /* ── Bonanza Blue (primary) ──────────────────────────────────── */
-  --blue-50:  #e8ecfb;
-  --blue-100: #d0d9f8;
-  --blue-200: #a2b3f1;
-  --blue-300: #738de9;
-  --blue-400: #4566e2;
+  /* 50–400: tints kept saturated and slightly azure so they read blue, not lavender, next to 500 */
+  --blue-50:  #ebf1ff;
+  --blue-100: #d3e1ff;
+  --blue-200: #9dbbff;
+  --blue-300: #5e8eff;
+  --blue-400: #3464f0;
   --blue-500: #1640db; /* Bonanza Blue — R22 G64 B219, the core brand color */
   /* darker interactive shades — extrapolated for hover / pressed / on-light text.
      Not in the source sheet; see readme.md "Color" note. */

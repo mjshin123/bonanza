@@ -5,6 +5,7 @@ import useNavScroll from "../hooks/useNavScroll.js";
 import { scrollToAnchor } from "../lib/scroll.js";
 import { useNavTheme } from "../context/NavThemeContext.jsx";
 import InquiryModal from "./InquiryModal.jsx";
+import { accentNums } from "../lib/accentNums.jsx";
 
 const PARENT_COMPANY = { name: "보난자팩토리", email: "contact@bonanza-factory.co.kr" };
 
@@ -95,6 +96,23 @@ export default function Nav() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openGroup, setOpenGroup] = useState(null);
   const [inquiryOpen, setInquiryOpen] = useState(false);
+  // KOR / ENG switch — UI only for now (no English content yet); remembered per browser
+  const [lang, setLang] = useState(() => {
+    try {
+      return localStorage.getItem("bf-lang") === "en" ? "en" : "ko";
+    } catch {
+      return "ko";
+    }
+  });
+  function pickLang(next) {
+    setLang(next);
+    document.documentElement.lang = next;
+    try {
+      localStorage.setItem("bf-lang", next);
+    } catch {
+      /* storage blocked: keep the in-memory choice */
+    }
+  }
   const closeTimerRef = useRef(null);
   const location = useLocation();
   const routerNavigate = useNavigate();
@@ -185,7 +203,7 @@ export default function Nav() {
 
         <div
           className="bf-desktopnav"
-          style={{ display: "flex", alignItems: "center", gap: 60 }}
+          style={{ display: "flex", alignItems: "center", gap: 80 }}
           onMouseLeave={scheduleMegaClose}
         >
           {megaGroups.map((group) => {
@@ -219,20 +237,20 @@ export default function Nav() {
                     gap: 48,
                   }}
                 >
-                  <h3
+                  <h3 className="bf-accent"
                     style={{
                       margin: 0,
                       flex: 1,
                       maxWidth: 520,
                       fontWeight: 800,
-                      fontSize: 26,
-                      lineHeight: 1.35,
+                      fontSize: 21,
+                      lineHeight: 1.45,
                       letterSpacing: "-0.02em",
                       color: dark ? "#fff" : "var(--text-strong)",
                       transition: "color .25s ease",
                     }}
                   >
-                    {group.heading}
+                    {accentNums(group.heading)}
                   </h3>
                   <div style={{ flex: "none", width: 280 }}>
                     {group.items.map((item) => (
@@ -271,26 +289,66 @@ export default function Nav() {
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <div className="bf-navcta" role="group" aria-label="언어 선택" style={{ display: "inline-flex", alignItems: "center", gap: 6, marginRight: 6, fontSize: 13, fontWeight: 600 }}>
+            {[
+              ["ko", "KOR"],
+              ["en", "ENG"],
+            ].map(([code, label], i) => (
+              <span key={code} style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                {i > 0 && (
+                  <span aria-hidden="true" style={{ color: dark ? "rgba(255,255,255,.3)" : "var(--border)", transition: "color .25s ease" }}>
+                    /
+                  </span>
+                )}
+                <button
+                  type="button"
+                  onClick={() => pickLang(code)}
+                  aria-pressed={lang === code}
+                  style={{
+                    padding: "4px 2px",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    font: "inherit",
+                    color:
+                      lang === code
+                        ? dark
+                          ? "#fff"
+                          : "var(--text-strong)"
+                        : dark
+                          ? "rgba(255,255,255,.45)"
+                          : "var(--text-muted)",
+                    transition: "color .25s ease",
+                  }}
+                >
+                  {label}
+                </button>
+              </span>
+            ))}
+          </div>
           <a
             href="#about"
-            className="bf-cta bf-navcta"
+            className="bf-ghostlink bf-navcta"
             onClick={(e) => {
               e.preventDefault();
               closeAll();
               setInquiryOpen(true);
             }}
+            // outline style like the home "연혁 보기" link: colour only on the border and text
+            // (#5E8EFF on the dark nav; the stronger primary blue on white, where #5E8EFF reads too faint)
             style={{
               display: "inline-flex",
               whiteSpace: "nowrap",
               alignItems: "center",
               justifyContent: "center",
-              padding: "7px 16px",
-              background: "var(--primary)",
-              borderRadius: 6,
-              color: "#fff",
+              padding: "6px 16px",
+              background: "transparent",
+              border: `1px solid ${dark ? "#5E8EFF" : "var(--primary)"}`,
+              borderRadius: 4,
+              color: dark ? "#5E8EFF" : "var(--primary)",
               fontWeight: 600,
               fontSize: 13,
-              transition: "background .18s ease",
+              transition: "background .2s ease, color .25s ease, border-color .25s ease",
             }}
           >
             사업 문의
@@ -392,7 +450,7 @@ export default function Nav() {
             marginTop: 4,
             padding: "12px 16px",
             background: "var(--primary)",
-            borderRadius: 6,
+            borderRadius: 4,
             color: "#fff",
             fontWeight: 600,
             fontSize: 14,

@@ -29,13 +29,13 @@ export default function Sectors() {
     <section ref={darkZoneRef} id="sectors" className="bf-pad" style={{ position: "relative", background: "#0A0A0A", padding: "96px 40px 104px", overflow: "hidden" }}>
       <div style={{ maxWidth: 1400, margin: "0 auto" }}>
         <div className="bf-reveal" style={{ textAlign: "center", marginBottom: 8 }}>
-          <div style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.1em", color: "#738de9", marginBottom: 14 }}>
+          <div style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.1em", color: "#5E8EFF", marginBottom: 14 }}>
             WHAT WE DO
           </div>
-          <h2 style={{ margin: 0, fontWeight: 700, fontSize: "clamp(26px,3.2vw,36px)", letterSpacing: "-0.02em", color: "#fff" }}>
+          <h2 className="bf-accent" style={{ margin: 0, fontWeight: 700, fontSize: "clamp(26px,3.2vw,36px)", letterSpacing: "-0.02em", color: "#fff" }}>
             기술과 규제의 교차점에서 투명한 디지털자산 환경을 만들어갑니다.
           </h2>
-          <div className="bf-sectors-mobile-caption">Digital Asset Compliance</div>
+          <div className="bf-sectors-mobile-caption bf-accent">Digital Asset Compliance</div>
         </div>
 
         {/* ================= DESKTOP diagram — matches the Figma "Slide 16:9" spec
@@ -70,16 +70,16 @@ export default function Sectors() {
           <div aria-hidden="true" style={{ position: "absolute", left: "49.48%", top: "31.85%", width: "18.53%", height: "32.94%", borderRadius: "50%", background: "linear-gradient(180deg, #0A0A0A 0%, rgba(10,10,10,0.8) 19.23%, rgba(22,64,219,0.8) 100%)", transform: "translate(-8px,16px) rotate(130deg)", zIndex: 1 }} />
           <div aria-hidden="true" style={{ position: "absolute", left: "32.57%", top: "31.85%", width: "18.53%", height: "32.94%", borderRadius: "50%", background: "linear-gradient(180deg, #0A0A0A 0%, rgba(10,10,10,0.8) 19.23%, rgba(22,64,219,0.8) 100%)", transform: "translate(8px,16px) rotate(-130deg)", zIndex: 1 }} />
 
-          <div style={{ position: "absolute", left: "50%", top: "26.48%", width: "5.57%", transform: "translate(-50%,-50%)", zIndex: 3, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", fontWeight: 400, fontSize: 18, lineHeight: "22px", color: "#A2B3F1" }}>
+          <div style={{ position: "absolute", left: "50%", top: "26.48%", width: "5.57%", transform: "translate(-50%,-50%)", zIndex: 3, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", fontWeight: 400, fontSize: 18, lineHeight: "22px", color: "#9DBBFF" }}>
             Risk Data
           </div>
-          <div style={{ position: "absolute", left: "50%", top: "38.13%", transform: "translateX(-50%)", zIndex: 3, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", whiteSpace: "nowrap", fontWeight: 500, fontSize: 42, lineHeight: "50px", color: "#fff" }}>
+          <div className="bf-accent" style={{ position: "absolute", left: "50%", top: "38.13%", transform: "translateX(-50%)", zIndex: 3, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", whiteSpace: "nowrap", fontWeight: 300, fontSize: 42, lineHeight: "50px", color: "#fff" }}>
             Digital Asset Compliance
           </div>
-          <div style={{ position: "absolute", left: "42.26%", top: "49.80%", width: "12.86%", transform: "translate(-50%,-50%)", zIndex: 3, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", fontWeight: 400, fontSize: 18, lineHeight: "22px", color: "#A2B3F1" }}>
+          <div style={{ position: "absolute", left: "42.26%", top: "49.80%", width: "12.86%", transform: "translate(-50%,-50%)", zIndex: 3, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", fontWeight: 400, fontSize: 18, lineHeight: "22px", color: "#9DBBFF" }}>
             Blockchain Technology
           </div>
-          <div style={{ position: "absolute", left: "58.33%", top: "49.80%", width: "5.16%", transform: "translate(-50%,-50%)", zIndex: 3, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", fontWeight: 400, fontSize: 18, lineHeight: "22px", color: "#A2B3F1" }}>
+          <div style={{ position: "absolute", left: "58.33%", top: "49.80%", width: "5.16%", transform: "translate(-50%,-50%)", zIndex: 3, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", fontWeight: 400, fontSize: 18, lineHeight: "22px", color: "#9DBBFF" }}>
             RegTech
           </div>
         </div>
@@ -180,19 +180,19 @@ export default function Sectors() {
             />
 
             {/* petal labels — centered on each circle's geometric center */}
-            <div className="bf-petal-l1" style={{ position: "absolute", left: "50.02%", top: "29.79%", transform: "translate(-50%,-50%)", textAlign: "center", whiteSpace: "nowrap", zIndex: 3, fontWeight: 400, fontSize: 12, lineHeight: 1.25, color: "#A2B3F1" }}>
+            <div className="bf-petal-l1" style={{ position: "absolute", left: "50.02%", top: "29.79%", transform: "translate(-50%,-50%)", textAlign: "center", whiteSpace: "nowrap", zIndex: 3, fontWeight: 400, fontSize: 12, lineHeight: 1.25, color: "#9DBBFF" }}>
               Risk Data
             </div>
-            <div className="bf-petal-l2" style={{ position: "absolute", left: "24.03%", top: "79.79%", transform: "translate(-50%,-50%)", width: "28.85%", textAlign: "center", zIndex: 3, fontWeight: 400, fontSize: 12, lineHeight: 1.25, color: "#A2B3F1" }}>
+            <div className="bf-petal-l2" style={{ position: "absolute", left: "24.03%", top: "79.79%", transform: "translate(-50%,-50%)", width: "28.85%", textAlign: "center", zIndex: 3, fontWeight: 400, fontSize: 12, lineHeight: 1.25, color: "#9DBBFF" }}>
               Blockchain Technology
             </div>
-            <div className="bf-petal-l3" style={{ position: "absolute", left: "75.98%", top: "79.79%", transform: "translate(-50%,-50%)", width: "32.69%", textAlign: "center", zIndex: 3, fontWeight: 400, fontSize: 12, lineHeight: 1.25, color: "#A2B3F1" }}>
+            <div className="bf-petal-l3" style={{ position: "absolute", left: "75.98%", top: "79.79%", transform: "translate(-50%,-50%)", width: "32.69%", textAlign: "center", zIndex: 3, fontWeight: 400, fontSize: 12, lineHeight: 1.25, color: "#9DBBFF" }}>
               RegTech
             </div>
 
             {/* center */}
             <div
-              className="bf-petal-center"
+              className="bf-petal-center bf-accent"
               style={{
                 position: "absolute",
                 left: "50%",

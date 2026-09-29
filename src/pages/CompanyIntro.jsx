@@ -4,6 +4,7 @@ import { ChevronRight } from "lucide-react";
 import useNavDarkZone from "../hooks/useNavDarkZone.js";
 import Aurora from "../components/Aurora/Aurora.jsx";
 import FinanceChart from "../components/FinanceChart.jsx";
+import { accentNums } from "../lib/accentNums.jsx";
 
 const revenueData = [
   { year: "2020", value: 4 },
@@ -133,13 +134,13 @@ export default function CompanyIntro() {
             <span style={{ color: "#fff" }}>회사 소개</span>
           </div>
 
-          <div className="bf-reveal" style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.14em", color: "#738DE9", marginBottom: 20 }}>
+          <div className="bf-reveal" style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.14em", color: "#5E8EFF", marginBottom: 20 }}>
             ABOUT US
           </div>
 
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 64, flexWrap: "wrap" }}>
             <h1
-              className="bf-reveal"
+              className="bf-accent bf-reveal"
               style={{
                 margin: 0,
                 flex: "1 1 480px",
@@ -175,7 +176,7 @@ export default function CompanyIntro() {
         </div>
 
         <div style={{ position: "relative", marginTop: 120, height: 220 }}>
-          <Aurora colorStops={["#1640DB", "#7B5CF0", "#738DE9"]} amplitude={1.2} blend={0.55} />
+          <Aurora colorStops={["#1640DB", "#7B5CF0", "#5E8EFF"]} amplitude={1.2} blend={0.55} />
         </div>
       </section>
 
@@ -184,6 +185,7 @@ export default function CompanyIntro() {
           <div className="bf-reveal" style={{ width: isMobile ? "100%" : "max-content", maxWidth: "100%", margin: "0 auto", display: "flex", flexDirection: "column" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 20, height: isMobile ? "auto" : 62 }}>
               <div
+                className="bf-accent"
                 style={{
                   flex: "none",
                   whiteSpace: isMobile ? "normal" : "nowrap",
@@ -192,15 +194,16 @@ export default function CompanyIntro() {
                   lineHeight: "130%",
                   display: "flex",
                   alignItems: "center",
-                  color: "#738DE9",
+                  color: "#5E8EFF",
                 }}
               >
                 불가능을 가능으로
               </div>
-              <div style={{ width: isMobile ? undefined : 334.76, flex: isMobile ? "1 1 auto" : "none", borderTop: "1.5px solid #738DE9" }} />
+              <div style={{ width: isMobile ? undefined : 334.76, flex: isMobile ? "1 1 auto" : "none", borderTop: "1.5px solid #5E8EFF" }} />
             </div>
             <div
               ref={madeHeadingRef}
+              className="bf-accent"
               style={{
                 alignSelf: "flex-start",
                 height: isMobile ? "auto" : 62,
@@ -315,8 +318,8 @@ export default function CompanyIntro() {
           </div>
           {achievementSections.map((section, i) => (
             <div key={section.key} className="bf-reveal" style={{ marginBottom: 72, transitionDelay: `${(i + 1) * REVEAL_STAGGER}s` }}>
-              <h2 style={{ margin: "0 0 16px", fontWeight: 800, fontSize: 28, letterSpacing: "-0.02em", color: "#171717" }}>
-                {section.title}
+              <h2 className="bf-accent" style={{ margin: "0 0 16px", fontWeight: 800, fontSize: 28, letterSpacing: "-0.02em", color: "#171717" }}>
+                {accentNums(section.title)}
               </h2>
               <div className="bf-achstats" style={{ display: "grid", gridTemplateColumns: `repeat(${section.stats.length},1fr)`, gap: 72 }}>
                 {section.stats.map((stat) => (
@@ -324,9 +327,9 @@ export default function CompanyIntro() {
                     <div style={{ fontSize: 15, color: "var(--text-subtle)", marginBottom: 6 }}>
                       {stat.label}
                     </div>
-                    <div style={{ fontWeight: 700, fontSize: "clamp(32px,8vw,48px)", letterSpacing: "-0.02em", color: "var(--text-strong)" }}>
+                    <div className="bf-accent bf-accent-num" style={{ fontWeight: 500, fontSize: "clamp(32px,8vw,48px)", letterSpacing: "-0.02em", color: "var(--text-strong)" }}>
                       {stat.value}
-                      <span style={{ fontSize: 22, fontWeight: 600, marginLeft: 4 }}>{stat.unit}</span>
+                      <span style={{ fontSize: 22, marginLeft: 4 }}>{stat.unit}</span>
                     </div>
                   </div>
                 ))}
@@ -337,7 +340,7 @@ export default function CompanyIntro() {
           <div className="bf-reveal" style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.1em", color: "var(--primary)", marginTop: 120, marginBottom: 14, transitionDelay: `${(achievementSections.length + 1) * REVEAL_STAGGER}s` }}>
             재무 구조
           </div>
-          <h2 className="bf-reveal" style={{ margin: "0 0 32px", fontWeight: 800, fontSize: 28, letterSpacing: "-0.02em", color: "#171717", transitionDelay: `${(achievementSections.length + 2) * REVEAL_STAGGER}s` }}>
+          <h2 className="bf-accent bf-reveal" style={{ margin: "0 0 32px", fontWeight: 800, fontSize: 28, letterSpacing: "-0.02em", color: "#171717", transitionDelay: `${(achievementSections.length + 2) * REVEAL_STAGGER}s` }}>
             건실한 재무 구조와 고성장 자회사의 시너지를 바탕으로 안정적인 성장 곡선을 만들어내고 있습니다.
           </h2>
           <div className="bf-reveal bf-finance" style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 24, transitionDelay: `${(achievementSections.length + 3) * REVEAL_STAGGER}s` }}>
@@ -352,7 +355,7 @@ export default function CompanyIntro() {
           <div className="bf-reveal" style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.1em", color: "var(--primary)", marginBottom: 14 }}>
             주요 인증 및 수상
           </div>
-          <h2 style={{ margin: "0 0 48px", fontWeight: 800, fontSize: 28, letterSpacing: "-0.02em", color: "#171717" }}>
+          <h2 className="bf-accent" style={{ margin: "0 0 48px", fontWeight: 800, fontSize: 28, letterSpacing: "-0.02em", color: "#171717" }}>
             공신력 있는 기관으로부터 기술력과 성장성을 인정받았습니다.
           </h2>
         </div>

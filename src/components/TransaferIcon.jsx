@@ -9,15 +9,15 @@ export default function TransaferIcon({ width = 40, height = 40 }) {
       <defs>
         <linearGradient id="paint0_linear_87_3873" x1="49.5888" y1="48.0146" x2="49.5888" y2="147.192" gradientUnits="userSpaceOnUse">
           <stop stopColor="white" />
-          <stop offset="1" stopColor="#A2B3F1" stopOpacity="0.7" />
+          <stop offset="1" stopColor="#9DBBFF" stopOpacity="0.7" />
         </linearGradient>
         <linearGradient id="paint1_linear_87_3873" x1="125.869" y1="48.0146" x2="125.869" y2="147.192" gradientUnits="userSpaceOnUse">
           <stop stopColor="white" />
-          <stop offset="1" stopColor="#A2B3F1" stopOpacity="0.7" />
+          <stop offset="1" stopColor="#9DBBFF" stopOpacity="0.7" />
         </linearGradient>
         <linearGradient id="paint2_linear_87_3873" x1="202.15" y1="48.0146" x2="202.15" y2="147.192" gradientUnits="userSpaceOnUse">
           <stop stopColor="white" />
-          <stop offset="1" stopColor="#A2B3F1" stopOpacity="0.7" />
+          <stop offset="1" stopColor="#9DBBFF" stopOpacity="0.7" />
         </linearGradient>
         <linearGradient id="paint3_linear_87_3873" x1="87.729" y1="35.2241" x2="87.729" y2="159.984" gradientUnits="userSpaceOnUse">
           <stop stopColor="#1640DB" />

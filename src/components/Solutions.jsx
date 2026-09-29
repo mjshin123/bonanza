@@ -182,9 +182,10 @@ export default function Solutions() {
         <div ref={contentRef} style={{ maxWidth: 1400, margin: "0 auto", width: "100%", padding: "48px 0 64px" }}>
           <div className="bf-reveal" style={{ position: "relative", display: "inline-block", marginBottom: 64 }}>
             <h2
+              className="bf-accent"
               style={{
                 margin: 0,
-                fontWeight: 700,
+                fontWeight: 300,
                 fontSize: "clamp(26px,3.2vw,36px)",
                 lineHeight: 1.25,
                 letterSpacing: "-0.02em",

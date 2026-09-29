@@ -331,7 +331,14 @@ const glassFragment = /* glsl */ `
     vec3 tv = (sd * H - p) / dd;
     float L = max(min(tv.x, min(tv.y, tv.z)), 0.0);
     vec3 q = p + d * L;                 // exit point on the far side
-    float g = smoothstep(0.0, 1.0, vGlow); // linear progress → ease-in-out
+    // light spreads out from the front top corner (the vertex nearest the camera): each fragment
+    // lights once a very soft glow front, growing with vGlow, reaches it
+    vec2 toCam = normalize(vCamObj.xz + vec2(1e-5));
+    vec3 lightOrigin = vec3(sign(toCam.x) * 0.5, H.y, sign(toCam.y) * 0.5);
+    float dn = clamp(length(p - lightOrigin) / 1.5, 0.0, 1.0); // 0 = at that corner, 1 = far bottom
+    const float SPREAD_SOFT = 1.6; // very soft front: reads as a glow swelling out, not a ring
+    float front = vGlow * (1.0 + SPREAD_SOFT);
+    float g = smoothstep(0.0, 1.0, 1.0 - smoothstep(front - SPREAD_SOFT, front, dn));
 
     // depth of field inside one cube: blur ramps up toward the top corner farthest from the viewer
     vec2 away = normalize(-vCamObj.xz + vec2(1e-5));
@@ -375,13 +382,30 @@ const glassFragment = /* glsl */ `
     // ── what shows through on the far faces ──
     vec3 aq = abs(q) / H;
     float innerE = mid3(aq);
-    // soft (frosted) and a crisper core, fading with depth
-    float innerLine = smoothstep(mix(0.93, 0.6, bq), 0.995, innerE) * 0.5
-                    + smoothstep(mix(0.978, 0.9, bq), 0.998, innerE) * 0.5 * (1.0 - bq);
+    // idle blocks: original far-edge line (untouched)
+    float innerLineI = smoothstep(mix(0.93, 0.6, bq), 0.995, innerE) * 0.5
+                     + smoothstep(mix(0.978, 0.9, bq), 0.998, innerE) * 0.5 * (1.0 - bq);
+    innerLineI *= mix(1.0, 0.25, bq);
+    vec3 inNI = normalize(uObjToWorld * (step(0.95, aq) * sign(q)));
+    float inLightI = 0.15 + 0.85 * pow(max(dot(inNI, normalize(vec3(-0.35, 1.0, 0.25))), 0.0), 1.5);
+    vec3 innerIdle = vec3(0.028, 0.031, 0.042) * innerLineI * inLightI * exp(-0.9 * L);
+    // lit (blue) blocks: frosted only — soft exponential falloff with no crisp core,
+    // wider and fainter toward the far corner
+    float innerD = max(1.0 - innerE, 0.0);
+    float innerLine = exp(-innerD / mix(0.22, 0.4, bq)) * 0.95;
     innerLine *= mix(1.0, 0.25, bq);
-    vec3 inN = normalize(uObjToWorld * (step(0.95, aq) * sign(q)));
-    float inLight = 0.15 + 0.85 * pow(max(dot(inN, normalize(vec3(-0.35, 1.0, 0.25))), 0.0), 1.5);
-    col += mix(vec3(0.028, 0.031, 0.042), vec3(0.4, 0.6, 1.0), g) * innerLine * inLight * exp(-0.9 * L);
+    // light direction: this face plus only the nearer edge (both at once clumps at the vertices)
+    float aqMax = max(aq.x, max(aq.y, aq.z));
+    vec3 faceQ = step(vec3(aqMax - 1e-4), aq);
+    vec3 selQ = (1.0 - faceQ) * exp((aq - innerE) * 30.0);
+    vec3 edgeQ = selQ / max(dot(selQ, vec3(1.0)), 1e-4) * smoothstep(0.85, 1.0, aq);
+    vec3 inN = normalize(uObjToWorld * ((faceQ + edgeQ) * sign(q)));
+    float inLight = 0.55 + 0.45 * pow(max(dot(inN, normalize(vec3(-0.35, 1.0, 0.25))), 0.0), 1.5);
+    // muted navy, darker than the lit body: blended in rather than added — adding pushed the
+    // blue past 1.0 and the tone mapping / bloom washed it out to white
+    float innerAmt = clamp(innerLine * inLight * exp(-0.5 * L), 0.0, 1.0);
+    col += innerIdle * (1.0 - g);
+    col = mix(col, vec3(0.006, 0.05, 0.28), innerAmt * 0.85 * g);
     bool exitBottom = q.y < -H.y + 0.002;
     if (exitBottom && vPattern > 1.5) {
       vec2 f = fract((q.xz + 0.5) * 13.0) - 0.5;
@@ -406,13 +430,62 @@ const glassFragment = /* glsl */ `
     vec3 ap = abs(p) / H;
     float fe = mid3(ap);
     float few = fwidth(fe) * 1.2;
-    float frontLine = smoothstep(1.0 - few - mix(0.012, 0.2, bf), 1.0 - 0.002, fe) * mix(1.0, 0.18, bf);
-    vec3 bevelN = normalize(uObjToWorld * normalize(step(0.9, ap) * sign(p) + vObjNormal * 0.35));
-    float edgeEnv = studio(reflect(V, bevelN));
+    // lit (blue) blocks: thin core + soft exponential halo, so the line fades out instead of a hard band
+    float edgeD = max(1.0 - fe, 0.0);
+    float frontCore = smoothstep(1.0 - few - mix(0.012, 0.2, bf), 1.0 - 0.002, fe);
+    float frontHalo = exp(-edgeD / mix(0.055, 0.15, bf));
+    float frontLine = (frontCore * 0.75 + frontHalo * 0.4) * mix(1.0, 0.18, bf);
+    // bevel normal blends smoothly toward the edge (a step here made the edge light jump → "tape" band).
+    // Each edge gets its own bevel normal and we cross-fade to the nearer edge: summing both edges'
+    // normals at a vertex tilted it diagonally into the softbox and the glows clumped there.
+    vec3 sp = sign(p);
+    float apMax = max(ap.x, max(ap.y, ap.z));
+    vec3 faceM = step(vec3(apMax - 1e-4), ap);          // the face this fragment is on
+    vec3 other = 1.0 - faceM;                            // its two edge directions
+    vec3 faceN = faceM * sp * 1.35;
+    vec3 w = smoothstep(0.8, 1.0, ap) * other;
+    float envX = studio(reflect(V, normalize(uObjToWorld * (faceN + vec3(sp.x * w.x, 0.0, 0.0)))));
+    float envY = studio(reflect(V, normalize(uObjToWorld * (faceN + vec3(0.0, sp.y * w.y, 0.0)))));
+    float envZ = studio(reflect(V, normalize(uObjToWorld * (faceN + vec3(0.0, 0.0, sp.z * w.z)))));
+    vec3 sel = other * exp((ap - fe) * 30.0);           // soft pick of the nearer edge
+    float edgeEnv = dot(sel, vec3(envX, envY, envZ)) / max(dot(sel, vec3(1.0)), 1e-4);
     float edgeLight = 0.06 + pow(clamp(edgeEnv, 0.0, 1.4), 1.6);
-    col += mix(vec3(0.12, 0.13, 0.16), vec3(0.65, 0.82, 1.0), g) * frontLine * edgeLight;
-    // soft bevel sheen just inside the edges
-    col += mix(vec3(0.014, 0.015, 0.02), vec3(0.1, 0.18, 0.4), g) * smoothstep(mix(0.84, 0.55, bf), 1.0, fe) * edgeLight * mix(1.0, 0.5, bf);
+    // the near vertical edge (front middle) reflects only the dim horizon, so it gets its own
+    // light: bright at the top, fading toward the bottom
+    float selSum = max(dot(sel, vec3(1.0)), 1e-4);
+    float vertW = (sel.x + sel.z) / selSum * (1.0 - faceM.y);
+    float nearV = smoothstep(0.6, 0.95, dot(normalize(sp.xz), -away));
+    float heightT = clamp(p.y / H.y * 0.5 + 0.5, 0.0, 1.0);
+    // wide, soft band (own falloff, not the hairline) with a strong top→bottom fade
+    float vertBand = exp(-edgeD / 0.14);
+    // fainter soft band + a crisp hairline core so the edge itself stays sharp
+    float vertLight = vertW * nearV * pow(heightT, 2.6) * (vertBand * 0.26 + frontCore * 0.4);
+    // top edge of the left/right side faces: a faint white gradient instead of the navy-ish sheen
+    // (much softer than the top face's own edge highlight)
+    float sideTopW = sel.y / selSum * (1.0 - faceM.y) * step(0.0, p.y);
+    float sideTop = sideTopW * exp(-edgeD / 0.2) * 0.22 * mix(1.0, 0.3, bf);
+    // top face, its two front edges: an extra wide soft band so their glow spreads further
+    vec2 nearXZ = vec2(
+      dot(vec2(sp.x, 0.0), -away),
+      dot(vec2(0.0, sp.z), -away));
+    float topFrontW = faceM.y * (sel.x * smoothstep(0.2, 0.6, nearXZ.x) + sel.z * smoothstep(0.2, 0.6, nearXZ.y)) / selSum;
+    float topFront = topFrontW * exp(-edgeD / 0.16) * 0.25 * mix(1.0, 0.3, bf);
+    vec3 frontLit = vec3(0.65, 0.82, 1.0) * frontLine * edgeLight
+                  + vec3(0.65, 0.82, 1.0) * topFront * edgeLight
+                  + vec3(0.6, 0.76, 1.0) * vertLight
+                  + vec3(0.26, 0.38, 0.54) * sideTop
+                  + vec3(0.03, 0.16, 0.42) * smoothstep(mix(0.76, 0.5, bf), 1.0, fe) * edgeLight * mix(1.0, 0.5, bf) * (1.0 - sideTopW);
+    // idle: the near vertical (centre) edge read too sharp against the rest — tone it down
+    float idleVertDim = 1.0 - vertW * nearV * 0.5;
+    // idle: same smooth bevel / nearer-edge light as lit (no step → no "tape" band), in the
+    // original dim grey; halo kept fainter than on lit blocks
+    float frontHaloI = exp(-edgeD / mix(0.11, 0.2, bf)); // wider gradient than lit
+    float frontLineI = (frontCore * 0.75 + frontHaloI * 0.2) * mix(1.0, 0.18, bf);
+    vec3 frontIdle = vec3(0.12, 0.13, 0.16) * frontLineI * edgeLight
+                   + vec3(0.014, 0.015, 0.02) * smoothstep(mix(0.72, 0.5, bf), 1.0, fe) * edgeLight * mix(1.0, 0.5, bf) * 0.75;
+    // near vertical edge: like lit, bright at the top fading down (soft band + crisp core), in idle grey
+    vec3 idleVert = vec3(0.12, 0.13, 0.16) * vertW * nearV * pow(heightT, 2.6) * (vertBand * 0.26 + frontCore * 0.4);
+    col += mix(frontIdle * idleVertDim + idleVert, frontLit, g);
 
     // defocus: flatten detail toward the cube's average body colour near the far corner
     vec3 avgBody = mix(vec3(0.012, 0.014, 0.022) + bg * 0.45, vec3(0.03, 0.16, 0.7) + bg * 0.1, g);
@@ -568,8 +641,8 @@ function Blocks({ pointerRef, glowMap, maskTarget, spill }) {
   const meshRef = useRef(null);
   const { camera, raycaster } = useThree();
 
-  // nearly sharp edges — just enough bevel to catch a highlight
-  const geometry = useMemo(() => new RoundedBoxGeometry(SIZE, HEIGHT, SIZE, 2, 0.012), []);
+  // very slightly rounded edges (more segments so the small radius stays smooth)
+  const geometry = useMemo(() => new RoundedBoxGeometry(SIZE, HEIGHT, SIZE, 4, 0.02), []);
   const content = useMemo(() => buildBlockContent(), []);
   const atlas = useMemo(() => {
     const t = makeDecalAtlas(mulberry32(5));
@@ -714,7 +787,7 @@ function Blocks({ pointerRef, glowMap, maskTarget, spill }) {
     const active = hx !== 1e6;
 
     // linear progress; eased with smoothstep where used → light fades in like a lamp warming up
-    const onStep = dt / 0.25; // ~0.25s to fully light
+    const onStep = dt / 0.3; // ~0.3s to fully light
     const offStep = dt / 0.6; // a little slower fade out = short light trail
     // lift is a damped spring: overshoots a little on the way up and settles with a small bounce
     const SPRING_K = 170;
@@ -927,7 +1000,37 @@ export default function CrystalCubeField3D() {
   const pointerRef = useRef({ x: 0, y: 0, active: false, last: 0 });
   const [visible, setVisible] = useState(true);
   const [dpr, setDpr] = useState(1.75);
+  const copyRef = useRef(null);
   useNavDarkZone(wrapRef);
+
+  // headline + description stay put (fixed) while the block field scrolls up underneath,
+  // then fade out as the field is almost gone and the next section takes over
+  useEffect(() => {
+    const section = wrapRef.current;
+    const copy = copyRef.current;
+    if (!section || !copy) return undefined;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const rect = section.getBoundingClientRect();
+      const p = Math.min(1, Math.max(0, -rect.top / rect.height)); // 0 = at top, 1 = field scrolled away
+      const f = smoothstep(0.55, 0.9, p);
+      copy.style.opacity = String(1 - f);
+      copy.style.transform = `translateY(${-24 * f}px)`;
+      copy.style.visibility = f >= 1 ? "hidden" : "visible";
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
 
   // pause rendering while off-screen
   useEffect(() => {
@@ -974,29 +1077,8 @@ export default function CrystalCubeField3D() {
         <Scene pointerRef={pointerRef} />
       </Canvas>
 
-      {/* thin dim layer + headline (pointer-events off so the blocks stay interactive) */}
+      {/* thin dim layer so the centred headline reads over the blocks */}
       <div className="pointer-events-none absolute inset-0 bg-black/30" />
-      <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-6">
-        <h1
-          className="bf-hero-h"
-          style={{
-            margin: 0,
-            textAlign: "center",
-            color: "#fff",
-            fontWeight: 500,
-            fontSize: "clamp(28px, 4.2vw, 60px)",
-            lineHeight: 1.3,
-            letterSpacing: "-0.01em",
-            textShadow: "0 2px 24px rgba(0,0,0,0.45)",
-            opacity: 0,
-            animation: "revU 1s .15s ease both",
-          }}
-        >
-          신뢰할 수 있는
-          <br />
-          디지털 자산의 기반을 만듭니다.
-        </h1>
-      </div>
 
       {/* edge vignette + blend into the next (video) section */}
       <div
@@ -1008,11 +1090,30 @@ export default function CrystalCubeField3D() {
         style={{ background: "linear-gradient(to bottom, transparent, #0A0A0A)" }}
       />
 
-      {/* scroll hint */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-8 flex flex-col items-center gap-2 text-[11px] tracking-[0.3em] text-white/50">
-        <span>SCROLL</span>
-        <span className="block h-8 w-px animate-pulse bg-gradient-to-b from-white/60 to-transparent" />
+      {/* centred headline with the description under it; wrapper ignores the pointer so the blocks stay interactive.
+          Fixed to the viewport (scroll-driven fade above), under the nav (z 100), over the next section.
+          Same side padding as the other sections (40px, 24px on mobile via .bf-pad). */}
+      <div
+        ref={copyRef}
+        className="bf-pad pointer-events-none"
+        style={{ position: "fixed", inset: 0, zIndex: 5, padding: "64px 40px 0", willChange: "opacity, transform" }}
+      >
+        <div style={{ position: "relative", maxWidth: 1400, height: "100%", margin: "0 auto" }}>
+          <div className="bf-hero3d-main">
+            <h1
+              className="bf-hero3d-h"
+              style={{ opacity: 0, animation: "revU 1s .15s ease both" }}
+            >
+              신뢰할 수 있는 디지털 자산의 기반을 만듭니다.
+            </h1>
+            <p className="bf-hero3d-desc" style={{ opacity: 0, animation: "revU 1s .3s ease both" }}>
+              보난자팩토리는 가상자산 자금세탁방지(AML) 전문 기업입니다. 블록체인 거래 데이터를 분석해 위험한
+              지갑과 자금 흐름을 찾아내고, 거래소와 은행이 위험 거래를 미리 확인하고 차단할 수 있도록 돕습니다.
+            </p>
+          </div>
+        </div>
       </div>
+
     </section>
   );
 }

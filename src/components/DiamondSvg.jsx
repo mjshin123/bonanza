@@ -10,7 +10,7 @@ export default function DiamondSvg({ index, selected }) {
       ]
     : [
         ["#F1F8FC", 0, 1],
-        ["#A2B3F1", 1, 0.7],
+        ["#9DBBFF", 1, 0.7],
       ];
 
   return (

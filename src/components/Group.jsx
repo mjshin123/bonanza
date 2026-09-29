@@ -1,19 +1,10 @@
 import { useEffect, useState } from "react";
 import { subsidiaries } from "../data/subsidiaries.js";
+import { accentNums } from "../lib/accentNums.jsx";
 
 const MOBILE_QUERY = "(max-width:860px)";
 const MOBILE_COLLAPSED_HEIGHT = 120;
 const MOBILE_EXPANDED_HEIGHT = 420;
-
-function renderDesc(desc) {
-  const sentences = desc.split(/(?<=\.)\s+/);
-  return sentences.map((sentence, idx) => (
-    <span key={idx}>
-      {sentence}
-      {idx < sentences.length - 1 && <br />}
-    </span>
-  ));
-}
 
 export default function Group() {
   // Which card is "open": tapping sets this, and it's what's shown whenever no
@@ -46,7 +37,7 @@ export default function Group() {
           <div style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.1em", color: "var(--primary)", marginBottom: 14 }}>
             GROUP SYNERGY
           </div>
-          <h2 style={{ margin: 0, fontWeight: 700, fontSize: "clamp(26px,3.2vw,36px)", lineHeight: 1.3, letterSpacing: "-0.02em", color: "var(--text-strong)" }}>
+          <h2 className="bf-accent" style={{ margin: 0, fontWeight: 700, fontSize: "clamp(26px,3.2vw,36px)", lineHeight: 1.3, letterSpacing: "-0.02em", color: "var(--text-strong)" }}>
             보난자 그룹의 모회사로서
             <br />
             자회사들과 시너지를 이끌어갑니다.
@@ -103,7 +94,7 @@ export default function Group() {
                     transition: isExpanded ? "none" : "opacity .25s ease .25s",
                   }}
                 >
-                  <span
+                  <span className="bf-accent"
                     style={{
                       fontWeight: 800,
                       fontSize: 26,
@@ -111,7 +102,7 @@ export default function Group() {
                       writingMode: !isMobile && !isExpanded ? "vertical-rl" : "horizontal-tb",
                     }}
                   >
-                    {sub.name}
+                    {accentNums(sub.name)}
                   </span>
                 </div>
                 <div
@@ -128,8 +119,8 @@ export default function Group() {
                     transition: isExpanded ? "opacity .25s ease .25s" : "none",
                   }}
                 >
-                  <div style={{ fontWeight: 800, fontSize: 28, whiteSpace: "nowrap", marginBottom: 10 }}>{sub.name}</div>
-                  <div style={{ fontSize: 13, lineHeight: 1.6, color: sub.descColor, maxWidth: 760 }}>{renderDesc(sub.desc)}</div>
+                  <div className="bf-accent" style={{ fontWeight: 800, fontSize: 28, whiteSpace: "nowrap", marginBottom: 10 }}>{accentNums(sub.name)}</div>
+                  <div style={{ fontSize: 13, lineHeight: 1.6, color: sub.descColor, maxWidth: 760, wordBreak: "keep-all" }}>{sub.desc}</div>
                 </div>
               </div>
             );

@@ -57,7 +57,7 @@ export default function Hero() {
             }}
           >
             <h1
-              className="bf-hero-h"
+              className="bf-accent bf-hero-h"
               style={{
                 margin: 0,
                 textAlign: "center",
