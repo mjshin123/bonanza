@@ -4,42 +4,13 @@ import { cn } from "@/lib/utils";
 
 /* Adapted from 21st.dev "cta-with-marquee" (HeroWithVideo demo) for this Vite + JS project:
    no next/image, no "use client", copy/assets passed in as props.
-   Left: headline + lines + scramble button. Right: looping muted video, both inside the 1400px content area.
+   Left: headline + lines + play button. Right: looping muted video, both inside the 1400px content area.
    The button opens `onPlay` (e.g. a modal with the full intro video). */
 
-const SCRAMBLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789가나다라마바사아자차카타파하";
-
-export function ScrambleButton({ label, onClick, className }) {
-  const [text, setText] = useState(label);
-  const timer = useRef(null);
-
-  useEffect(() => () => clearInterval(timer.current), []);
-  useEffect(() => setText(label), [label]);
-
-  const scramble = () => {
-    if (timer.current) return;
-    let iteration = 0;
-    timer.current = setInterval(() => {
-      setText(
-        label
-          .split("")
-          .map((ch, i) => (ch === " " || i < iteration ? ch : SCRAMBLE_CHARS[(Math.random() * SCRAMBLE_CHARS.length) | 0]))
-          .join(""),
-      );
-      if (iteration >= label.length) {
-        clearInterval(timer.current);
-        timer.current = null;
-        setText(label);
-      }
-      iteration += 1 / 3;
-    }, 30);
-  };
-
+export function PlayButton({ label, onClick, className }) {
   return (
     <button
       type="button"
-      onMouseEnter={scramble}
-      onFocus={scramble}
       onClick={onClick}
       className={cn(
         "inline-flex items-center gap-2 rounded-[4px] bg-[var(--primary)] px-5 py-3 text-[15px] font-semibold text-white transition-colors hover:bg-[#1233b0] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white",
@@ -47,10 +18,7 @@ export function ScrambleButton({ label, onClick, className }) {
       )}
     >
       <Play className="size-4 fill-current" aria-hidden="true" />
-      {/* fixed width per character so the scramble doesn't make the button jitter */}
-      <span className="tabular-nums" aria-label={label}>
-        {text}
-      </span>
+      <span>{label}</span>
     </button>
   );
 }
@@ -108,7 +76,7 @@ function PlaylistVideo({ src, poster, className, crop }) {
 /* Scroll-pinned, scroll-scrubbed entrance — no scroll hijacking.
    The section is `position: sticky` inside a wrapper that is `pinVh` taller than the viewport, so it
    holds still while the user scrolls through that extra distance. Over the first `revealEnd` of it
-   the [data-seq] items (title → lines → button → video) fade/slide in *in step with the scroll*;
+   the [data-seq] items (title → lines → video → button) fade/slide in *in step with the scroll*;
    the rest of the distance they simply stay put. The section therefore can't move on before
    everything is shown, and scrolling back up plays it in reverse (so it replays every pass). */
 const SEQ_STAGGER = 0.2; // item i starts at i × stagger of the reveal
@@ -128,9 +96,11 @@ function useScrubbedReveal(wrapRef, sectionRef, revealEnd) {
       const dist = Math.max(1, wrap.offsetHeight - window.innerHeight);
       const prog = Math.min(1, Math.max(0, -wrap.getBoundingClientRect().top / dist)); // 0 = just pinned
       const r = reduce ? 1 : Math.min(1, prog / revealEnd);
-      items.forEach((item, i) => {
+      items.forEach((item) => {
+        // reveal order comes from data-seq (1, 2, 3…), not from DOM order
+        const i = Number(item.dataset.seq) - 1;
         const t = easeOut(Math.min(1, Math.max(0, (r - i * SEQ_STAGGER) / SEQ_SPAN)));
-        const isVideo = item.dataset.seq === "4";
+        const isVideo = "seqScale" in item.dataset;
         item.style.opacity = String(t);
         item.style.transform = `translateY(${(1 - t) * 28}px)${isVideo ? ` scale(${0.97 + 0.03 * t})` : ""}`;
       });
@@ -232,13 +202,13 @@ export function HeroWithVideo({
               </p>
             ))}
           </div>
-          <div data-seq="3">
-            <ScrambleButton label={buttonLabel} onClick={onPlay} />
+          <div data-seq="4">
+            <PlayButton label={buttonLabel} onClick={onPlay} />
           </div>
         </div>
 
         {/* right video: the rest of the content width, at the video's own aspect ratio */}
-        <div data-seq="4" className="relative w-full flex-1 overflow-hidden rounded-[6px]">
+        <div data-seq="3" data-seq-scale className="relative w-full flex-1 overflow-hidden rounded-[6px]">
           <PlaylistVideo src={videoSrc} crop={videoCrop} poster={poster} className="block h-auto w-full" />
         </div>
       </div>

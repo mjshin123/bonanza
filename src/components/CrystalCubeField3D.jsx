@@ -1107,8 +1107,8 @@ export default function CrystalCubeField3D() {
               신뢰할 수 있는 디지털 자산의 기반을 만듭니다.
             </h1>
             <p className="bf-hero3d-desc" style={{ opacity: 0, animation: "revU 1s .3s ease both" }}>
-              보난자팩토리는 가상자산 자금세탁방지(AML) 전문 기업입니다. 블록체인 거래 데이터를 분석해 위험한
-              지갑과 자금 흐름을 찾아내고, 거래소와 은행이 위험 거래를 미리 확인하고 차단할 수 있도록 돕습니다.
+              보난자팩토리는 가상자산 자금세탁방지(AML) 전문 기업입니다. 블록체인 데이터에 대한 깊은 이해를
+              바탕으로, 거래소와 은행, 수사기관이 함께 신뢰할 수 있는 가상자산 생태계를 만들어갑니다.
             </p>
           </div>
         </div>

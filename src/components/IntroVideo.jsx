@@ -25,12 +25,15 @@ export default function IntroVideo() {
         sectionRef={ref}
         title={
           <>
-            위험한 자금 흐름을 먼저 찾아
+            안전한 거래를 연결하는
             <br />
-            안전한 거래를 연결합니다
+            통합 컴플라이언스 아키텍처를 제공합니다.
           </>
         }
-        lines={["위험 주소 식별부터 추적, 공조, 차단까지.", "하나로 연결하는 가상자산 통합 AML 솔루션."]}
+        lines={[
+          "원화 입출금 이상거래 탐지부터 KYT, AML, 트래블룰까지.",
+          "흩어져 있던 컴플라이언스 업무를 하나의 흐름으로 연결합니다.",
+        ]}
         buttonLabel="소개 영상 보기"
         onPlay={() => setOpen(true)}
         videoSrc={LOOP_VIDEO}

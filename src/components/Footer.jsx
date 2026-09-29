@@ -1,6 +1,7 @@
-import { useRef } from "react";
+import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import useNavDarkZone from "../hooks/useNavDarkZone.js";
+import PrivacyPolicyModal from "./PrivacyPolicyModal.jsx";
 
 const menuGroups = [
   {
@@ -29,6 +30,7 @@ const menuGroups = [
 
 export default function Footer() {
   const darkZoneRef = useRef(null);
+  const [policyOpen, setPolicyOpen] = useState(false);
   useNavDarkZone(darkZoneRef);
 
   return (
@@ -83,9 +85,16 @@ export default function Footer() {
           }}
         >
           <span style={{ fontSize: 12, color: "#9a9a9a" }}>© Bonanza Factory. All rights reserved.</span>
-          <span style={{ fontSize: 12, color: "#9a9a9a" }}>개인정보처리방침 · 이용약관</span>
+          <button
+            type="button"
+            onClick={() => setPolicyOpen(true)}
+            style={{ padding: 0, fontSize: 13, fontWeight: 600, color: "#d4d4d4", background: "none", border: "none", cursor: "pointer" }}
+          >
+            개인정보처리방침
+          </button>
         </div>
       </div>
+      <PrivacyPolicyModal open={policyOpen} onClose={() => setPolicyOpen(false)} />
     </footer>
   );
 }

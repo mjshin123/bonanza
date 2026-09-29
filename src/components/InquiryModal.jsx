@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
+import PrivacyPolicyModal from "./PrivacyPolicyModal.jsx";
 
 const FIELD_STYLE = {
   width: "100%",
@@ -20,6 +21,7 @@ export default function InquiryModal({ open, company, email, onClose }) {
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [consent, setConsent] = useState(false);
+  const [policyOpen, setPolicyOpen] = useState(false);
 
   const contactValid = EMAIL_PATTERN.test(contact);
   const contactError = contactTouched && contact.length > 0 && !contactValid;
@@ -28,11 +30,12 @@ export default function InquiryModal({ open, company, email, onClose }) {
   useEffect(() => {
     if (!open) return undefined;
     function onKeyDown(e) {
-      if (e.key === "Escape") onClose();
+      // while the policy modal is on top, Esc only closes that one
+      if (e.key === "Escape" && !policyOpen) onClose();
     }
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [open, onClose]);
+  }, [open, onClose, policyOpen]);
 
   useEffect(() => {
     if (open) {
@@ -42,6 +45,7 @@ export default function InquiryModal({ open, company, email, onClose }) {
       setName("");
       setMessage("");
       setConsent(false);
+      setPolicyOpen(false);
     }
   }, [open]);
 
@@ -60,6 +64,7 @@ export default function InquiryModal({ open, company, email, onClose }) {
   }
 
   return (
+    <>
     <div
       onClick={onClose}
       style={{
@@ -161,16 +166,34 @@ export default function InquiryModal({ open, company, email, onClose }) {
             rows={5}
             style={{ ...FIELD_STYLE, resize: "vertical", fontFamily: "inherit" }}
           />
-          <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "var(--text-muted)", cursor: "pointer" }}>
-            <input
-              required
-              type="checkbox"
-              checked={consent}
-              onChange={(e) => setConsent(e.target.checked)}
-              style={{ width: 16, height: 16, cursor: "pointer" }}
-            />
-            개인정보 수집 및 이용에 동의합니다
-          </label>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+            <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "var(--text-muted)", cursor: "pointer" }}>
+              <input
+                required
+                type="checkbox"
+                checked={consent}
+                onChange={(e) => setConsent(e.target.checked)}
+                style={{ width: 16, height: 16, cursor: "pointer" }}
+              />
+              [필수] 개인정보 수집 및 이용에 동의합니다
+            </label>
+            <button
+              type="button"
+              onClick={() => setPolicyOpen(true)}
+              style={{
+                flexShrink: 0,
+                padding: 0,
+                fontSize: 13,
+                fontWeight: 400,
+                color: "var(--blue-300)",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              전체보기
+            </button>
+          </div>
           <button
             type="submit"
             disabled={!formValid}
@@ -190,5 +213,8 @@ export default function InquiryModal({ open, company, email, onClose }) {
         </form>
       </div>
     </div>
+    {/* sibling, not child: a click on its backdrop must not bubble to the inquiry backdrop */}
+    <PrivacyPolicyModal open={policyOpen} onClose={() => setPolicyOpen(false)} />
+    </>
   );
 }
