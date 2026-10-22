@@ -126,6 +126,8 @@ nav[data-theme="dark"] .bf-megaitem:hover{color:#fff;}
   .bf-groupacc-row > *:nth-child(4){grid-area:media;}
   .bf-achstats{grid-template-columns:1fr !important;gap:28px !important;}
   .bf-detailsgrid{grid-template-columns:1fr !important;grid-template-rows:none !important;grid-auto-flow:row !important;}
+  .bf-flowsteps{grid-template-columns:1fr !important;row-gap:18px !important;}
+  .bf-flowline{display:none !important;}
   .bf-affgrid{grid-template-columns:1fr !important;}
   .bf-affcarditem{padding:28px !important;}
   .bf-parentcard{padding:28px !important;}

@@ -22,7 +22,7 @@ export default function TransightSolutions() {
       <div style={{ maxWidth: 1400, margin: "0 auto" }}>
         <div
           className="bf-reveal"
-          style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.14em", color: "var(--primary)", marginBottom: 20 }}
+          style={{ textAlign: "center", fontSize: 13, fontWeight: 700, letterSpacing: "0.14em", color: "var(--primary)", marginBottom: 20 }}
         >
           제공 솔루션
         </div>

@@ -6,6 +6,7 @@ import TransightRing from "../components/TransightRing.jsx";
 import TransightSolutions from "../components/TransightSolutions.jsx";
 import TransightDetails from "../components/TransightDetails.jsx";
 import TransaferFlow from "../components/TransaferFlow.jsx";
+import TransaferDetails from "../components/TransaferDetails.jsx";
 import { accentNums } from "../lib/accentNums.jsx";
 
 const SOLUTIONS = {
@@ -97,6 +98,12 @@ export default function SolutionIntro({ slug }) {
         <>
           <TransightSolutions />
           <TransightDetails />
+        </>
+      )}
+
+      {slug === "transafer" && (
+        <>
+          <TransaferDetails />
         </>
       )}
     </div>
