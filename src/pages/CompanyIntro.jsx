@@ -93,7 +93,6 @@ export default function CompanyIntro() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    document.title = "회사 소개 | Bonanza Factory";
     window.scrollTo(0, 0);
   }, []);
 

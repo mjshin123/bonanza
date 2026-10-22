@@ -7,24 +7,24 @@ const menuGroups = [
   {
     label: "기업 개요",
     items: [
-      { label: "회사 소개", href: "/회사소개" },
-      { label: "보난자 그룹", href: "/계열사-소개" },
-      { label: "연혁", href: "/연혁" },
+      { label: "회사 소개", href: "/about" },
+      { label: "보난자 그룹", href: "/group" },
+      { label: "연혁", href: "/history" },
     ],
   },
   {
     label: "솔루션",
     items: [
-      { label: "TranSight", href: "/TranSight" },
-      { label: "TranSafer", href: "/TranSafer" },
-      { label: "Compliance Infra", href: "/ComplianceInfra" },
+      { label: "TranSight", href: "/transight" },
+      { label: "TranSafer", href: "/transafer" },
+      { label: "Compliance Infra", href: "/compliance-infra" },
     ],
   },
   {
     label: "뉴스룸",
     items: [
-      { label: "보도자료", href: "/보도자료" },
-      { label: "공지사항", href: "/공지사항" },
+      { label: "보도자료", href: "/press" },
+      { label: "공지사항", href: "/notice" },
     ],
   },
 ];

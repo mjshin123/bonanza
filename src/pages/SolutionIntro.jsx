@@ -28,9 +28,8 @@ export default function SolutionIntro({ slug }) {
   const solution = SOLUTIONS[slug];
 
   useEffect(() => {
-    document.title = `${solution.name} | Bonanza Factory`;
     window.scrollTo(0, 0);
-  }, [solution.name]);
+  }, [slug]);
 
   return (
     <div style={{ position: "relative", paddingTop: 64 }}>

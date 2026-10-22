@@ -188,7 +188,6 @@ function HistoryYear({ year, rows, isLast }) {
 
 export default function History() {
   useEffect(() => {
-    document.title = "연혁 | Bonanza Factory";
     window.scrollTo(0, 0);
   }, []);
 

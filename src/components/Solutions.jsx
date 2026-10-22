@@ -179,7 +179,7 @@ export default function Solutions() {
             : {}),
         }}
       >
-        <div ref={contentRef} style={{ maxWidth: 1400, margin: "0 auto", width: "100%", padding: "48px 0 64px" }}>
+        <div ref={contentRef} style={{ maxWidth: 1400, margin: "0 auto", width: "100%", padding: "48px 0 120px" }}>
           <div className="bf-reveal" style={{ position: "relative", display: "inline-block", marginBottom: 64 }}>
             <h2
               className="bf-accent"

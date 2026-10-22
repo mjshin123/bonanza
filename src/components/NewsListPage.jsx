@@ -104,7 +104,7 @@ function Pager({ page, totalPages, onPageChange }) {
   );
 }
 
-export default function NewsListPage({ documentTitle, breadcrumbLabel, heading, searchPlaceholder, items, getItemPath }) {
+export default function NewsListPage({ breadcrumbLabel, heading, searchPlaceholder, items, getItemPath }) {
   const [company, setCompany] = useState(ALL_COMPANIES);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
@@ -112,9 +112,8 @@ export default function NewsListPage({ documentTitle, breadcrumbLabel, heading, 
   const companies = useMemo(() => [ALL_COMPANIES, ...new Set(items.map((n) => n.category))], [items]);
 
   useEffect(() => {
-    document.title = documentTitle;
     window.scrollTo(0, 0);
-  }, [documentTitle]);
+  }, []);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();

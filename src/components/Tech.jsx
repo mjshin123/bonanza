@@ -180,7 +180,7 @@ export default function Tech() {
 
         <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 20 }}>
           <Link
-            to="/연혁"
+            to="/history"
             className="bf-ghostlink"
             style={{
               display: "inline-flex",

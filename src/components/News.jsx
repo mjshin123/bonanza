@@ -21,7 +21,7 @@ export default function News() {
               성과를 전해드립니다.
             </p>
             <div className="bf-reveal">
-              <Link to="/보도자료" className="bf-btn-outline">
+              <Link to="/press" className="bf-btn-outline">
                 전체 보기
               </Link>
             </div>
@@ -34,7 +34,7 @@ export default function News() {
               {newsItems.map((item, i) => (
                 <Link
                   key={item.id}
-                  to={`/보도자료/${item.id}`}
+                  to={`/press/${item.id}`}
                   className="bf-techrow"
                   style={{
                     display: "block",

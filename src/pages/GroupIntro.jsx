@@ -233,7 +233,6 @@ export default function GroupIntro() {
   const sectionActiveRef = useRef(false);
 
   useEffect(() => {
-    document.title = "보난자 그룹 | Bonanza Factory";
     window.scrollTo(0, 0);
   }, []);
 

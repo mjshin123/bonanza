@@ -41,7 +41,7 @@ const MODULES = [
     owner: "보난자팩토리",
     category: "원화 입출금 검증",
     desc: "고객 실명계좌를 바탕으로 거래소와 은행 사이의 원화 입출금을 검증하고 이상 거래를 차단합니다.",
-    href: "/TranSafer",
+    href: "/transafer",
   },
   {
     key: "transight-api",
@@ -49,7 +49,7 @@ const MODULES = [
     owner: "보난자팩토리",
     category: "위험 주소 데이터 · KYT 검증",
     desc: "국내 최대 규모 가상자산 범죄 라벨링 데이터와 실시간 KYT API로 입출금 거래의 위험을 즉시 감지하고 차단합니다.",
-    href: "/TranSight",
+    href: "/transight",
   },
   {
     key: "transight-web",
@@ -57,7 +57,7 @@ const MODULES = [
     owner: "보난자팩토리",
     category: "트랜잭션 맵 · 민관 공조",
     desc: "멀티체인 자금 흐름을 시각화해 핵심 경로를 추적하고, IAAN Protocol로 기관 간 실시간 동결 요청을 중계합니다.",
-    href: "/TranSight",
+    href: "/transight",
   },
   {
     key: "transight-expert",
@@ -65,7 +65,7 @@ const MODULES = [
     owner: "보난자팩토리",
     category: "전문 분석 · 리포트",
     desc: "가상자산 범죄 전문가가 온체인 분석과 긴급 대응 컨설팅을 수행하고 정기 인텔리전스 리포트를 발간합니다.",
-    href: "/TranSight",
+    href: "/transight",
   },
 ];
 
@@ -455,7 +455,6 @@ export default function ComplianceInfra() {
   useNavDarkZone(heroRef);
 
   useEffect(() => {
-    document.title = `${HERO.title} | Bonanza Factory`;
     window.scrollTo(0, 0);
   }, []);
 

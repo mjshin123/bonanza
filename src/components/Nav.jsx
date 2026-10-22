@@ -20,9 +20,9 @@ const megaGroups = [
       </>
     ),
     items: [
-      { label: "회사 소개", href: "/회사소개", route: true },
-      { label: "보난자 그룹", href: "/계열사-소개", route: true },
-      { label: "연혁", href: "/연혁", route: true },
+      { label: "회사 소개", href: "/about", route: true },
+      { label: "보난자 그룹", href: "/group", route: true },
+      { label: "연혁", href: "/history", route: true },
     ],
     image: "/images/nav/menu-1.jpg",
   },
@@ -36,9 +36,9 @@ const megaGroups = [
       </>
     ),
     items: [
-      { label: "TranSight", href: "/TranSight", route: true },
-      { label: "TranSafer", href: "/TranSafer", route: true },
-      { label: "Compliance Infra", href: "/ComplianceInfra", route: true },
+      { label: "TranSight", href: "/transight", route: true },
+      { label: "TranSafer", href: "/transafer", route: true },
+      { label: "Compliance Infra", href: "/compliance-infra", route: true },
     ],
     image: "/images/nav/menu-3.png",
   },
@@ -52,8 +52,8 @@ const megaGroups = [
       </>
     ),
     items: [
-      { label: "보도자료", href: "/보도자료", route: true },
-      { label: "공지사항", href: "/공지사항", route: true },
+      { label: "보도자료", href: "/press", route: true },
+      { label: "공지사항", href: "/notice", route: true },
     ],
     image: "/images/nav/menu-4.png",
   },

@@ -23,18 +23,15 @@ function PlaceholderImage() {
   );
 }
 
-export default function NewsDetailPage({ items, listPath, documentTitleSuffix }) {
+export default function NewsDetailPage({ items, listPath }) {
   const { id } = useParams();
   const item = items.find((n) => String(n.id) === id);
   const darkZoneRef = useRef(null);
   useNavDarkZone(darkZoneRef);
 
   useEffect(() => {
-    if (item) {
-      document.title = `${item.title} | ${documentTitleSuffix}`;
-      window.scrollTo(0, 0);
-    }
-  }, [item, documentTitleSuffix]);
+    if (item) window.scrollTo(0, 0);
+  }, [item]);
 
   if (!item) return <Navigate to={listPath} replace />;
 
