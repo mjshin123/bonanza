@@ -1,11 +1,47 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ChevronRight, Image as ImageIcon } from "lucide-react";
+import { ChevronRight, Image as ImageIcon, Plus } from "lucide-react";
 import { historyEntries, groupHistoryByYear } from "../data/history.js";
 
 const timeline = groupHistoryByYear(historyEntries);
 
-function HistoryRow({ row }) {
+// 같은 달의 이력은 한 줄씩 나누되, 왼쪽 월 칸은 하나로 합쳐 보인다
+function HistoryMonth({ month, items }) {
+  return (
+    <div
+      className="bf-histmonthrow"
+      style={{
+        display: "grid",
+        gridTemplateColumns: "110px 1fr",
+        alignItems: "start",
+        columnGap: 20,
+        borderTop: "1px solid #EEEEEE",
+      }}
+    >
+      <div
+        className="bf-histmonth"
+        style={{
+          fontSize: 12,
+          fontWeight: 400,
+          color: "var(--text-muted)",
+          letterSpacing: "0.02em",
+          fontVariantNumeric: "tabular-nums",
+          padding: "26px 0 0 12px",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {`${month}월`}
+      </div>
+      <div style={{ minWidth: 0 }}>
+        {items.map((item, i) => (
+          <HistoryRow key={item.title} row={item} divided={i > 0} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function HistoryRow({ row, divided }) {
   const [open, setOpen] = useState(false);
   const hasDetail = !!row.detail;
 
@@ -21,37 +57,23 @@ function HistoryRow({ row }) {
       onClick={hasDetail ? toggle : undefined}
       style={{
         display: "grid",
-        gridTemplateColumns: "110px 1fr 32px",
+        gridTemplateColumns: "1fr 32px",
         alignItems: "start",
         columnGap: 20,
-        padding: "22px 12px",
-        borderTop: "1px solid var(--border)",
+        // 같은 달의 두 번째 이력부터는 구분선 없이 간격만 좁혀 이어 붙인다
+        padding: divided ? "0 12px 22px 0" : "22px 12px 22px 0",
       }}
     >
-      <div
-        className="bf-histmonth"
-        style={{
-          fontSize: 14,
-          fontWeight: 600,
-          color: "var(--text-subtle)",
-          letterSpacing: "0.02em",
-          fontVariantNumeric: "tabular-nums",
-          paddingTop: 4,
-          whiteSpace: "nowrap",
-        }}
-      >
-        {`${row.month}월`}
-      </div>
-
       <div style={{ minWidth: 0 }}>
         <div
           className="bf-histttl"
           style={{
-            fontSize: "clamp(16px,1.5vw,20px)",
-            fontWeight: 600,
+            fontSize: "clamp(15px,1.2vw,17px)",
+            fontWeight: 500,
             lineHeight: 1.4,
-            color: "var(--text-strong)",
+            color: "#1C1C1C",
             letterSpacing: "-0.01em",
+            wordBreak: "keep-all",
             transition: "color .18s ease",
           }}
         >
@@ -65,13 +87,14 @@ function HistoryRow({ row }) {
           onClick={toggle}
           style={{
             justifySelf: "end",
-            width: 26,
-            height: 26,
+            width: 20,
+            height: 20,
+            padding: 0,
             border: "none",
             borderRadius: 4,
             background: open ? "var(--primary)" : "var(--grey-900)",
             color: "#fff",
-            marginTop: 4,
+            marginTop: 2,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -80,7 +103,7 @@ function HistoryRow({ row }) {
             transform: open ? "rotate(45deg)" : "none",
           }}
         >
-          <span style={{ fontSize: 16, fontWeight: 300, lineHeight: 1 }}>+</span>
+          <Plus width={14} height={14} strokeWidth={2} style={{ display: "block" }} />
         </button>
       ) : (
         <span />
@@ -90,7 +113,7 @@ function HistoryRow({ row }) {
         <div
           className="bf-histdetail"
           style={{
-            gridColumn: "2 / 3",
+            gridColumn: "1 / 2",
             minWidth: 0,
             maxHeight: open ? 520 : 0,
             opacity: open ? 1 : 0,
@@ -134,7 +157,7 @@ function HistoryYear({ year, rows, isLast }) {
   return (
     <section
       className="bf-reveal"
-      style={{ padding: "44px 0 8px", borderBottom: isLast ? "1px solid var(--border)" : "none" }}
+      style={{ padding: "44px 0 8px", borderBottom: "1px solid #EEEEEE" }}
     >
       <div
         className="bf-accent bf-year"
@@ -152,7 +175,11 @@ function HistoryYear({ year, rows, isLast }) {
       </div>
       <div>
         {rows.map((row) => (
-          <HistoryRow key={row.id} row={row} />
+          <HistoryMonth
+            key={row.id}
+            month={row.month}
+            items={(row.items ?? [row]).map((item) => (typeof item === "string" ? { title: item } : item))}
+          />
         ))}
       </div>
     </section>

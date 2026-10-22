@@ -83,7 +83,8 @@ nav[data-theme="dark"] .bf-megaitem:hover{color:#fff;}
 .bf-histrow[data-clickable="1"]:hover .bf-histttl{color:var(--primary);}
 @media(max-width:720px){
   .bf-year{font-size:32px !important;}
-  .bf-histrow{grid-template-columns:64px 1fr 24px !important;column-gap:12px !important;}
+  .bf-histmonthrow{grid-template-columns:64px 1fr !important;column-gap:12px !important;}
+  .bf-histrow{grid-template-columns:1fr 24px !important;column-gap:12px !important;}
   .bf-histdetail{grid-column:1 / -1 !important;}
 }
 .bf-groupcard{transition:transform .25s ease, box-shadow .25s ease;}

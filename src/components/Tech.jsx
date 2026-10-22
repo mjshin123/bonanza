@@ -1,13 +1,13 @@
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Image as ImageIcon } from "lucide-react";
-import { historyEntries } from "../data/history.js";
+import { homeMilestones } from "../data/history.js";
 import DiamondSvg from "./DiamondSvg.jsx";
 import useNavDarkZone from "../hooks/useNavDarkZone.js";
 import { accentNums } from "../lib/accentNums.jsx";
 
 // 연혁 페이지와 동일한 데이터에서 "홈 화면에 보이기"로 표시된 항목만 사용한다.
-const milestones = historyEntries.filter((entry) => entry.showOnHome);
+const milestones = homeMilestones.filter((entry) => entry.showOnHome);
 
 const W = 1120;
 const DW = 300;
