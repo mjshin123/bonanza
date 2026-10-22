@@ -24,8 +24,25 @@ export default function TransightSolutions() {
           className="bf-reveal"
           style={{ textAlign: "center", fontSize: 13, fontWeight: 700, letterSpacing: "0.14em", color: "var(--primary)", marginBottom: 20 }}
         >
-          제공 솔루션
+          Overview
         </div>
+        <h2
+          className="bf-accent bf-reveal"
+          style={{
+            margin: "0 auto 56px",
+            maxWidth: 1200,
+            textAlign: "center",
+            wordBreak: "keep-all",
+            fontWeight: 500,
+            fontSize: "clamp(20px,2.1vw,30px)",
+            lineHeight: 1.35,
+            color: "#000",
+          }}
+        >
+          위험 주소 데이터를 기반으로 KYT 검증부터 추적, 공조, 차단까지.
+          <br />
+          온체인 범죄 대응을 하나의 솔루션으로 완성합니다.
+        </h2>
         <div className="bf-bento-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 20 }}>
           {ITEMS.map((item, i) => (
             <div

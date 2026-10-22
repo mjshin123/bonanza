@@ -260,3 +260,10 @@ nav[data-theme="dark"] .bf-megaitem:hover{color:#fff;}
 
 /* HeroWithVideo items: opacity/transform are scrubbed from scroll in JS (useScrubbedReveal); start hidden */
 .bf-seq [data-seq]{opacity:0;will-change:opacity,transform;}
+
+/* Compliance Infra 모듈 카드: 데스크톱 6열 → 3열 → 2열 → 1열 */
+.bf-modulecard:hover{border-color:#1640DB !important;}
+.bf-modulecard:hover .bf-moduleowner{color:#2F2F2F !important;}
+@media (max-width:1200px){.bf-modulegrid{grid-template-columns:repeat(3,1fr) !important;}}
+@media (max-width:860px){.bf-modulegrid{grid-template-columns:repeat(2,1fr) !important;}}
+@media (max-width:560px){.bf-modulegrid{grid-template-columns:1fr !important;}.bf-modulegrid > *{min-height:0 !important;}}

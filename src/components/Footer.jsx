@@ -17,6 +17,7 @@ const menuGroups = [
     items: [
       { label: "TranSight", href: "/TranSight" },
       { label: "TranSafer", href: "/TranSafer" },
+      { label: "Compliance Infra", href: "/ComplianceInfra" },
     ],
   },
   {

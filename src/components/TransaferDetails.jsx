@@ -1,6 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
+import { ArrowRight } from "lucide-react";
 import { accentNums } from "../lib/accentNums.jsx";
 import TransaferDiagram from "./TransaferDiagram.jsx";
+import InquiryModal from "./InquiryModal.jsx";
+import useStepProgress from "../hooks/useStepProgress.js";
+
+const PARENT_COMPANY = { name: "보난자팩토리", email: "contact@bonanza-factory.co.kr" };
 
 const OVERVIEW = {
   label: "Overview",
@@ -16,6 +21,7 @@ const API = {
     "초고위험 고객 확인 및 지급정지 전문 중계",
   ],
   process: {
+    label: "원화 입출금 검증 절차",
     heading: "전자금융보조업자로서 고객 전자서명 인증을 수행하여, 거래소·은행 간 원화 입출금 인증 절차를 안전하게 지원합니다.",
     steps: [
       { actor: "고객 → 거래소", text: "원화 입출금 요청" },
@@ -83,37 +89,6 @@ function DetailGrid({ items }) {
       ))}
     </div>
   );
-}
-
-const STEP_MS = 900;
-const HOLD_MS = 1800;
-
-// 화면에 보이는 동안 01 → 마지막 단계까지 차례로 파랗게 채우고, 잠시 멈춘 뒤 반복
-function useStepProgress(count) {
-  const ref = useRef(null);
-  const [active, setActive] = useState(-1);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
-      setActive(count - 1);
-      return undefined;
-    }
-    const el = ref.current;
-    if (!el) return undefined;
-    const io = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting), { threshold: 0.3 });
-    io.observe(el);
-    return () => io.disconnect();
-  }, [count]);
-
-  useEffect(() => {
-    if (!visible) return undefined;
-    const delay = active >= count - 1 ? HOLD_MS : STEP_MS;
-    const timer = setTimeout(() => setActive((a) => (a >= count - 1 ? -1 : a + 1)), delay);
-    return () => clearTimeout(timer);
-  }, [visible, active, count]);
-
-  return [ref, active];
 }
 
 function ProcessSteps({ steps }) {
@@ -191,6 +166,7 @@ function ProcessSteps({ steps }) {
 
 export default function TransaferDetails() {
   const { process } = API;
+  const [inquiryOpen, setInquiryOpen] = useState(false);
   return (
     <section className="bf-pad" style={{ background: "#fff", padding: "110px 40px 130px" }}>
       <div style={{ maxWidth: 1400, margin: "0 auto", display: "flex", flexDirection: "column", gap: 160 }}>
@@ -252,6 +228,18 @@ export default function TransaferDetails() {
           </div>
 
           <div style={{ marginTop: 160 }}>
+            <div
+              style={{
+                textAlign: "center",
+                fontSize: 13,
+                fontWeight: 700,
+                letterSpacing: "0.14em",
+                color: "var(--primary)",
+                marginBottom: 20,
+              }}
+            >
+              {process.label}
+            </div>
             <h2 className="bf-accent" style={{ ...headingStyle, margin: "0 auto 48px", maxWidth: 1200, textAlign: "center" }}>
               {renderHeading(process.heading)}
             </h2>
@@ -261,7 +249,36 @@ export default function TransaferDetails() {
             <DetailGrid items={process.points} />
           </div>
         </div>
+
+        <div className="bf-reveal" style={{ display: "flex", justifyContent: "center", transitionDelay: "0.4s" }}>
+          <button
+            type="button"
+            onClick={() => setInquiryOpen(true)}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "12px 20px",
+              border: "none",
+              borderRadius: 4,
+              background: "#1640DB",
+              color: "#fff",
+              fontWeight: 600,
+              fontSize: 15,
+              cursor: "pointer",
+            }}
+          >
+            도입 상담 문의 <ArrowRight width={16} height={16} />
+          </button>
+        </div>
       </div>
+
+      <InquiryModal
+        open={inquiryOpen}
+        company={PARENT_COMPANY.name}
+        email={PARENT_COMPANY.email}
+        onClose={() => setInquiryOpen(false)}
+      />
     </section>
   );
 }

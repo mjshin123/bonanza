@@ -38,6 +38,7 @@ const megaGroups = [
     items: [
       { label: "TranSight", href: "/TranSight", route: true },
       { label: "TranSafer", href: "/TranSafer", route: true },
+      { label: "Compliance Infra", href: "/ComplianceInfra", route: true },
     ],
     image: "/images/nav/menu-3.png",
   },
