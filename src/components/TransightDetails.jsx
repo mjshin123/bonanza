@@ -171,8 +171,10 @@ export default function TransightDetails() {
                       <h3
                         style={{
                           display: "flex",
+                          flexWrap: "wrap", // 좁은 화면에서는 영문 부제가 다음 줄로 내려감
                           alignItems: "center",
-                          gap: 12,
+                          columnGap: 12,
+                          rowGap: 4,
                           margin: "0 0 14px",
                           fontWeight: 700,
                           fontSize: 22,
@@ -180,8 +182,8 @@ export default function TransightDetails() {
                           color: "#000",
                         }}
                       >
-                        <span style={{ fontSize: 12, fontWeight: 600, color: "#2A5BFF" }}>주요 기능</span>
-                        {feature.title}
+                        <span style={{ fontSize: 12, fontWeight: 600, color: "#2A5BFF", whiteSpace: "nowrap" }}>주요 기능</span>
+                        <span style={{ whiteSpace: "nowrap" }}>{feature.title}</span>
                         {feature.titleNote && (
                           <span style={{ fontSize: 13, fontWeight: 400, letterSpacing: 0, color: "#7A8299" }}>
                             {feature.titleNote}

@@ -103,8 +103,8 @@ function ProcessSteps({ steps }) {
       {steps.map((step, i) => {
         const on = i <= active;
         return (
-        <div key={step.text} style={{ minWidth: 0, textAlign: "center" }}>
-          <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
+        <div key={step.text} className="bf-flowstep" style={{ minWidth: 0, textAlign: "center" }}>
+          <div className="bf-flowdot" style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
             <span
               style={{
                 position: "relative",
@@ -146,6 +146,7 @@ function ProcessSteps({ steps }) {
                     inset: 0,
                     background: "#1640DB",
                     transform: `scaleX(${i < active ? 1 : 0})`,
+                    "--flow-fill": i < active ? 1 : 0, // 모바일 세로 연결선용 (page.css)
                     transformOrigin: "left",
                     transition: i < active ? "transform .4s linear" : "none",
                   }}

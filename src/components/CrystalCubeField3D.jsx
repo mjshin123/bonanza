@@ -1,11 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Environment, Lightformer, PerformanceMonitor, useFBO } from "@react-three/drei";
 import { EffectComposer, Bloom, ToneMapping } from "@react-three/postprocessing";
 import { Effect, EffectAttribute, ToneMappingMode } from "postprocessing";
 import * as THREE from "three";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
-import useNavDarkZone from "../hooks/useNavDarkZone.js";
 import { COINS, DECAL_CODE, DECAL_ARROW, ATLAS_SLOTS, makeDecalAtlas, makeCoinFace } from "./coinLogos.js";
 
 /* ── feature flags ─────────────────────────────────────────── */
@@ -26,7 +25,7 @@ const HEIGHT = 1; // cube, like the reference image
 const GAP = 0.18;
 const PITCH = SIZE + GAP;
 const LIFT = 0.3; // hovered block rise
-const BG = "#0b0c11";
+const BG = "#0b0c11"; // keep in sync with CrystalHero
 const FOG_NEAR = 7;
 const FOG_FAR = 18;
 
@@ -36,10 +35,6 @@ const HALF_D = ((ROWS - 1) * PITCH) / 2;
 
 /* ── helpers ───────────────────────────────────────────────── */
 const ease = (v) => v * v * (3 - 2 * v); // ease-in-out on 0..1
-function smoothstep(e0, e1, x) {
-  const t = Math.min(1, Math.max(0, (x - e0) / (e1 - e0)));
-  return t * t * (3 - 2 * t);
-}
 
 // seeded random so layout/patterns are stable between renders
 function mulberry32(seed) {
@@ -62,9 +57,12 @@ function makeFloorTexture() {
   const sz = px / worldD;
   const rand = mulberry32(11);
 
+  // drawn in 4096 px coordinates onto a 2048 canvas: the floor is only seen at a glance through
+  // fog and glass, and uploading + mipmapping a 4096² texture stalled the first frame by ~0.3s
   const canvas = document.createElement("canvas");
-  canvas.width = canvas.height = px;
+  canvas.width = canvas.height = px / 2;
   const ctx = canvas.getContext("2d");
+  ctx.scale(0.5, 0.5);
   ctx.fillStyle = "#101118";
   ctx.fillRect(0, 0, px, px);
 
@@ -234,6 +232,17 @@ function useGlowMap() {
      multiplied in), blurred for frost → cubes overlapping each other get deeper
    - reflections of an analytic studio (overhead softbox + strip lights) weighted by
      Fresnel, so each face catches light differently                                    */
+/* Uneven room light shared by the blocks and the floor (group-local xz): one soft pool off to the
+   back left, a slow low-frequency unevenness, and darker corners — so idle blocks aren't one flat value */
+const ambientShadeGlsl = /* glsl */ `
+  float ambientShade(vec2 xz) {
+    vec2 c = vec2(-2.6, -2.2);
+    float pool = exp(-dot(xz - c, xz - c) / (2.0 * 5.0 * 5.0));
+    float n = 0.5 + 0.5 * sin(xz.x * 0.42 + 1.3) * sin(xz.y * 0.36 - 0.7);
+    return (0.28 + 1.05 * pool) * mix(0.78, 1.15, n);
+  }
+`;
+
 const glassVertex = /* glsl */ `
   attribute float aGlow;
   attribute float aPattern;
@@ -252,8 +261,10 @@ const glassVertex = /* glsl */ `
   varying vec3 vWorldNormal;
   varying vec3 vViewNormal;
   varying float vDepth;
+  varying vec2 vCell;
   void main() {
     vGlow = aGlow;
+    vCell = instanceMatrix[3].xz;
     vPattern = aPattern;
     vDecal = aDecal;
     vDecalFace = aDecalFace;
@@ -273,6 +284,7 @@ const glassVertex = /* glsl */ `
 `;
 
 const glassFragment = /* glsl */ `
+  ${ambientShadeGlsl}
   uniform sampler2D uBuffer;
   uniform vec2 uViewport;
   uniform vec3 uFog;
@@ -282,6 +294,7 @@ const glassFragment = /* glsl */ `
   uniform sampler2D uAtlas;
   uniform float uSlots;
   uniform mat3 uObjToWorld;
+  uniform float uTime;
   varying float vGlow;
   varying float vPattern;
   varying float vDecal;
@@ -294,6 +307,7 @@ const glassFragment = /* glsl */ `
   varying vec3 vWorldNormal;
   varying vec3 vViewNormal;
   varying float vDepth;
+  varying vec2 vCell;
 
   float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 
@@ -374,11 +388,20 @@ const glassFragment = /* glsl */ `
     vec3 idle = bg * exp(-sigI * L);
     float fromTop = clamp((p.y + q.y) / (4.0 * H.y) + 0.5, 0.0, 1.0);
     idle += vec3(0.012, 0.014, 0.023) * (1.0 - exp(-1.8 * L)) * mix(0.55, 1.35, fromTop);
-    // lit: blue acrylic lit from within — thin paths pale, thick paths deep blue
-    vec3 sigL = vec3(5.5, 2.8, 0.45);
-    vec3 lightIn = vec3(0.42, 0.62, 1.0);
-    vec3 lit = (lightIn * 0.72 + bg * 0.4) * exp(-sigL * L);
-    lit += vec3(0.008, 0.07, 0.62) * (1.0 - exp(-1.6 * L));
+    // lit: the box itself stays clear, nearly colourless glass in the dark — only a faint blue
+    // haze where the inner light scatters; the colour comes from a lamp at the centre
+    vec3 lit = bg * exp(-vec3(0.32, 0.3, 0.26) * L);
+    lit += vec3(0.008, 0.02, 0.06) * (1.0 - exp(-1.6 * L));
+    // inner lamp: light scattered toward the eye along the view ray from a point light at the
+    // centre (∫ 1/r² dt, solved analytically) → falls off like real light in haze, so it spreads
+    // through the whole box instead of reading as a disc; breathes very slowly
+    float tc = dot(-p, d);                                  // ray distance to the closest point
+    float h = sqrt(dot(p + d * tc, p + d * tc) + 0.03);     // + softening so the centre isn't a dot
+    float scatter = (atan((L - tc) / h) + atan(tc / h)) / h;
+    float breathe = 0.88 + 0.12 * sin(uTime * 1.6);
+    float lamp = scatter * 0.05 * breathe;                  // ~0.7 at the centre, ~0.15 near the faces
+    vec3 lampCol = mix(vec3(0.0, 0.1, 1.0), vec3(0.02, 0.22, 1.0), smoothstep(0.4, 1.0, lamp));
+    lit += lampCol * lamp;
     // a block holding a coin glows softer so the coin reads through
     lit = mix(lit, bg * vec3(0.35, 0.6, 1.3) + vec3(0.0, 0.03, 0.2), vInner * 0.5);
     vec3 col = mix(idle, lit, g);
@@ -409,7 +432,8 @@ const glassFragment = /* glsl */ `
     // blue past 1.0 and the tone mapping / bloom washed it out to white
     float innerAmt = clamp(innerLine * inLight * exp(-0.5 * L), 0.0, 1.0);
     col += innerIdle * (1.0 - g);
-    col = mix(col, vec3(0.006, 0.05, 0.28), innerAmt * 0.85 * g);
+    // far edges catch a little of the lamp's light instead of reading as a dark navy outline
+    col += vec3(0.01, 0.07, 0.3) * innerAmt * 0.5 * g;
     bool exitBottom = q.y < -H.y + 0.002;
     if (exitBottom && vPattern > 1.5) {
       vec2 f = fract((q.xz + 0.5) * 13.0) - 0.5;
@@ -429,7 +453,7 @@ const glassFragment = /* glsl */ `
     // reflections: overhead softbox / strips, stronger at grazing angles
     vec3 envCol = mix(vec3(0.86, 0.89, 1.0), vec3(0.8, 0.9, 1.0), g);
     env = mix(env, env * 0.25 + 0.1, bf); // soft, defocused reflections at the far corner
-    col += envCol * env * F * mix(0.2, 0.8, g);
+    col += envCol * env * F * mix(0.2, 0.4, g);
     // hairline front edges catching light — brightness varies with what they reflect
     vec3 ap = abs(p) / H;
     float fe = mid3(ap);
@@ -438,7 +462,7 @@ const glassFragment = /* glsl */ `
     float edgeD = max(1.0 - fe, 0.0);
     float frontCore = smoothstep(1.0 - few - mix(0.012, 0.2, bf), 1.0 - 0.002, fe);
     float frontHalo = exp(-edgeD / mix(0.055, 0.15, bf));
-    float frontLine = (frontCore * 0.75 + frontHalo * 0.4) * mix(1.0, 0.18, bf);
+    float frontLine = (frontCore * 0.5 + frontHalo * 0.45) * mix(1.0, 0.18, bf);
     // bevel normal blends smoothly toward the edge (a step here made the edge light jump → "tape" band).
     // Each edge gets its own bevel normal and we cross-fade to the nearer edge: summing both edges'
     // normals at a vertex tilted it diagonally into the softbox and the glows clumped there.
@@ -454,6 +478,10 @@ const glassFragment = /* glsl */ `
     vec3 sel = other * exp((ap - fe) * 30.0);           // soft pick of the nearer edge
     float edgeEnv = dot(sel, vec3(envX, envY, envZ)) / max(dot(sel, vec3(1.0)), 1e-4);
     float edgeLight = 0.06 + pow(clamp(edgeEnv, 0.0, 1.4), 1.6);
+    // a straight edge reflects the same thing along its whole length, so it read as one flat
+    // value: let it fall off gently along the edge — fullest at the near top corner, easing
+    // down toward the far / bottom ends
+    edgeLight *= mix(1.1, 0.45, smoothstep(0.1, 1.05, dn));
     // the near vertical edge (front middle) reflects only the dim horizon, so it gets its own
     // light: bright at the top, fading toward the bottom
     float selSum = max(dot(sel, vec3(1.0)), 1e-4);
@@ -478,7 +506,7 @@ const glassFragment = /* glsl */ `
                   + vec3(0.65, 0.82, 1.0) * topFront * edgeLight
                   + vec3(0.6, 0.76, 1.0) * vertLight
                   + vec3(0.26, 0.38, 0.54) * sideTop
-                  + vec3(0.03, 0.16, 0.42) * smoothstep(mix(0.76, 0.5, bf), 1.0, fe) * edgeLight * mix(1.0, 0.5, bf) * (1.0 - sideTopW);
+                  + vec3(0.06, 0.16, 0.34) * smoothstep(mix(0.76, 0.5, bf), 1.0, fe) * edgeLight * mix(1.0, 0.5, bf) * (1.0 - sideTopW);
     // idle: the near vertical (centre) edge read too sharp against the rest — tone it down
     float idleVertDim = 1.0 - vertW * nearV * 0.5;
     // idle: same smooth bevel / nearer-edge light as lit (no step → no "tape" band), in the
@@ -490,10 +518,13 @@ const glassFragment = /* glsl */ `
     // near vertical edge: like lit, bright at the top fading down (soft band + crisp core), in idle grey
     vec3 idleVert = vec3(0.12, 0.13, 0.16) * vertW * nearV * pow(heightT, 2.6) * (vertBand * 0.26 + frontCore * 0.4);
     col += mix(frontIdle * idleVertDim + idleVert, frontLit, g);
-
     // defocus: flatten detail toward the cube's average body colour near the far corner
-    vec3 avgBody = mix(vec3(0.012, 0.014, 0.022) + bg * 0.45, vec3(0.03, 0.16, 0.7) + bg * 0.1, g);
+    vec3 avgBody = mix(vec3(0.012, 0.014, 0.022) + bg * 0.45, vec3(0.01, 0.03, 0.1) + bg * 0.4, g);
     col = mix(col, avgBody, bf * 0.3);
+
+    // idle blocks follow the room light (+ a small per-block variation); lit blocks keep their lamp
+    float shade = ambientShade(vCell) * mix(0.85, 1.12, hash(vCell + 7.3));
+    col *= mix(shade, 1.0, g);
 
     // printed white marks (logo / code / arrow) on one visible face
     if (vDecal > -0.5) {
@@ -534,7 +565,7 @@ const backVertex = /* glsl */ `
 const backFragment = /* glsl */ `
   varying float vGlow;
   void main() {
-    vec3 tint = mix(vec3(0.72, 0.75, 0.84), vec3(0.22, 0.45, 1.0), smoothstep(0.0, 1.0, vGlow));
+    vec3 tint = mix(vec3(0.72, 0.75, 0.84), vec3(0.74, 0.8, 0.94), smoothstep(0.0, 1.0, vGlow));
     gl_FragColor = vec4(tint, 1.0);
   }
 `;
@@ -616,6 +647,7 @@ function useGlassMaterials(atlas) {
         uSlots: { value: ATLAS_SLOTS },
         // blocks sit in a group rotated 45° around Y
         uObjToWorld: { value: new THREE.Matrix3().setFromMatrix4(new THREE.Matrix4().makeRotationY(Math.PI / 4)) },
+        uTime: { value: 0 },
       },
     });
     const back = new THREE.ShaderMaterial({
@@ -712,7 +744,13 @@ function Blocks({ pointerRef, glowMap, maskTarget, spill }) {
         pos[i * 2 + 1] = r * PITCH - HALF_D;
       }
     }
-    return { pos, glow: new Float32Array(COUNT), lift: new Float32Array(COUNT), liftVel: new Float32Array(COUNT) };
+    return {
+      pos,
+      glow: new Float32Array(COUNT),
+      lift: new Float32Array(COUNT),
+      liftVel: new Float32Array(COUNT),
+      hold: new Float32Array(COUNT), // seconds a block keeps rising after the cursor has left it
+    };
   }, []);
 
   useEffect(() => {
@@ -791,12 +829,20 @@ function Blocks({ pointerRef, glowMap, maskTarget, spill }) {
     const active = hx !== 1e6;
 
     // linear progress; eased with smoothstep where used → light fades in like a lamp warming up
-    const onStep = dt / 0.3; // ~0.3s to fully light
-    const offStep = dt / 0.6; // a little slower fade out = short light trail
-    // lift is a damped spring: overshoots a little on the way up and settles with a small bounce
-    const SPRING_K = 170;
-    const SPRING_C = 21; // near-critical: one soft overshoot, no wobbling
-    const { liftVel } = state;
+    const onStep = dt / 0.22; // ~0.22s to fully light
+    const offStep = dt / 1.0; // slower fade out = soft afterglow trail
+    glassMat.uniforms.uTime.value = three.clock.elapsedTime;
+    // lift is a damped spring: overshoots a little on the way up and settles with a small bounce.
+    // Softer than before (170 / 21) so a block sweeping past rises and sinks in one smooth arc
+    const SPRING_K = 110;
+    const SPRING_C = 18; // ζ ≈ 0.86: one soft overshoot, no wobbling
+    // a block brushed by a fast-moving cursor keeps its target for a moment, so it completes a
+    // small rise instead of twitching up and straight back down (the "stop-start" feel)
+    const HOLD = 0.16;
+    // integrate in small fixed steps: one big step on a slow frame made the spring jump
+    const SUB = Math.max(1, Math.ceil(Math.min(delta, 0.1) / (1 / 120)));
+    const sdt = Math.min(delta, 0.1) / SUB;
+    const { liftVel, hold } = state;
     const glowData = glowMap.image.data;
 
     for (let i = 0; i < COUNT; i++) {
@@ -809,13 +855,22 @@ function Blocks({ pointerRef, glowMap, maskTarget, spill }) {
         const dz = Math.abs(z - hz);
         const inCell = dx <= PITCH / 2 && dz <= PITCH / 2;
         target = inCell ? 1 : 0;
-        liftTarget = inCell ? 1 : 0;
+        if (inCell) hold[i] = HOLD;
       }
+      hold[i] = Math.max(0, hold[i] - dt);
+      liftTarget = hold[i] > 0 ? 1 : 0;
       const g = glow[i];
       glow[i] = target > g ? Math.min(target, g + onStep) : Math.max(target, g - offStep);
-      const acc = SPRING_K * (liftTarget - lift[i]) - SPRING_C * liftVel[i];
-      liftVel[i] += acc * dt;
-      lift[i] = Math.max(-0.04, lift[i] + liftVel[i] * dt);
+      for (let k = 0; k < SUB; k++) {
+        const acc = SPRING_K * (liftTarget - lift[i]) - SPRING_C * liftVel[i];
+        liftVel[i] += acc * sdt;
+        lift[i] += liftVel[i] * sdt;
+        if (lift[i] < -0.04) {
+          // resting on the floor: stop there instead of sticking with leftover downward speed
+          lift[i] = -0.04;
+          liftVel[i] = Math.max(0, liftVel[i]);
+        }
+      }
 
       const y = lift[i] * LIFT;
       tmp.m.makeTranslation(x, y, z);
@@ -913,10 +968,15 @@ function Floor({ glowMap, spill }) {
       shader.uniforms.uHalf = { value: SIZE / PITCH / 2 };
       shader.uniforms.uSpill = spill;
       shader.fragmentShader = shader.fragmentShader
-        .replace("#include <common>", "#include <common>\nuniform sampler2D uGlowMap;\nuniform vec2 uTexel;\nuniform float uHalf;\nuniform float uSpill;")
+        .replace("#include <common>", "#include <common>\nuniform sampler2D uGlowMap;\nuniform vec2 uTexel;\nuniform float uHalf;\nuniform float uSpill;\n" + ambientShadeGlsl)
         .replace(
           "#include <map_fragment>",
           `#include <map_fragment>
+          {
+            // same room light as the blocks, a bit milder (it's also seen through them)
+            vec2 floorXZ = vec2((vMapUv.x - 0.5) * ${(COLS * PITCH).toFixed(3)}, (0.5 - vMapUv.y) * ${(ROWS * PITCH).toFixed(3)});
+            diffuseColor.rgb *= mix(1.0, ambientShade(floorXZ), 0.6);
+          }
           {
             // distance from this floor point to each nearby block's square footprint;
             // light falls off within the gap so it frames the block, not a big circle
@@ -928,10 +988,10 @@ function Floor({ glowMap, spill }) {
                 vec2 c = cell + vec2(float(ix), float(iy));
                 float gl = texture2D(uGlowMap, (c + 0.5) * uTexel).r;
                 vec2 q = max(abs(grid - (c + 0.5)) - uHalf, 0.0);
-                spill = max(spill, gl * exp(-length(q) * 14.0));
+                spill = max(spill, gl * exp(-length(q) * 8.0));
               }
             }
-            diffuseColor.rgb += vec3(0.03, 0.12, 1.0) * spill * 0.9 * uSpill;
+            diffuseColor.rgb += vec3(0.03, 0.2, 1.0) * spill * 0.6 * uSpill;
           }`,
         );
     };
@@ -997,6 +1057,52 @@ function FirstFrames({ onReady }) {
   return null;
 }
 
+/* Compiles the scene's shaders before the first frame with KHR_parallel_shader_compile (when the
+   browser has it), so the heavy glass shader builds off the main thread instead of freezing the
+   page for a second or two (worst on Windows / D3D). Rendering waits for it via `onDone`. */
+function Precompile({ onDone }) {
+  const { gl, scene, camera } = useThree();
+  useEffect(() => {
+    let alive = true;
+    let raf = 0;
+    const ctx = gl.getContext();
+    // the browser only updates the compile status when commands are flushed; nothing is drawn
+    // while we wait, so flush each frame ourselves
+    const pump = () => {
+      ctx.flush();
+      raf = requestAnimationFrame(pump);
+    };
+    pump();
+    // the composer draws the scene into an off-screen buffer (no tone mapping, linear output), and
+    // three builds a different shader variant for that than for the screen — compile that variant,
+    // or the first frame recompiles everything anyway
+    const target = new THREE.WebGLRenderTarget(2, 2, { type: THREE.HalfFloatType });
+    const compiled = Promise.resolve()
+      .then(() => {
+        const prev = gl.getRenderTarget();
+        gl.setRenderTarget(target);
+        try {
+          return gl.compileAsync?.(scene, camera); // programs are created synchronously in here
+        } finally {
+          gl.setRenderTarget(prev);
+        }
+      })
+      .catch(() => undefined) // fall back to compiling on the first frame
+      .finally(() => target.dispose());
+    // never hold the canvas back for long if the status check stalls
+    const cap = new Promise((resolve) => setTimeout(resolve, 3000));
+    Promise.race([compiled, cap]).then(() => {
+      cancelAnimationFrame(raf);
+      if (alive) onDone();
+    });
+    return () => {
+      alive = false;
+      cancelAnimationFrame(raf);
+    };
+  }, [gl, scene, camera, onDone]);
+  return null;
+}
+
 function Scene({ pointerRef, quality }) {
   const high = quality === "high";
   const glowMap = useGlowMap();
@@ -1027,154 +1133,53 @@ function Scene({ pointerRef, quality }) {
       <CameraRig />
       <EffectComposer multisampling={0} disableNormalPass>
         {high && CORNER_BLUR_PX > 0 && <primitive object={cornerBlur} />}
-        {high && USE_BLOOM && <Bloom mipmapBlur luminanceThreshold={0.22} luminanceSmoothing={0.2} intensity={0.45} radius={0.35} />}
+        {high && USE_BLOOM && <Bloom mipmapBlur luminanceThreshold={0.26} luminanceSmoothing={0.35} intensity={0.6} radius={0.6} />}
         <ToneMapping mode={ToneMappingMode.NEUTRAL} />
       </EffectComposer>
     </>
   );
 }
 
-/* ── section ───────────────────────────────────────────────── */
-export default function CrystalCubeField3D() {
-  const wrapRef = useRef(null);
-  // capture: last = Infinity keeps the idle wander off, so every block stays dark
-  const pointerRef = useRef({ x: 0, y: 0, active: false, last: CAPTURE_POSTER ? Infinity : 0 });
-  const [ready, setReady] = useState(false);
-  const [visible, setVisible] = useState(true);
-  const [tabHidden, setTabHidden] = useState(() => typeof document !== "undefined" && document.hidden);
+/* ── canvas ──────────────────────────────────────────────────
+   Loaded lazily by CrystalHero, so three.js / postprocessing stay out of the main bundle and the
+   headline + poster show right away. `running` pauses rendering (off-screen / hidden tab). */
+export default function CrystalCubeField3D({ pointerRef, running, onReady }) {
   const lowEnd = useMemo(isLowEndDevice, []);
   const [quality, setQuality] = useState(lowEnd && !CAPTURE_POSTER ? "low" : "high");
-  const copyRef = useRef(null);
-  useNavDarkZone(wrapRef);
-
-  // headline + description stay put (fixed) while the block field scrolls up underneath,
-  // then fade out as the field is almost gone and the next section takes over
-  useEffect(() => {
-    const section = wrapRef.current;
-    const copy = copyRef.current;
-    if (!section || !copy) return undefined;
-    let raf = 0;
-    const update = () => {
-      raf = 0;
-      const rect = section.getBoundingClientRect();
-      const p = Math.min(1, Math.max(0, -rect.top / rect.height)); // 0 = at top, 1 = field scrolled away
-      const f = smoothstep(0.55, 0.9, p);
-      copy.style.opacity = String(1 - f);
-      copy.style.transform = `translateY(${-24 * f}px)`;
-      copy.style.visibility = f >= 1 ? "hidden" : "visible";
-    };
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(update);
-    };
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
-  }, []);
-
-  // pause rendering while off-screen
-  useEffect(() => {
-    const node = wrapRef.current;
-    if (!node) return undefined;
-    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { threshold: 0 });
-    io.observe(node);
-    return () => io.disconnect();
-  }, []);
-
-  // and while another tab is in front
-  useEffect(() => {
-    const onVisibility = () => setTabHidden(document.hidden);
-    document.addEventListener("visibilitychange", onVisibility);
-    return () => document.removeEventListener("visibilitychange", onVisibility);
-  }, []);
-
-  const updatePointer = (e) => {
-    const rect = wrapRef.current.getBoundingClientRect();
-    const p = pointerRef.current;
-    p.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-    p.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-    p.active = true;
-    p.last = performance.now();
-  };
-  const leave = () => {
-    pointerRef.current.active = false;
-    pointerRef.current.last = performance.now();
-  };
+  const [ready, setReady] = useState(false);
+  const [compiled, setCompiled] = useState(false);
+  const onCompiled = useCallback(() => setCompiled(true), []);
+  // capture: last = Infinity keeps the idle wander off, so every block stays dark
+  if (CAPTURE_POSTER) pointerRef.current.last = Infinity;
 
   return (
-    <section
-      ref={wrapRef}
-      id="home"
-      className="relative w-full overflow-hidden"
-      style={{ height: "100vh", minHeight: 560, background: BG }}
-      onPointerMove={updatePointer}
-      onPointerDown={updatePointer}
-      onPointerLeave={leave}
-      onPointerCancel={leave}
+    <Canvas
+      style={{ position: "absolute", inset: 0 }}
+      frameloop={running && compiled ? "always" : "never"}
+      dpr={DPR[quality]}
+      camera={{ fov: 34, near: 0.1, far: 80, position: [0, 5, 8.7] }}
+      gl={{ antialias: false, powerPreference: "high-performance", toneMapping: THREE.NeutralToneMapping }}
     >
-      {/* static render of the idle field, shown until the live canvas fades in over it */}
-      <div aria-hidden="true" className="bf-hero3d-poster pointer-events-none absolute inset-0" />
-      <Canvas
-        style={{ position: "absolute", inset: 0, opacity: ready ? 1 : 0, transition: "opacity .9s ease" }}
-        frameloop={visible && !tabHidden ? "always" : "never"}
-        dpr={DPR[quality]}
-        camera={{ fov: 34, near: 0.1, far: 80, position: [0, 5, 8.7] }}
-        gl={{ antialias: false, powerPreference: "high-performance", toneMapping: THREE.NeutralToneMapping }}
-      >
-        {/* frames dropping → switch to the low tier; low-end devices never go back up.
-            After a few flip-flops it stays low for good. */}
-        <FirstFrames onReady={() => setReady(true)} />
+      <FirstFrames
+        onReady={() => {
+          setReady(true);
+          onReady();
+        }}
+      />
+      {/* frames dropping → switch to the low tier; low-end devices never go back up.
+          After a few flip-flops it stays low for good. Only starts once the first frames are up:
+          the startup stall (shader compile, texture upload) used to read as a slow device and
+          swapped the tier right while the canvas was fading in. */}
+      {ready && (
         <PerformanceMonitor
           flipflops={3}
           onDecline={() => !CAPTURE_POSTER && setQuality("low")}
           onIncline={() => !lowEnd && setQuality("high")}
           onFallback={() => !CAPTURE_POSTER && setQuality("low")}
         />
-        <Scene pointerRef={pointerRef} quality={quality} />
-      </Canvas>
-
-      {/* thin dim layer so the centred headline reads over the blocks */}
-      <div className="pointer-events-none absolute inset-0 bg-black/30" />
-
-      {/* edge vignette + blend into the next (video) section */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{ background: `radial-gradient(ellipse at 50% 45%, transparent 45%, ${BG}ee 100%)` }}
-      />
-      <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-40"
-        style={{ background: "linear-gradient(to bottom, transparent, #0A0A0A)" }}
-      />
-
-      {/* centred headline with the description under it; wrapper ignores the pointer so the blocks stay interactive.
-          Fixed to the viewport (scroll-driven fade above), under the nav (z 100), over the next section.
-          Same side padding as the other sections (40px, 24px on mobile via .bf-pad). */}
-      <div
-        ref={copyRef}
-        className="bf-pad pointer-events-none"
-        style={{ position: "fixed", inset: 0, zIndex: 5, padding: "64px 40px 0", willChange: "opacity, transform" }}
-      >
-        <div style={{ position: "relative", maxWidth: 1400, height: "100%", margin: "0 auto" }}>
-          <div className="bf-hero3d-main">
-            <h1
-              className="bf-hero3d-h"
-              style={{ opacity: 0, animation: "revU 1s .15s ease both" }}
-            >
-              신뢰할 수 있는 디지털 자산의 기반을 만듭니다.
-            </h1>
-            <p className="bf-hero3d-desc" style={{ opacity: 0, animation: "revU 1s .3s ease both" }}>
-              보난자팩토리는 가상자산 자금세탁방지(AML) 전문 기업입니다. 블록체인 데이터에 대한 깊은 이해를
-              <br className="bf-hero3d-br" />
-              바탕으로, 거래소와 은행, 수사기관이 함께 신뢰할 수 있는 가상자산 생태계를 만들어갑니다.
-            </p>
-          </div>
-        </div>
-      </div>
-
-    </section>
+      )}
+      <Scene pointerRef={pointerRef} quality={quality} />
+      <Precompile onDone={onCompiled} />
+    </Canvas>
   );
 }

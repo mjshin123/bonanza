@@ -127,8 +127,14 @@ nav[data-theme="dark"] .bf-megaitem:hover{color:#fff;}
   .bf-groupacc-row > *:nth-child(4){grid-area:media;}
   .bf-achstats{grid-template-columns:1fr !important;gap:28px !important;}
   .bf-detailsgrid{grid-template-columns:1fr !important;grid-template-rows:none !important;grid-auto-flow:row !important;}
-  .bf-flowsteps{grid-template-columns:1fr !important;row-gap:18px !important;}
-  .bf-flowline{display:none !important;}
+  /* 프로세스 단계: 가운데 정렬로 한 단계씩 쌓으면 너무 길어서, 왼쪽 번호 + 오른쪽 글의 세로 타임라인으로 */
+  .bf-flowsteps{grid-template-columns:1fr !important;row-gap:20px !important;width:fit-content;max-width:100% !important;}
+  .bf-flowstep{display:grid;grid-template-columns:32px 1fr;column-gap:14px;text-align:left !important;}
+  .bf-flowstep > *:not(.bf-flowdot){grid-column:2;padding:0 !important;}
+  .bf-flowstep > .bf-flowdot + *{margin-top:6px;}
+  .bf-flowdot{grid-column:1;grid-row:1 / span 3;align-self:stretch;align-items:flex-start !important;margin-bottom:0 !important;}
+  .bf-flowline{left:15.5px !important;top:32px !important;bottom:-20px !important;width:1px !important;height:auto !important;}
+  .bf-flowline > span{transform:scaleY(var(--flow-fill)) !important;transform-origin:top !important;}
   .bf-affgrid{grid-template-columns:1fr !important;}
   .bf-affcarditem{padding:28px !important;}
   .bf-parentcard{padding:28px !important;}
@@ -267,3 +273,5 @@ nav[data-theme="dark"] .bf-megaitem:hover{color:#fff;}
 @media (max-width:1200px){.bf-modulegrid{grid-template-columns:repeat(3,1fr) !important;}}
 @media (max-width:860px){.bf-modulegrid{grid-template-columns:repeat(2,1fr) !important;}}
 @media (max-width:560px){.bf-modulegrid{grid-template-columns:1fr !important;}.bf-modulegrid > *{min-height:0 !important;}}
+/* Compliance Infra 헤더 구조도: 폰에서는 3열이 좁아 모듈명이 세 줄로 꺾여 2열로 */
+@media (max-width:560px){.bf-hubgrid{grid-template-columns:repeat(2,1fr) !important;}}

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-// 버전 전환: CrystalCubeField3D(두께 기반 유리) / GlassCubeField3D(유리 재질+Bloom) / CoinCubeField3D(코인 큐브) / BlockField3D(최초 버전)
-import BlockField3D from "../components/CrystalCubeField3D.jsx";
+// 버전 전환: CrystalHero(CrystalCubeField3D를 지연 로드, 두께 기반 유리) / GlassCubeField3D(유리 재질+Bloom) / CoinCubeField3D(코인 큐브) / BlockField3D(최초 버전)
+import BlockField3D from "../components/CrystalHero.jsx";
 // 블럭 아래 영역: IntroVideo(좌 텍스트 + 우 영상) / Hero(가운데 큰 영상, 이전 버전)
 import IntroVideo from "../components/IntroVideo.jsx";
 import About from "../components/About.jsx";

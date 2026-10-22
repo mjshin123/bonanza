@@ -150,13 +150,14 @@ const labelStyle = {
 function HubDiagram() {
   return (
     <div
+      className="bf-hubgrid"
       style={{
         position: "relative",
         display: "grid",
         gridTemplateColumns: "repeat(3,1fr)",
         gap: 12,
         padding: 20,
-        border: "1px solid rgba(94,142,255,.25)",
+        border: "1px solid rgba(94,142,255,.6)",
         borderRadius: 16,
         background: "rgba(94,142,255,.14)",
       }}
@@ -391,8 +392,8 @@ function ProcessSteps() {
       {PROCESS.map((step, i) => {
         const on = i <= active;
         return (
-        <div key={step.title} style={{ minWidth: 0, textAlign: "center" }}>
-          <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
+        <div key={step.title} className="bf-flowstep" style={{ minWidth: 0, textAlign: "center" }}>
+          <div className="bf-flowdot" style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
             <span
               style={{
                 position: "relative",
@@ -433,6 +434,7 @@ function ProcessSteps() {
                     inset: 0,
                     background: "#1640DB",
                     transform: `scaleX(${i < active ? 1 : 0})`,
+                    "--flow-fill": i < active ? 1 : 0, // 모바일 세로 연결선용 (page.css)
                     transformOrigin: "left",
                     transition: i < active ? "transform .4s linear" : "none",
                   }}
