@@ -17,12 +17,14 @@ const solutionItems = [
     title: "디지털자산 지갑·송금 인프라 솔루션, took!",
     desc: "기업과 기관이 디지털자산 지갑 및 송금 서비스를 효율적으로 구축·운영할 수 있도록 지원하는 WaaS(Wallet-as-a-Service) 솔루션입니다. KYT 기능을 내재화하여 디지털자산 거래 위험을 실시간으로 모니터링하고, 규제 준수와 안전한 자산 관리를 지원하는 통합 인프라를 제공합니다.",
     link: "https://tookwallet.com",
+    image: "/images/took.webp",
   },
   {
     company: "트라버스",
     title: "디지털자산 거래 조회·신고 플랫폼, SaferBlock",
     desc: "디지털자산 거래정보 조회와 의심거래 및 범죄 관련 정보 신고 기능을 제공하는 플랫폼입니다. 실시간 가상자산 뉴스와 전문 분석 리포트를 통해 주요 시장 동향 및 위험정보를 제공하며, 이용자의 거래 위험 식별과 범죄 피해 예방을 지원합니다.",
     link: "https://saferblock.io",
+    image: "/images/saferblock.webp",
   },
   {
     company: "바이스",
