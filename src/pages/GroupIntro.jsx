@@ -40,9 +40,21 @@ const solutionItems = [
   },
 ];
 
-// 솔루션 우측 미디어 영역 — 영상이 있으면 박스 없이 영상 비율 그대로 두되,
-// 자리표시 박스(16:10)와 비슷한 면적이 되도록 폭을 줄인다 (9:16 기준 약 59%)
+// Match the default placeholder's area using the media's intrinsic aspect ratio,
+// bounded by the available column width and with no forced media height.
 function SolutionMedia({ item, iconSize, boxStyle }) {
+  const [sourceRatio, setSourceRatio] = useState(item.video ? 9 / 16 : 16 / 10);
+  const mediaStyle = {
+    display: "block",
+    width: `${Math.min(1, Math.sqrt((10 / 16) * sourceRatio)) * 100}%`,
+    maxWidth: "100%",
+    height: "auto",
+    marginTop: boxStyle.marginTop,
+    marginBottom: boxStyle.marginBottom,
+    marginLeft: "auto",
+    marginRight: "auto",
+    flex: "none",
+  };
   if (item.video) {
     return (
       <video
@@ -53,7 +65,26 @@ function SolutionMedia({ item, iconSize, boxStyle }) {
         loop
         playsInline
         preload="auto"
-        style={{ display: "block", width: "59%", height: "auto", marginTop: boxStyle.marginTop, marginBottom: boxStyle.marginBottom, flex: "none" }}
+        onLoadedMetadata={({ currentTarget }) => {
+          if (currentTarget.videoWidth && currentTarget.videoHeight) {
+            setSourceRatio(currentTarget.videoWidth / currentTarget.videoHeight);
+          }
+        }}
+        style={mediaStyle}
+      />
+    );
+  }
+  if (item.image) {
+    return (
+      <img
+        src={item.image}
+        alt={item.title}
+        onLoad={({ currentTarget }) => {
+          if (currentTarget.naturalWidth && currentTarget.naturalHeight) {
+            setSourceRatio(currentTarget.naturalWidth / currentTarget.naturalHeight);
+          }
+        }}
+        style={mediaStyle}
       />
     );
   }
@@ -179,35 +210,38 @@ function AccordionRow({ item, index, open, onOpen }) {
         </div>
       </div>
 
-      <div style={{ minWidth: 0 }}>
+      <div style={{ minWidth: 0, alignSelf: "center" }}>
         <div
           style={{
-            maxHeight: open ? (item.video ? 720 : 460) : 0,
+            display: "grid",
+            gridTemplateRows: open ? "1fr" : "0fr",
             opacity: open ? 1 : 0,
             overflow: "hidden",
-            transition: "max-height .4s cubic-bezier(.65,0,.35,1), opacity .3s ease",
+            transition: "grid-template-rows .4s cubic-bezier(.65,0,.35,1), opacity .3s ease",
           }}
         >
-          <SolutionMedia
-            item={item}
-            iconSize={46}
-            boxStyle={{
-              position: "relative",
-              width: "100%",
-              aspectRatio: "16 / 10",
-              borderRadius: 0,
-              background: "linear-gradient(135deg,#eef1fc,#dbe2fb)",
-              border: "1px solid var(--border)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexDirection: "column",
-              gap: 10,
-              color: "var(--blue-400)",
-              marginTop: 8,
-              marginBottom: 8,
-            }}
-          />
+          <div className="bf-groupacc-media-slot">
+            <SolutionMedia
+              item={item}
+              iconSize={46}
+              boxStyle={{
+                position: "relative",
+                width: "100%",
+                aspectRatio: "16 / 10",
+                borderRadius: 0,
+                background: "linear-gradient(135deg,#eef1fc,#dbe2fb)",
+                border: "1px solid var(--border)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "column",
+                gap: 10,
+                color: "var(--blue-400)",
+                marginTop: 8,
+                marginBottom: 8,
+              }}
+            />
+          </div>
         </div>
       </div>
     </div>

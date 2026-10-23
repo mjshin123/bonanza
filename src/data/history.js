@@ -99,7 +99,7 @@ export const historyEntries = [
     items: [
       "한국금융연구원·한국금융범죄예방협회 주관 '제3회 금융범죄예방을 위한 정책세미나'에서 '가상자산 거래의 불법 지갑 주소 추적과 효과' 발표",
       "베트남 MB Bank와 전략적 제휴 체결",
-      "TranSight - 서비스 전체 리뉴얼 및 Auto Trace 기능 출시",
+      "TranSight 2.0 - Auto Trace 기능 포함 전체 서비스 리뉴얼",
     ],
   },
   { id: "2026-01", year: "2026", month: "01", items: ["가상자산 범죄 및 자금세탁 보고서 최초 발간"] },

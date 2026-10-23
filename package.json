@@ -19,6 +19,7 @@
     "framer-motion": "^13.1.1",
     "gsap": "^3.15.0",
     "lucide-react": "^0.480.0",
+    "motion": "^14.6.0",
     "ogl": "^1.0.11",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -30,8 +31,11 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.2",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
     "@vitejs/plugin-react": "^4.3.4",
     "tailwindcss": "^4.3.2",
+    "typescript": "^7.0.2",
     "vite": "^6.0.0"
   }
 }

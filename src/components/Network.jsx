@@ -1,39 +1,41 @@
 const topLogos = [
-  { src: "/images/network/top/bybit.jpg", alt: "Bybit" },
+  { src: "/images/network/top/bybit.jpg", alt: "Bybit", scale: 0.8 },
   { src: "/images/network/top/dwf-labs.jpg", alt: "DWF Labs" },
   { src: "/images/network/top/mexc.png", alt: "MEXC" },
-  { src: "/images/network/top/weex.avif", alt: "WEEX" },
-  { src: "/images/network/top/광주은행.jpg", alt: "광주은행" },
-  { src: "/images/network/top/국민은행.jpg", alt: "국민은행" },
+  { src: "/images/network/top/weex.avif", alt: "WEEX", scale: 0.95 },
+  { src: "/images/network/top/JB금융그룹.svg", alt: "JB금융그룹", scale: 1.14 },
+  { src: "/images/network/top/국민은행.jpg", alt: "국민은행", scale: 1.14 },
   { src: "/images/network/top/두나무.png", alt: "두나무" },
   { src: "/images/network/top/미래에셋.jpg", alt: "미래에셋" },
   { src: "/images/network/top/신한은행.png", alt: "신한은행" },
-  { src: "/images/network/top/카카오뱅크.png", alt: "카카오뱅크" },
+  { src: "/images/network/top/카카오뱅크.png", alt: "카카오뱅크", scale: 1.235 },
   { src: "/images/network/top/카카오페이.avif", alt: "카카오페이" },
   { src: "/images/network/top/케이뱅크.png", alt: "케이뱅크" },
-  { src: "/images/network/top/코인원.png", alt: "코인원" },
-  { src: "/images/network/top/하나은행.png", alt: "하나은행" },
+  { src: "/images/network/top/키움증권.avif", alt: "키움증권", scale: 0.8 },
+  { src: "/images/network/top/하나은행.png", alt: "하나은행", scale: 0.85 },
 ];
 
 const bottomLogos = [
-  { src: "/images/network/bottom/kpmg.png", alt: "KPMG" },
-  { src: "/images/network/bottom/lgcns.png", alt: "LG CNS" },
-  { src: "/images/network/bottom/네이버.png", alt: "네이버" },
+  { src: "/images/network/bottom/kpmg.png", alt: "KPMG", scale: 0.85 },
+  { src: "/images/network/bottom/lgcns.png", alt: "LG CNS", scale: 0.95 },
+  { src: "/images/network/bottom/VerifyVASP.webp", alt: "VerifyVASP" },
+  { src: "/images/network/bottom/네이버.png", alt: "네이버", scale: 0.85 },
   { src: "/images/network/bottom/국세청.png", alt: "국세청" },
-  { src: "/images/network/bottom/국방부.jpg", alt: "국방부" },
-  { src: "/images/network/bottom/경찰청.jpg", alt: "경찰청" },
-  { src: "/images/network/bottom/고려대학교.gif", alt: "고려대학교" },
-  { src: "/images/network/bottom/취리히대학.png", alt: "취리히대학" },
+  { src: "/images/network/bottom/국방부.jpg", alt: "국방부", scale: 1.045 },
+  { src: "/images/network/bottom/경찰청.jpg", alt: "경찰청", scale: 0.85 },
+  { src: "/images/network/bottom/경찰대학.png", alt: "경찰대학", scale: 1.116 },
+  { src: "/images/network/bottom/고려대학교.gif", alt: "고려대학교", scale: 0.85 },
+  { src: "/images/network/bottom/취리히대학.png", alt: "취리히대학", scale: 1.259 },
 ];
 
-function LogoTile({ src, alt }) {
+function LogoTile({ src, alt, scale = 1 }) {
   return (
     <div className="bf-logo-tile">
-      <div className="bf-logo-box">
+      <div className="bf-logo-box" style={scale > 1 ? { overflow: "visible" } : undefined}>
         <img
           src={src}
           alt={alt}
-          style={{ width: "100%", height: "auto", flex: "none", display: "block" }}
+          style={{ width: `${scale * 100}%`, maxWidth: "none", height: "auto", flex: "none", display: "block" }}
         />
       </div>
     </div>

@@ -71,7 +71,7 @@ nav[data-theme="dark"] .bf-megaitem:hover{color:#fff;}
 .bf-sectors-mobile-caption{display:none;}
 .bf-sectors-mobile-graphic{display:none;}
 @media(max-width:860px){
-  .bf-sectors-mobile-caption{display:block;text-align:center;color:#fff;font-weight:600;font-size:clamp(18px,5vw,22px);letter-spacing:-0.01em;margin-top:60px;}
+  .bf-sectors-mobile-caption{display:block;text-align:center;color:#fff;font-weight:600;font-size:clamp(17px,4.6vw,20px);letter-spacing:-0.01em;margin-top:60px;}
   .bf-petal-center{display:none !important;}
   .bf-sectors-desktop{display:none !important;}
   .bf-sectors-mobile-graphic{display:block !important;}
@@ -89,6 +89,8 @@ nav[data-theme="dark"] .bf-megaitem:hover{color:#fff;}
 }
 .bf-groupcard{transition:transform .25s ease, box-shadow .25s ease;}
 .bf-groupcard:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg);}
+.bf-groupacc-media-slot{width:100%;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.bf-groupacc-media-slot > div{flex:none;}
 .bf-affcard{cursor:pointer;}
 .bf-affcard-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(10,14,30,.35);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;transition:opacity .3s ease;}
 .bf-affcard:hover .bf-affcard-overlay{opacity:1;}
@@ -164,6 +166,15 @@ nav[data-theme="dark"] .bf-megaitem:hover{color:#fff;}
 .bf-stack-mobile-item{border-top:1px solid rgba(255,255,255,.15);padding:18px 0;}
 
 /* ── Sectors trefoil sequential reveal (Sectors.jsx) ───────────────── */
+.bf-sector-step{opacity:0;translate:0 12px;transition:opacity .4s ease, translate .4s ease;}
+.bf-sector-step-1{--sector-delay:.05s;}
+.bf-sector-step-2{--sector-delay:.35s;}
+.bf-sector-step-3{--sector-delay:.65s;}
+.bf-sectors-desktop.bf-in .bf-sector-step{opacity:1;translate:0 0;transition-delay:var(--sector-delay);}
+@media(prefers-reduced-motion:reduce){
+  .bf-sector-step{translate:none;transition:none;}
+  .bf-sectors-desktop.bf-in .bf-sector-step{translate:none;transition-delay:0s;}
+}
 .bf-petal-c1,.bf-petal-c2,.bf-petal-c3{opacity:0;transition:opacity .6s ease, transform .6s cubic-bezier(.4,0,.2,1);}
 .bf-petal-c1{transform:scale(.8);}
 .bf-petal-c2{transform:rotate(-130deg) scale(.8);}

@@ -49,7 +49,7 @@ export default function Tech() {
         </h2>
 
         <div id="bf-stack">
-          <div className="bf-stack-stage" style={{ width: W, height: H }}>
+          <div className="bf-stack-stage" style={{ width: W, height: H, transform: "scale(0.9)", transformOrigin: "top center" }}>
             {milestones.map((m, i) => {
               const isSel = i === sel;
               const cy = centerY(i, sel);
