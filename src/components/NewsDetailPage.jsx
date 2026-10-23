@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useParams, Navigate } from "react-router-dom";
-import { Image as ImageIcon } from "lucide-react";
+import { ArrowUpRight, Image as ImageIcon } from "lucide-react";
 import useNavDarkZone from "../hooks/useNavDarkZone.js";
 import { accentNums } from "../lib/accentNums.jsx";
 
@@ -76,6 +76,28 @@ export default function NewsDetailPage({ items, listPath }) {
             </p>
           ))}
         </div>
+
+        {item.sourceUrl && (
+          <a
+            href={item.sourceUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              marginTop: 56,
+              padding: "12px 20px",
+              borderRadius: 4,
+              background: "var(--grey-900)",
+              color: "#fff",
+              fontWeight: 600,
+              fontSize: 14,
+            }}
+          >
+            원문 보기 <ArrowUpRight width={16} height={16} />
+          </a>
+        )}
       </main>
     </div>
   );
