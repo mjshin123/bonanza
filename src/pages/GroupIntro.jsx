@@ -26,11 +26,17 @@ const solutionItems = [
   },
   {
     company: "바이스",
-    title: "AI기반 비즈니스 프로필 서비스(Felore)",
+    title: "AI기반 비즈니스 프로필 서비스, Felore",
     desc: "펠로어는 링크 하나로 나를 소개하는 AI 비즈니스 프로필입니다.\n경력과 학력 인증, 직접 만난 사람들이 남긴 평판 키워드와 피드백, 명함 네트워크를 한 화면에 담아 처음 만나는 상대에게도 신뢰를 빠르게 전달합니다.\nAI가 프로필을 분석해 한 줄 페르소나를 만들고, 상대와의 공통점과 케미를 알려줘 더 좋은 만남을 돕습니다.",
     link: "https://felore.me",
     video: "/videos/felore.mp4",
     poster: "/videos/felore-poster.jpg",
+  },
+  {
+    company: "플러그앤엑스",
+    title: "금융 거래를 위한 간편인증·전자문서 서비스",
+    desc: "플러그앤엑스는 네이버·카카오 본인인증과 전자문서 서비스의 공식 대행사입니다.\n금융사와 가상자산 거래소가 별도 개발 부담 없이 간편인증·전자서명·전자문서를 도입할 수 있도록, 도입 상담부터 연동과 운영까지 함께합니다.\n금융권과 쌓아온 파트너십과 노하우를 바탕으로 프롭테크 영역까지 서비스를 넓혀가고 있습니다.",
+    textOnly: true,
   },
 ];
 
@@ -49,6 +55,7 @@ function SolutionMedia({ item, iconSize, boxStyle }) {
     marginRight: "auto",
     flex: "none",
   };
+  if (item.textOnly) return null;
   if (item.video) {
     return (
       <video
@@ -174,7 +181,7 @@ function AccordionRow({ item, index, open, onOpen }) {
           <p
             style={{
               margin: "18px 0 0",
-              maxWidth: 440,
+              maxWidth: 460,
               fontSize: 13,
               lineHeight: 1.6,
               whiteSpace: "pre-line",
@@ -184,24 +191,26 @@ function AccordionRow({ item, index, open, onOpen }) {
           >
             {item.desc}
           </p>
-          <a
-            href={item.link || "#"}
-            {...(item.link.startsWith("http") && { target: "_blank", rel: "noopener noreferrer" })}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              marginTop: 28,
-              padding: "12px 20px",
-              borderRadius: 4,
-              background: "var(--grey-900)",
-              color: "#fff",
-              fontWeight: 600,
-              fontSize: 14,
-            }}
-          >
-            자세히 보기 <ArrowRight width={16} height={16} />
-          </a>
+          {!item.textOnly && (
+            <a
+              href={item.link || "#"}
+              {...(item.link.startsWith("http") && { target: "_blank", rel: "noopener noreferrer" })}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                marginTop: 28,
+                padding: "12px 20px",
+                borderRadius: 4,
+                background: "var(--grey-900)",
+                color: "#fff",
+                fontWeight: 600,
+                fontSize: 14,
+              }}
+            >
+              자세히 보기 <ArrowRight width={16} height={16} />
+            </a>
+          )}
         </div>
       </div>
 
@@ -658,25 +667,27 @@ export default function GroupIntro() {
                   <p style={{ margin: "16px 0 0", fontSize: 14, lineHeight: 1.7, color: "var(--text-muted)", fontWeight: 500 }}>
                     {item.desc}
                   </p>
-                  <a
-                    href={item.link || "#"}
-                    {...(item.link.startsWith("http") && { target: "_blank", rel: "noopener noreferrer" })}
-                    style={{
-                      alignSelf: "flex-start",
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: 8,
-                      marginTop: 24,
-                      padding: "12px 20px",
-                      borderRadius: 4,
-                      background: "var(--grey-900)",
-                      color: "#fff",
-                      fontWeight: 600,
-                      fontSize: 14,
-                    }}
-                  >
-                    자세히 보기 <ArrowRight width={16} height={16} />
-                  </a>
+                  {!item.textOnly && (
+                    <a
+                      href={item.link || "#"}
+                      {...(item.link.startsWith("http") && { target: "_blank", rel: "noopener noreferrer" })}
+                      style={{
+                        alignSelf: "flex-start",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 8,
+                        marginTop: 24,
+                        padding: "12px 20px",
+                        borderRadius: 4,
+                        background: "var(--grey-900)",
+                        color: "#fff",
+                        fontWeight: 600,
+                        fontSize: 14,
+                      }}
+                    >
+                      자세히 보기 <ArrowRight width={16} height={16} />
+                    </a>
+                  )}
                   <SolutionMedia
                     item={item}
                     iconSize={40}

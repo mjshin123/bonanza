@@ -21,7 +21,7 @@ const PAGES = {
   },
   "/group": {
     title: `보난자 그룹 | ${SITE_NAME}`,
-    description: "보난자팩토리와 보난자랩, 트라버스, 바이스, 플러그NX로 이어지는 보난자 그룹의 계열사와 솔루션을 소개합니다.",
+    description: "보난자팩토리와 보난자랩, 트라버스, 바이스, 플러그앤엑스로 이어지는 보난자 그룹의 계열사와 솔루션을 소개합니다.",
   },
   "/history": {
     title: `연혁 | ${SITE_NAME}`,
