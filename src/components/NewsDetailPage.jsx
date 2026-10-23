@@ -41,7 +41,7 @@ export default function NewsDetailPage({ items, listPath }) {
         <div className="bf-pad" style={{ maxWidth: 1200, margin: "0 auto", padding: "72px 48px 40px" }}>
           <div
             className="bf-reveal"
-            style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.14em", color: "#8fa3f5", marginBottom: 20, textTransform: "uppercase" }}
+            style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.14em", color: "#5E8EFF", marginBottom: 20, textTransform: "uppercase" }}
           >
             {item.category}
           </div>
@@ -52,7 +52,7 @@ export default function NewsDetailPage({ items, listPath }) {
             {accentNums(item.title)}
           </h1>
           <div style={{ marginTop: 40 }}>
-            <span style={{ fontSize: 14, color: "#8a97c9", fontWeight: 500 }}>{item.date}</span>
+            <span style={{ fontSize: 14, color: "rgba(255,255,255,.45)", fontWeight: 500 }}>{item.date}</span>
           </div>
         </div>
       </header>
