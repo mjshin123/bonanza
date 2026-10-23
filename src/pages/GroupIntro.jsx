@@ -13,30 +13,24 @@ const PARENT_DESC =
 
 const solutionItems = [
   {
-    company: "보난자랩",
-    title: "차세대 컴플라이언스 연구",
-    desc: "블록체인·AI 기술을 연구하며 이상거래 탐지 모델과 규제 대응 엔진을 자체 개발합니다. 다수의 특허와 국책 과제로 기술력을 축적합니다.",
-    link: "",
+    company: "트라버스",
+    title: "디지털자산 지갑·송금 인프라 솔루션, took!",
+    desc: "기업과 기관이 디지털자산 지갑 및 송금 서비스를 효율적으로 구축·운영할 수 있도록 지원하는 WaaS(Wallet-as-a-Service) 솔루션입니다. KYT 기능을 내재화하여 디지털자산 거래 위험을 실시간으로 모니터링하고, 규제 준수와 안전한 자산 관리를 지원하는 통합 인프라를 제공합니다.",
+    link: "https://tookwallet.com",
   },
   {
     company: "트라버스",
-    title: "온체인 데이터 분석 플랫폼",
-    desc: "온체인 거래 흐름을 실시간으로 수집·정규화하고 자금 이동을 그래프로 시각화해, 위험 지갑과 자금세탁 경로를 빠르게 식별합니다.",
-    link: "",
+    title: "디지털자산 거래 조회·신고 플랫폼, SaferBlock",
+    desc: "디지털자산 거래정보 조회와 의심거래 및 범죄 관련 정보 신고 기능을 제공하는 플랫폼입니다. 실시간 가상자산 뉴스와 전문 분석 리포트를 통해 주요 시장 동향 및 위험정보를 제공하며, 이용자의 거래 위험 식별과 범죄 피해 예방을 지원합니다.",
+    link: "https://saferblock.io",
   },
   {
     company: "바이스",
     title: "AI기반 비즈니스 프로필 서비스(Felore)",
-    desc: "펠로어는 링크 하나로 나를 소개하는 AI 비즈니스 프로필입니다. 경력과 학력 인증, 직접 만난 사람들이 남긴 평판 키워드와 피드백, 명함 네트워크를 한 화면에 담아 처음 만나는 상대에게도 신뢰를 빠르게 전달합니다. AI가 프로필을 분석해 한 줄 페르소나를 만들고, 상대와의 공통점과 케미를 알려줘 더 좋은 만남을 돕습니다.",
+    desc: "펠로어는 링크 하나로 나를 소개하는 AI 비즈니스 프로필입니다.\n경력과 학력 인증, 직접 만난 사람들이 남긴 평판 키워드와 피드백, 명함 네트워크를 한 화면에 담아 처음 만나는 상대에게도 신뢰를 빠르게 전달합니다.\nAI가 프로필을 분석해 한 줄 페르소나를 만들고, 상대와의 공통점과 케미를 알려줘 더 좋은 만남을 돕습니다.",
     link: "https://felore.me",
     video: "/videos/felore.mp4",
     poster: "/videos/felore-poster.jpg",
-  },
-  {
-    company: "플러그NX",
-    title: "결제·정산 인프라",
-    desc: "가맹점 결제부터 실시간 정산·리포팅까지, 가상자산 결제 전 과정을 안정적으로 처리하는 인프라를 제공합니다.",
-    link: "",
   },
 ];
 
@@ -183,6 +177,7 @@ function AccordionRow({ item, index, open, onOpen }) {
               maxWidth: 440,
               fontSize: 13,
               lineHeight: 1.6,
+              whiteSpace: "pre-line",
               color: "var(--text-muted)",
               fontWeight: 500,
             }}
@@ -639,7 +634,7 @@ export default function GroupIntro() {
             >
               {solutionItems.map((item, i) => (
                 <div
-                  key={item.company}
+                  key={`${item.company}-${item.title}`}
                   style={{
                     position: "absolute",
                     inset: 0,
@@ -710,7 +705,7 @@ export default function GroupIntro() {
             <div style={{ height: listHeight || undefined, overflow: "hidden" }}>
               <div ref={listRef} style={{ borderBottom: "1px solid var(--border)" }}>
                 {solutionItems.map((item, i) => (
-                  <AccordionRow key={item.company} item={item} index={i} open={i === active} onOpen={openRow} />
+                  <AccordionRow key={`${item.company}-${item.title}`} item={item} index={i} open={i === active} onOpen={openRow} />
                 ))}
               </div>
             </div>

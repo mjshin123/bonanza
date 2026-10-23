@@ -23,7 +23,7 @@ const OVERVIEW = {
 const MODULES = [
   {
     key: "took",
-    name: "TOOK",
+    name: "took!",
     owner: "트라버스",
     category: "비수탁 통합 지갑",
     desc: "여러 비수탁 지갑을 한 화면에서 관리하는 통합 지갑 솔루션입니다. 금융기관 앱에 그대로 탑재해 고객에게 지갑 기능을 제공할 수 있습니다.",
@@ -531,7 +531,7 @@ export default function ComplianceInfra() {
           <div className="bf-reveal">
             <div style={labelStyle}>Modules</div>
             <h2 className="bf-accent" style={{ ...headingStyle, margin: "0 auto 28px", maxWidth: 1200, textAlign: "center" }}>
-              {renderHeading("기관마다 필요한 컴플라이언스는 다릅니다, 필요한 솔루션만 골라 하나의 인프라로 연결합니다.")}
+              {renderHeading("은행의 지갑 서비스부터 거래소의 거래 검증, 수사기관의 자금 추적까지. 각 기관의 업무를 하나의 인프라로 구축합니다.")}
             </h2>
             <InstitutionTabs />
           </div>
@@ -539,7 +539,7 @@ export default function ComplianceInfra() {
           <div className="bf-reveal">
             <div style={labelStyle}>Process</div>
             <h2 className="bf-accent" style={{ ...headingStyle, margin: "0 auto 56px", maxWidth: 1200, textAlign: "center" }}>
-              {renderHeading("기관의 사업 모델과 규제 요건에 맞춘 구성을 제안하고, 모듈 단위 도입부터 전체 구축까지 함께 진행합니다.")}
+              {renderHeading("기관의 사업 모델과 규제 환경에 맞춘 설계로, 모듈 단위 도입부터 서비스 운영까지 전 과정을 함께합니다.")}
             </h2>
             <ProcessSteps />
           </div>

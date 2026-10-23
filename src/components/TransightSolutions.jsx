@@ -1,6 +1,6 @@
 const ITEMS = [
   {
-    tag: "DATA & KYT API",
+    tag: "TranSight API",
     title: ["위험 주소 데이터 &", "실시간 KYT 검증"],
     desc: "국내 최대 규모 가상자산 범죄 라벨링 데이터(RA)와 실시간 KYT API로 모든 입출금 거래에서 위험을 즉시 감지하고 차단합니다.",
   },

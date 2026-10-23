@@ -17,7 +17,7 @@ export const subsidiaries = [
   {
     key: "traverse",
     name: "트라버스",
-    email: "traverse@bonanzafactory.co.kr",
+    email: "contact@traverse.kr",
     mark: "T",
     image: "/images/traverse2.png",
     background: "linear-gradient(90deg,rgba(20,20,20,1) 0%,rgba(20,20,20,0) 65%), url(/images/traverse2.png)",
@@ -25,8 +25,8 @@ export const subsidiaries = [
     backgroundPosition: "center",
     color: "#fff",
     markBg: "rgba(255,255,255,.12)",
-    desc: "블록체인·AI 기술을 연구하며 이상거래 탐지 모델과 규제 대응 엔진을 자체 개발합니다. 통합 지갑 관리 솔루션을 통해 스테이블코인 생태계에 최적화된 사용자 경험과 AML 관리 체계를 선도합니다.",
-    descLong: "블록체인·AI 기술을 연구하며 이상거래 탐지 모델과 규제 대응 엔진을 자체 개발합니다. 통합 지갑 관리 솔루션을 통해 스테이블코인 생태계에 최적화된 사용자 경험과 AML 관리 체계를 선도합니다.",
+    desc: "블록체인 데이터 및 디지털 월렛 인프라를 설계·구축하고, 온체인 수사 과정에 전문적인 기술 지원을 제공합니다. 금융·공공기관의 규제 대응과 디지털자산 업무 효율화를 뒷받침하며, 안전하고 신뢰할 수 있는 디지털자산 생태계를 만들어갑니다.",
+    descLong: "블록체인 데이터 및 디지털 월렛 인프라를 설계·구축하고, 온체인 수사 과정에 전문적인 기술 지원을 제공합니다. 금융·공공기관의 규제 대응과 디지털자산 업무 효율화를 뒷받침하며, 안전하고 신뢰할 수 있는 디지털자산 생태계를 만들어갑니다.",
     descColor: "rgba(255,255,255,.82)",
   },
   {

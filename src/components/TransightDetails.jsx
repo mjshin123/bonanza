@@ -4,7 +4,7 @@ import KytApiDiagram from "./KytApiDiagram.jsx";
 
 const SECTIONS = [
   {
-    tag: "DATA & KYT API",
+    tag: "TranSight API",
     heading: "국내 컴플라이언스 환경에 최적화된 데이터 및 리스크 평가 모델로, 고객사별 규제 및 니즈에 따라 맞춤형 솔루션을 제공합니다.",
     features: [
       {
