@@ -26,9 +26,11 @@ const solutionItems = [
   },
   {
     company: "바이스",
-    title: "디지털자산 보안 솔루션",
-    desc: "멀티시그 기반 키 관리와 실시간 이상거래 차단으로 기관 수준의 디지털자산 보안 체계를 제공합니다.",
-    link: "",
+    title: "AI기반 비즈니스 프로필 서비스(Felore)",
+    desc: "펠로어는 링크 하나로 나를 소개하는 AI 비즈니스 프로필입니다. 경력과 학력 인증, 직접 만난 사람들이 남긴 평판 키워드와 피드백, 명함 네트워크를 한 화면에 담아 처음 만나는 상대에게도 신뢰를 빠르게 전달합니다. AI가 프로필을 분석해 한 줄 페르소나를 만들고, 상대와의 공통점과 케미를 알려줘 더 좋은 만남을 돕습니다.",
+    link: "https://felore.me",
+    video: "/videos/felore.mp4",
+    poster: "/videos/felore-poster.jpg",
   },
   {
     company: "플러그NX",
@@ -37,6 +39,31 @@ const solutionItems = [
     link: "",
   },
 ];
+
+// 솔루션 우측 미디어 영역 — 영상이 있으면 박스 없이 영상 비율 그대로 두되,
+// 자리표시 박스(16:10)와 비슷한 면적이 되도록 폭을 줄인다 (9:16 기준 약 59%)
+function SolutionMedia({ item, iconSize, boxStyle }) {
+  if (item.video) {
+    return (
+      <video
+        src={item.video}
+        poster={item.poster}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        style={{ display: "block", width: "59%", height: "auto", marginTop: boxStyle.marginTop, marginBottom: boxStyle.marginBottom, flex: "none" }}
+      />
+    );
+  }
+  return (
+    <div style={boxStyle}>
+      <PlayCircle width={iconSize} height={iconSize} />
+      <span style={{ fontSize: 12, fontWeight: 600 }}>이미지 / 영상 영역</span>
+    </div>
+  );
+}
 
 function AccordionRow({ item, index, open, onOpen }) {
   const num = String(index + 1).padStart(2, "0");
@@ -133,6 +160,7 @@ function AccordionRow({ item, index, open, onOpen }) {
           </p>
           <a
             href={item.link || "#"}
+            {...(item.link.startsWith("http") && { target: "_blank", rel: "noopener noreferrer" })}
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -154,14 +182,16 @@ function AccordionRow({ item, index, open, onOpen }) {
       <div style={{ minWidth: 0 }}>
         <div
           style={{
-            maxHeight: open ? 460 : 0,
+            maxHeight: open ? (item.video ? 720 : 460) : 0,
             opacity: open ? 1 : 0,
             overflow: "hidden",
             transition: "max-height .4s cubic-bezier(.65,0,.35,1), opacity .3s ease",
           }}
         >
-          <div
-            style={{
+          <SolutionMedia
+            item={item}
+            iconSize={46}
+            boxStyle={{
               position: "relative",
               width: "100%",
               aspectRatio: "16 / 10",
@@ -177,10 +207,7 @@ function AccordionRow({ item, index, open, onOpen }) {
               marginTop: 8,
               marginBottom: 8,
             }}
-          >
-            <PlayCircle width={46} height={46} />
-            <span style={{ fontSize: 12, fontWeight: 600 }}>이미지 / 영상 영역</span>
-          </div>
+          />
         </div>
       </div>
     </div>
@@ -604,6 +631,7 @@ export default function GroupIntro() {
                   </p>
                   <a
                     href={item.link || "#"}
+                    {...(item.link.startsWith("http") && { target: "_blank", rel: "noopener noreferrer" })}
                     style={{
                       alignSelf: "flex-start",
                       display: "inline-flex",
@@ -620,8 +648,10 @@ export default function GroupIntro() {
                   >
                     자세히 보기 <ArrowRight width={16} height={16} />
                   </a>
-                  <div
-                    style={{
+                  <SolutionMedia
+                    item={item}
+                    iconSize={40}
+                    boxStyle={{
                       position: "relative",
                       width: "100%",
                       aspectRatio: "16 / 10",
@@ -636,10 +666,7 @@ export default function GroupIntro() {
                       marginTop: 24,
                       flex: "none",
                     }}
-                  >
-                    <PlayCircle width={40} height={40} />
-                    <span style={{ fontSize: 12, fontWeight: 600 }}>이미지 / 영상 영역</span>
-                  </div>
+                  />
                 </div>
               ))}
             </div>

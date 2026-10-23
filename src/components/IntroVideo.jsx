@@ -10,7 +10,8 @@ const LOOP_VIDEO = ["/videos/transafer.mp4", "/videos/transight.mp4"];
 // trimmed with a 2px margin → visible band 1920×820
 const LOOP_CROP = { width: 1920, height: 1080, top: 130, bottom: 130 };
 // 보난자팩토리_홍보영상_본편_FHD(저용량)_[KOR].mp4 re-encoded for the web
-// (H.264 CRF 24, AAC 128k, faststart so it starts streaming right away)
+// at full 1080p (H.264 CRF 21 capped at 6 Mbps, AAC 128k, faststart so it starts streaming right away);
+// a 720p encode looked soft and blocky once the modal scaled it up to fill the screen
 const INTRO_VIDEO = "/videos/bonanza-intro-kor.mp4";
 
 export default function IntroVideo() {

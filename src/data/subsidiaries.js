@@ -32,7 +32,7 @@ export const subsidiaries = [
   {
     key: "vice",
     name: "바이스",
-    email: "vice@bonanzafactory.co.kr",
+    email: "contact@byth.co.kr",
     mark: "V",
     image: "/images/byth.png",
     background: "linear-gradient(90deg,rgba(20,20,20,1) 0%,rgba(20,20,20,0.3) 65%), url(/images/byth.png)",
@@ -40,8 +40,8 @@ export const subsidiaries = [
     backgroundPosition: "center",
     color: "#fff",
     markBg: "rgba(255,255,255,.2)",
-    desc: "마케팅 솔루션 기획·개발·지급·결제대행 서비스를 제공합니다. 데이터 기반의 인사이트를 통해 고객의 문제를 해결하는 신사업 전문 기업입니다.",
-    descLong: "마케팅 솔루션 기획·개발·지급·결제대행 서비스를 제공합니다. 데이터 기반의 인사이트를 통해 고객의 문제를 해결하는 신사업 전문 기업입니다.",
+    desc: "AI기반 사람과 사람 사이의 신뢰를 데이터로 보여주는 비즈니스 프로필 서비스 펠로어(Felore)를 만듭니다. 커리어, 라이프스타일, 평판을 한 링크에 담아 첫 만남에 필요한 정보를 한눈에 보여줍니다.",
+    descLong: "AI기반 사람과 사람 사이의 신뢰를 데이터로 보여주는 비즈니스 프로필 서비스 펠로어(Felore)를 만듭니다. 커리어, 라이프스타일, 평판을 한 링크에 담아 첫 만남에 필요한 정보를 한눈에 보여줍니다.",
     descColor: "rgba(255,255,255,.9)",
   },
   {

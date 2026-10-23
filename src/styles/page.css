@@ -275,3 +275,11 @@ nav[data-theme="dark"] .bf-megaitem:hover{color:#fff;}
 @media (max-width:560px){.bf-modulegrid{grid-template-columns:1fr !important;}.bf-modulegrid > *{min-height:0 !important;}}
 /* Compliance Infra 헤더 구조도: 폰에서는 3열이 좁아 모듈명이 세 줄로 꺾여 2열로 */
 @media (max-width:560px){.bf-hubgrid{grid-template-columns:repeat(2,1fr) !important;}}
+
+/* intro video modal — volume slider (thin track, filled up to the current level) */
+.bf-vm-volume{-webkit-appearance:none;appearance:none;height:16px;background:transparent;cursor:pointer;}
+.bf-vm-volume::-webkit-slider-runnable-track{height:2px;border-radius:2px;background:linear-gradient(to right,#fff var(--vol),rgba(255,255,255,.25) var(--vol));}
+.bf-vm-volume::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:10px;height:10px;margin-top:-4px;border-radius:50%;background:#fff;border:0;}
+.bf-vm-volume::-moz-range-track{height:2px;border-radius:2px;background:rgba(255,255,255,.25);}
+.bf-vm-volume::-moz-range-progress{height:2px;border-radius:2px;background:#fff;}
+.bf-vm-volume::-moz-range-thumb{width:10px;height:10px;border-radius:50%;background:#fff;border:0;}

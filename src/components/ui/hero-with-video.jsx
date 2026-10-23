@@ -1,5 +1,17 @@
-import { useEffect, useRef, useState } from "react";
-import { Play, X } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  Loader2,
+  Maximize,
+  Minimize,
+  Pause,
+  PictureInPicture2,
+  Play,
+  RotateCcw,
+  Volume1,
+  Volume2,
+  VolumeX,
+  X,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /* Adapted from 21st.dev "cta-with-marquee" (HeroWithVideo demo) for this Vite + JS project:
@@ -227,13 +239,183 @@ export function HeroWithVideo({
   );
 }
 
-/* Full-screen player for the intro video (sound on, native controls). Esc / backdrop closes. */
+/* Full-screen player for the intro video (sound on, custom controls). Esc / backdrop closes.
+   Control bar follows the "영상재생 ui" reference: caption line, then play · thin progress · time · volume,
+   plus the rest of what the native bar offered (speed, picture-in-picture, fullscreen) — no download. */
+// how long the pointer can sit still before the controls and close button fade out
+const IDLE_HIDE_MS = 2500;
+const SEEK_STEP = 5;
+const SPEEDS = [0.5, 0.75, 1, 1.25, 1.5, 2];
+
+function formatTime(sec) {
+  const t = Number.isFinite(sec) && sec > 0 ? sec : 0;
+  const m = Math.floor(t / 60);
+  const s = Math.floor(t % 60);
+  return `${m}:${String(s).padStart(2, "0")}`;
+}
+
+function ControlButton({ label, onClick, tabIndex, className, children }) {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      title={label}
+      onClick={onClick}
+      tabIndex={tabIndex}
+      className={cn(
+        "inline-flex size-8 shrink-0 items-center justify-center rounded-full text-white/85 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-white/70",
+        className
+      )}
+    >
+      {children}
+    </button>
+  );
+}
+
 export function VideoModal({ open, onClose, src, title }) {
   const closeRef = useRef(null);
+  const frameRef = useRef(null);
+  const videoRef = useRef(null);
+  const trackRef = useRef(null);
+  const idleTimerRef = useRef(null);
+  const scrubbingRef = useRef(false);
+
+  const [active, setActive] = useState(true);
+  const [paused, setPaused] = useState(false);
+  const [ended, setEnded] = useState(false);
+  const [waiting, setWaiting] = useState(false);
+  const [current, setCurrent] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [buffered, setBuffered] = useState(0);
+  const [volume, setVolume] = useState(1);
+  const [muted, setMuted] = useState(false);
+  const [rate, setRate] = useState(1);
+  const [fullscreen, setFullscreen] = useState(false);
+  const [hoverTime, setHoverTime] = useState(null);
+  const [scrubbing, setScrubbing] = useState(false);
+
+  // while paused or seeking the controls stay up so the viewer can always resume
+  const showUi = active || paused || scrubbing;
+  const uiTab = showUi ? 0 : -1;
+  const pipSupported = typeof document !== "undefined" && document.pictureInPictureEnabled;
+
+  const wake = useCallback(() => {
+    setActive(true);
+    clearTimeout(idleTimerRef.current);
+    idleTimerRef.current = setTimeout(() => setActive(false), IDLE_HIDE_MS);
+  }, []);
+
+  const togglePlay = useCallback(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused || v.ended) v.play().catch(() => {});
+    else v.pause();
+  }, []);
+
+  const seekBy = useCallback((delta) => {
+    const v = videoRef.current;
+    if (!v || !Number.isFinite(v.duration)) return;
+    v.currentTime = Math.min(v.duration, Math.max(0, v.currentTime + delta));
+  }, []);
+
+  const toggleMute = useCallback(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    // unmuting at zero volume would stay silent, so bring it back to an audible level
+    if (v.muted || v.volume === 0) {
+      v.muted = false;
+      if (v.volume === 0) v.volume = 0.5;
+    } else {
+      v.muted = true;
+    }
+  }, []);
+
+  const toggleFullscreen = useCallback(() => {
+    const el = frameRef.current;
+    if (!el) return;
+    if (document.fullscreenElement) document.exitFullscreen?.().catch(() => {});
+    else if (el.requestFullscreen) el.requestFullscreen().catch(() => {});
+    // iOS Safari has no element fullscreen; fall back to the video's own fullscreen player
+    else videoRef.current?.webkitEnterFullscreen?.();
+  }, []);
+
+  const togglePip = useCallback(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (document.pictureInPictureElement) document.exitPictureInPicture().catch(() => {});
+    else v.requestPictureInPicture?.().catch(() => {});
+  }, []);
+
+  const cycleRate = useCallback(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    const i = SPEEDS.indexOf(v.playbackRate);
+    v.playbackRate = i === -1 ? 1 : SPEEDS[(i + 1) % SPEEDS.length];
+  }, []);
 
   useEffect(() => {
     if (!open) return undefined;
-    const onKey = (e) => e.key === "Escape" && onClose();
+    setPaused(false);
+    setEnded(false);
+    setWaiting(false);
+    setCurrent(0);
+    setDuration(0);
+    setBuffered(0);
+    setRate(1);
+    setHoverTime(null);
+    wake();
+    return () => clearTimeout(idleTimerRef.current);
+  }, [open, wake]);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const onFs = () => setFullscreen(document.fullscreenElement === frameRef.current);
+    document.addEventListener("fullscreenchange", onFs);
+    return () => {
+      document.removeEventListener("fullscreenchange", onFs);
+      if (document.fullscreenElement) document.exitFullscreen?.().catch(() => {});
+      if (document.pictureInPictureElement) document.exitPictureInPicture?.().catch(() => {});
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const onKey = (e) => {
+      wake();
+      if (e.key === "Escape") {
+        // the browser itself leaves fullscreen on Esc; only close when we're not in it
+        if (!document.fullscreenElement) onClose();
+        return;
+      }
+      // leave keys alone while a control has focus (space/enter press the button, arrows move the slider)
+      const tag = e.target?.tagName;
+      if (tag === "INPUT" || (tag === "BUTTON" && (e.key === " " || e.key === "Enter"))) return;
+      switch (e.key) {
+        case " ":
+        case "k":
+        case "K":
+          e.preventDefault();
+          togglePlay();
+          break;
+        case "ArrowLeft":
+          e.preventDefault();
+          seekBy(-SEEK_STEP);
+          break;
+        case "ArrowRight":
+          e.preventDefault();
+          seekBy(SEEK_STEP);
+          break;
+        case "m":
+        case "M":
+          toggleMute();
+          break;
+        case "f":
+        case "F":
+          toggleFullscreen();
+          break;
+        default:
+      }
+    };
     window.addEventListener("keydown", onKey);
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -242,36 +424,273 @@ export function VideoModal({ open, onClose, src, title }) {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = prevOverflow;
     };
-  }, [open, onClose]);
+  }, [open, onClose, wake, togglePlay, seekBy, toggleMute, toggleFullscreen]);
+
+  function timeAtPointer(clientX) {
+    const track = trackRef.current;
+    if (!track || !duration) return 0;
+    const rect = track.getBoundingClientRect();
+    const ratio = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+    return ratio * duration;
+  }
+
+  function onTrackPointerDown(e) {
+    if (!duration) return;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    scrubbingRef.current = true;
+    setScrubbing(true);
+    const t = timeAtPointer(e.clientX);
+    videoRef.current.currentTime = t;
+    setCurrent(t);
+  }
+
+  function onTrackPointerMove(e) {
+    const t = timeAtPointer(e.clientX);
+    setHoverTime(t);
+    if (scrubbingRef.current) {
+      videoRef.current.currentTime = t;
+      setCurrent(t);
+    }
+  }
+
+  function onTrackPointerUp(e) {
+    if (!scrubbingRef.current) return;
+    e.currentTarget.releasePointerCapture?.(e.pointerId);
+    scrubbingRef.current = false;
+    setScrubbing(false);
+  }
+
+  function onTrackKeyDown(e) {
+    if (e.key === "Home" || e.key === "End") {
+      e.preventDefault();
+      videoRef.current.currentTime = e.key === "Home" ? 0 : duration;
+    }
+  }
+
+  function syncBuffered() {
+    const v = videoRef.current;
+    if (!v || !v.duration || !v.buffered.length) return;
+    // the buffered range that covers the playhead is what the viewer can play without stalling
+    for (let i = 0; i < v.buffered.length; i++) {
+      if (v.buffered.start(i) <= v.currentTime && v.currentTime <= v.buffered.end(i)) {
+        setBuffered(v.buffered.end(i) / v.duration);
+        return;
+      }
+    }
+  }
 
   if (!open) return null;
+
+  const progress = duration ? (current / duration) * 100 : 0;
+  const effectiveVolume = muted ? 0 : volume;
+  const VolumeIcon = effectiveVolume === 0 ? VolumeX : effectiveVolume < 0.5 ? Volume1 : Volume2;
+  const playLabel = paused ? (ended ? "다시 재생" : "재생") : "일시정지";
+
   return (
     <div
       role="dialog"
       aria-modal="true"
       aria-label={title}
-      className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 backdrop-blur-sm"
+      className={cn(
+        "fixed inset-0 z-[200] flex items-center justify-center bg-black/90 backdrop-blur-sm",
+        !showUi && "cursor-none"
+      )}
       onClick={onClose}
+      onMouseMove={wake}
+      onPointerDown={wake}
+      onTouchStart={wake}
     >
       <button
         ref={closeRef}
         type="button"
         onClick={onClose}
         aria-label="닫기"
-        className="absolute top-4 right-4 inline-flex size-11 items-center justify-center rounded-[4px] bg-white/10 text-white transition-colors hover:bg-white/20"
+        tabIndex={uiTab}
+        // round like the control-bar buttons, a touch larger so it still reads as the way out
+        className={cn(
+          "absolute top-5 right-5 inline-flex size-10 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white/85 backdrop-blur-sm transition-[background-color,color,opacity] duration-300 hover:bg-white/20 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-white/70 sm:top-6 sm:right-6",
+          !showUi && "pointer-events-none opacity-0"
+        )}
       >
-        <X className="size-5" />
+        <X className="size-[18px]" />
       </button>
-      {/* whole 16:9 frame, as large as the viewport allows (width- or height-bound), never cropped */}
-      <video
-        src={src}
-        autoPlay
-        controls
-        playsInline
-        className="block aspect-video bg-black object-contain"
-        style={{ width: "min(94vw, calc((100dvh - 112px) * 16 / 9))" }}
+
+      {/* whole 16:9 frame, as large as the viewport allows (width- or height-bound), never cropped;
+          in fullscreen the frame itself fills the screen so the custom controls come along */}
+      <div
+        ref={frameRef}
+        className={cn("relative overflow-hidden bg-black", !showUi && "cursor-none", fullscreen && "flex items-center justify-center")}
+        style={fullscreen ? { width: "100vw", height: "100vh" } : { width: "min(94vw, calc((100dvh - 112px) * 16 / 9))" }}
         onClick={(e) => e.stopPropagation()}
-      />
+        onMouseMove={wake}
+      >
+        <video
+          ref={videoRef}
+          src={src}
+          autoPlay
+          playsInline
+          preload="auto"
+          className={cn("block bg-black object-contain", fullscreen ? "h-full w-full" : "aspect-video w-full")}
+          onClick={togglePlay}
+          onDoubleClick={toggleFullscreen}
+          // no "save video as" from the browser's right-click menu either
+          onContextMenu={(e) => e.preventDefault()}
+          onPlay={() => {
+            setPaused(false);
+            setEnded(false);
+          }}
+          onPause={() => setPaused(true)}
+          onEnded={() => setEnded(true)}
+          onWaiting={() => setWaiting(true)}
+          onPlaying={() => setWaiting(false)}
+          onCanPlay={() => setWaiting(false)}
+          onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
+          onDurationChange={(e) => setDuration(e.currentTarget.duration)}
+          onTimeUpdate={(e) => {
+            if (!scrubbingRef.current) setCurrent(e.currentTarget.currentTime);
+            syncBuffered();
+          }}
+          onProgress={syncBuffered}
+          onVolumeChange={(e) => {
+            setVolume(e.currentTarget.volume);
+            setMuted(e.currentTarget.muted);
+          }}
+          onRateChange={(e) => setRate(e.currentTarget.playbackRate)}
+        />
+
+        {waiting && !paused && (
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+            <Loader2 className="size-10 animate-spin text-white/80" />
+          </div>
+        )}
+
+        {paused && (
+          <button
+            type="button"
+            aria-label={playLabel}
+            onClick={togglePlay}
+            className="absolute top-1/2 left-1/2 inline-flex size-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-black shadow-lg transition-transform hover:scale-105"
+          >
+            {ended ? <RotateCcw className="size-6" /> : <Play className="ml-1 size-6 fill-current" />}
+          </button>
+        )}
+
+        {/* control bar: caption line, then play · progress · time · volume · speed · PiP · fullscreen */}
+        <div
+          className={cn(
+            "absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 via-black/35 to-transparent px-4 pt-14 pb-3 text-white transition-opacity duration-300 sm:px-7 sm:pb-5",
+            !showUi && "pointer-events-none opacity-0"
+          )}
+        >
+          {title && <p className="mb-2.5 truncate text-[13px] font-medium tracking-[-0.01em] text-white/90">{title}</p>}
+
+          <div className="flex items-center gap-2 sm:gap-3">
+            <ControlButton label={playLabel} onClick={togglePlay} tabIndex={uiTab} className="-ml-1.5">
+              {!paused ? (
+                <Pause className="size-4 fill-current" />
+              ) : ended ? (
+                <RotateCcw className="size-4" />
+              ) : (
+                <Play className="size-4 fill-current" />
+              )}
+            </ControlButton>
+
+            {/* progress: played (brand blue) over buffered (light) over the rest (faint) */}
+            <div
+              ref={trackRef}
+              role="slider"
+              tabIndex={uiTab}
+              aria-label="재생 위치"
+              aria-valuemin={0}
+              aria-valuemax={Math.round(duration)}
+              aria-valuenow={Math.round(current)}
+              aria-valuetext={`${formatTime(current)} / ${formatTime(duration)}`}
+              className="group/track relative flex h-6 min-w-0 flex-1 cursor-pointer touch-none items-center rounded-sm outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/60"
+              onPointerDown={onTrackPointerDown}
+              onPointerMove={onTrackPointerMove}
+              onPointerUp={onTrackPointerUp}
+              onPointerCancel={onTrackPointerUp}
+              onPointerLeave={() => setHoverTime(null)}
+              onKeyDown={onTrackKeyDown}
+            >
+              <div className="relative h-[2px] w-full overflow-hidden rounded-full bg-white/20 transition-[height] duration-150 group-hover/track:h-1">
+                <div className="absolute inset-y-0 left-0 bg-white/35" style={{ width: `${buffered * 100}%` }} />
+                <div className="absolute inset-y-0 left-0 bg-[var(--blue-400)]" style={{ width: `${progress}%` }} />
+              </div>
+              <span
+                className={cn(
+                  "pointer-events-none absolute top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white shadow transition-transform duration-150",
+                  scrubbing ? "scale-100" : "scale-0 group-hover/track:scale-100"
+                )}
+                style={{ left: `${progress}%` }}
+              />
+              {hoverTime !== null && duration > 0 && (
+                <span
+                  className="pointer-events-none absolute bottom-full mb-1.5 -translate-x-1/2 rounded-[3px] bg-black/80 px-1.5 py-0.5 text-[11px] font-medium tabular-nums"
+                  style={{ left: `${(hoverTime / duration) * 100}%` }}
+                >
+                  {formatTime(hoverTime)}
+                </span>
+              )}
+            </div>
+
+            <span className="shrink-0 text-[12px] font-medium tabular-nums text-white/85">
+              {formatTime(current)} <span className="text-white/45">/</span> {formatTime(duration)}
+            </span>
+
+            <div className="group/vol flex shrink-0 items-center">
+              <ControlButton label={effectiveVolume === 0 ? "음소거 해제" : "음소거"} onClick={toggleMute} tabIndex={uiTab}>
+                <VolumeIcon className="size-4" />
+              </ControlButton>
+              {/* volume slider slides out on hover/focus; phones use their hardware buttons instead */}
+              <input
+                type="range"
+                min={0}
+                max={1}
+                step={0.05}
+                value={effectiveVolume}
+                aria-label="볼륨"
+                tabIndex={uiTab}
+                onChange={(e) => {
+                  const v = videoRef.current;
+                  const val = Number(e.target.value);
+                  v.volume = val;
+                  v.muted = val === 0;
+                }}
+                className="bf-vm-volume hidden w-0 opacity-0 transition-[width,opacity,margin] duration-200 sm:block group-focus-within/vol:ml-1 group-focus-within/vol:w-16 group-focus-within/vol:opacity-100 group-hover/vol:ml-1 group-hover/vol:w-16 group-hover/vol:opacity-100"
+                style={{ "--vol": `${effectiveVolume * 100}%` }}
+              />
+            </div>
+
+            <button
+              type="button"
+              aria-label={`재생 속도 ${rate}배`}
+              title="재생 속도"
+              onClick={cycleRate}
+              tabIndex={uiTab}
+              className="hidden h-8 min-w-10 shrink-0 items-center justify-center rounded-full px-2 text-[12px] font-semibold tabular-nums text-white/85 transition-colors hover:bg-white/10 hover:text-white sm:inline-flex"
+            >
+              {rate}x
+            </button>
+
+            {pipSupported && (
+              <ControlButton label="PIP 모드" onClick={togglePip} tabIndex={uiTab} className="hidden sm:inline-flex">
+                <PictureInPicture2 className="size-4" />
+              </ControlButton>
+            )}
+
+
+            <ControlButton
+              label={fullscreen ? "전체화면 종료" : "전체화면"}
+              onClick={toggleFullscreen}
+              tabIndex={uiTab}
+              className="-mr-1.5"
+            >
+              {fullscreen ? <Minimize className="size-4" /> : <Maximize className="size-4" />}
+            </ControlButton>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
