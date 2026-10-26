@@ -287,6 +287,15 @@ nav[data-theme="dark"] .bf-megaitem:hover{color:#fff;}
 /* Compliance Infra 헤더 구조도: 폰에서는 3열이 좁아 모듈명이 세 줄로 꺾여 2열로 */
 @media (max-width:560px){.bf-hubgrid{grid-template-columns:repeat(2,1fr) !important;}}
 
+/* intro video modal — frame size. Fit the whole 16:9 picture by default; on desktop-shaped windows fill the
+   viewport height (no bars above/below) and trim the sides instead. Limited to landscape windows (≥3:2) so the
+   side trim stays small; phones keep the full picture */
+.bf-vm-frame{width:min(94vw,calc((100dvh - 112px) * 16 / 9));}
+@media (min-width:861px) and (min-aspect-ratio:3/2){
+  .bf-vm-frame{width:min(100vw,calc(100dvh * 16 / 9));height:100dvh;}
+  .bf-vm-frame > video{height:100%;aspect-ratio:auto;object-fit:cover;}
+}
+
 /* intro video modal — volume slider (thin track, filled up to the current level) */
 .bf-vm-volume{-webkit-appearance:none;appearance:none;height:16px;background:transparent;cursor:pointer;}
 .bf-vm-volume::-webkit-slider-runnable-track{height:2px;border-radius:2px;background:linear-gradient(to right,#fff var(--vol),rgba(255,255,255,.25) var(--vol));}

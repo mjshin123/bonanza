@@ -515,12 +515,13 @@ export function VideoModal({ open, onClose, src, title }) {
         <X className="size-[18px]" />
       </button>
 
-      {/* whole 16:9 frame, as large as the viewport allows (width- or height-bound), never cropped;
+      {/* phones/narrow windows: whole 16:9 frame, as large as the viewport allows, never cropped;
+          desktop: full viewport height with no bars above/below (sides trimmed if the window is narrower than 16:9), see page.css .bf-vm-frame;
           in fullscreen the frame itself fills the screen so the custom controls come along */}
       <div
         ref={frameRef}
-        className={cn("relative overflow-hidden bg-black", !showUi && "cursor-none", fullscreen && "flex items-center justify-center")}
-        style={fullscreen ? { width: "100vw", height: "100vh" } : { width: "min(94vw, calc((100dvh - 112px) * 16 / 9))" }}
+        className={cn("relative overflow-hidden bg-black", !showUi && "cursor-none", fullscreen ? "flex items-center justify-center" : "bf-vm-frame")}
+        style={fullscreen ? { width: "100vw", height: "100vh" } : undefined}
         onClick={(e) => e.stopPropagation()}
         onMouseMove={wake}
       >
