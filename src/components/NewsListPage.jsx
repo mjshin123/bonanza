@@ -6,7 +6,7 @@ import { accentNums } from "../lib/accentNums.jsx";
 const PAGE_SIZE = 10;
 const ALL_COMPANIES = "전체 계열사";
 
-function FilterBar({ companies, company, onCompanyChange, query, onQueryChange, searchPlaceholder }) {
+function FilterBar({ companies, company, onCompanyChange, query, onQueryChange, searchPlaceholder, showCategory }) {
   const [open, setOpen] = useState(false);
 
   function pick(c) {
@@ -16,8 +16,8 @@ function FilterBar({ companies, company, onCompanyChange, query, onQueryChange, 
 
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 20, flexWrap: "wrap", padding: "4px 8px 28px" }}>
-      {open && <div onClick={() => setOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 55, background: "transparent" }} />}
-      <div style={{ position: "relative", zIndex: 60 }}>
+      {showCategory && open && <div onClick={() => setOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 55, background: "transparent" }} />}
+      {showCategory && <div style={{ position: "relative", zIndex: 60 }}>
         <button
           onClick={() => setOpen((v) => !v)}
           style={{ display: "inline-flex", alignItems: "center", gap: 8, border: "none", background: "transparent", color: "var(--text-strong)", fontSize: 16, fontWeight: 700, cursor: "pointer", padding: 0 }}
@@ -50,8 +50,8 @@ function FilterBar({ companies, company, onCompanyChange, query, onQueryChange, 
             ))}
           </div>
         )}
-      </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0, maxWidth: 340, flex: "1 1 280px", justifyContent: "flex-end" }}>
+      </div>}
+      <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0, maxWidth: 340, flex: "1 1 280px", justifyContent: "flex-end", marginLeft: showCategory ? 0 : "auto" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", maxWidth: 320, border: "1px solid var(--border)", borderRadius: 8, background: "#fff", padding: "10px 14px" }}>
           <input
             type="text"
@@ -104,7 +104,7 @@ function Pager({ page, totalPages, onPageChange }) {
   );
 }
 
-export default function NewsListPage({ breadcrumbLabel, heading, searchPlaceholder, items, getItemPath }) {
+export default function NewsListPage({ breadcrumbLabel, heading, searchPlaceholder, items, getItemPath, showCategory = true }) {
   const [company, setCompany] = useState(ALL_COMPANIES);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
@@ -118,11 +118,11 @@ export default function NewsListPage({ breadcrumbLabel, heading, searchPlacehold
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return items.filter((n) => {
-      const okCompany = company === ALL_COMPANIES || n.category === company;
+      const okCompany = !showCategory || company === ALL_COMPANIES || n.category === company;
       const okQuery = !q || (n.title + n.excerpt).toLowerCase().includes(q);
       return okCompany && okQuery;
     });
-  }, [items, company, query]);
+  }, [items, company, query, showCategory]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
@@ -152,7 +152,7 @@ export default function NewsListPage({ breadcrumbLabel, heading, searchPlacehold
       </header>
 
       <main className="bf-pad" style={{ maxWidth: 1400, margin: "0 auto", padding: "32px 48px 40px" }}>
-        <FilterBar companies={companies} company={company} onCompanyChange={updateCompany} query={query} onQueryChange={updateQuery} searchPlaceholder={searchPlaceholder} />
+        <FilterBar companies={companies} company={company} onCompanyChange={updateCompany} query={query} onQueryChange={updateQuery} searchPlaceholder={searchPlaceholder} showCategory={showCategory} />
 
         {pageItems.map((item) => {
           const href = getItemPath?.(item);
@@ -165,7 +165,7 @@ export default function NewsListPage({ breadcrumbLabel, heading, searchPlacehold
                 {item.date}
               </div>
               <div style={{ minWidth: 0, alignSelf: "start" }}>
-                <div style={{ fontSize: 13, fontWeight: 600, letterSpacing: "0.06em", color: "var(--primary)", marginBottom: 12 }}>{item.category}</div>
+                {showCategory && <div style={{ fontSize: 13, fontWeight: 600, letterSpacing: "0.06em", color: "var(--primary)", marginBottom: 12 }}>{item.category}</div>}
                 <h2 className="bf-newsttl" style={{ margin: 0, fontWeight: 700, fontSize: "clamp(18px,1.8vw,22px)", lineHeight: 1.35, letterSpacing: "-0.01em", color: "var(--text-strong)", transition: "color .18s ease" }}>
                   {item.title}
                 </h2>

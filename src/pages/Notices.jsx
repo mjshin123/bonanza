@@ -9,6 +9,7 @@ export default function Notices() {
       searchPlaceholder="공지사항 내 검색"
       items={noticeItems}
       getItemPath={(item) => `/notice/${item.id}`}
+      showCategory={false}
     />
   );
 }

@@ -23,7 +23,7 @@ function PlaceholderImage() {
   );
 }
 
-export default function NewsDetailPage({ items, listPath }) {
+export default function NewsDetailPage({ items, listPath, showCategory = true }) {
   const { id } = useParams();
   const item = items.find((n) => String(n.id) === id);
   const darkZoneRef = useRef(null);
@@ -39,12 +39,12 @@ export default function NewsDetailPage({ items, listPath }) {
     <div style={{ position: "relative", paddingTop: 64 }}>
       <header ref={darkZoneRef} style={{ background: "#0A0A0A" }}>
         <div className="bf-pad" style={{ maxWidth: 1200, margin: "0 auto", padding: "72px 48px 40px" }}>
-          <div
+          {showCategory && <div
             className="bf-reveal"
             style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.14em", color: "#5E8EFF", marginBottom: 20, textTransform: "uppercase" }}
           >
             {item.category}
-          </div>
+          </div>}
           <h1
             className="bf-accent bf-reveal"
             style={{ margin: 0, fontWeight: 500, fontSize: "clamp(24px,2.9vw,36px)", lineHeight: 1.3, letterSpacing: "-0.01em", color: "#fff" }}

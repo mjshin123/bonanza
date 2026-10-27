@@ -1,4 +1,4 @@
-export const noticeItems = [
+const noticesByCompany = [
   {
     id: 1,
     date: "2026.06.30",
@@ -187,3 +187,5 @@ export const noticeItems = [
     ],
   },
 ];
+
+export const noticeItems = noticesByCompany.filter((item) => item.category === "보난자팩토리");

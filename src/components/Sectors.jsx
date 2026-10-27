@@ -69,20 +69,20 @@ export default function Sectors() {
             Regulation
           </div>
 
-          <div aria-hidden="true" className="bf-sector-step bf-sector-step-1" style={{ position: "absolute", left: "40.74%", top: "9.45%", width: "18.53%", height: "32.94%", borderRadius: "50%", background: "linear-gradient(180deg, #0A0A0A 0%, rgba(10,10,10,0.8) 19.23%, rgba(22,64,219,0.8) 100%)", transform: "translateY(6px)", zIndex: 1 }} />
-          <div aria-hidden="true" className="bf-sector-step bf-sector-step-3" style={{ position: "absolute", left: "49.48%", top: "31.85%", width: "18.53%", height: "32.94%", borderRadius: "50%", background: "linear-gradient(180deg, #0A0A0A 0%, rgba(10,10,10,0.8) 19.23%, rgba(22,64,219,0.8) 100%)", transform: "translate(-8px,16px) rotate(130deg)", zIndex: 1 }} />
-          <div aria-hidden="true" className="bf-sector-step bf-sector-step-2" style={{ position: "absolute", left: "32.57%", top: "31.85%", width: "18.53%", height: "32.94%", borderRadius: "50%", background: "linear-gradient(180deg, #0A0A0A 0%, rgba(10,10,10,0.8) 19.23%, rgba(22,64,219,0.8) 100%)", transform: "translate(8px,16px) rotate(-130deg)", zIndex: 1 }} />
+          <div aria-hidden="true" className="bf-sector-step bf-sector-step-1" style={{ position: "absolute", left: "40.74%", top: "9.45%", width: "18.53%", height: "32.94%", borderRadius: "50%", background: "linear-gradient(180deg, #0A0A0A 0%, rgba(10,10,10,0.8) 19.23%, rgba(22,64,219,0.8) 100%)", transform: "translateY(4px)", zIndex: 1 }} />
+          <div aria-hidden="true" className="bf-sector-step bf-sector-step-3" style={{ position: "absolute", left: "49.48%", top: "31.85%", width: "18.53%", height: "32.94%", borderRadius: "50%", background: "linear-gradient(180deg, #0A0A0A 0%, rgba(10,10,10,0.8) 19.23%, rgba(22,64,219,0.8) 100%)", transform: "translate(-8px,20px) rotate(130deg)", zIndex: 1 }} />
+          <div aria-hidden="true" className="bf-sector-step bf-sector-step-2" style={{ position: "absolute", left: "32.57%", top: "31.85%", width: "18.53%", height: "32.94%", borderRadius: "50%", background: "linear-gradient(180deg, #0A0A0A 0%, rgba(10,10,10,0.8) 19.23%, rgba(22,64,219,0.8) 100%)", transform: "translate(8px,20px) rotate(-130deg)", zIndex: 1 }} />
 
-          <div className="bf-sector-step bf-sector-step-1" style={{ position: "absolute", left: "50%", top: "26.48%", width: "5.57%", transform: "translate(-50%,-50%)", zIndex: 3, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", fontWeight: 400, fontSize: 18, lineHeight: "22px", color: "#9DBBFF" }}>
+          <div className="bf-sector-step bf-sector-step-1" style={{ position: "absolute", left: "50%", top: "calc(26.48% - 2px)", width: "5.57%", transform: "translate(-50%,-50%)", zIndex: 3, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", fontWeight: 400, fontSize: 18, lineHeight: "22px", color: "#9DBBFF" }}>
             <span style={{ whiteSpace: "nowrap" }}>Risk<br />Analytics</span>
           </div>
           <div className="bf-accent" style={{ position: "absolute", left: "50%", top: "38.13%", transform: "translateX(-50%)", zIndex: 3, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", whiteSpace: "nowrap", fontWeight: 300, fontSize: 38, lineHeight: "50px", color: "#fff" }}>
             <AnimatedText text="Digital Asset Compliance" className="" staggerDelay={0.02} duration={0.4} delay={0.1} />
           </div>
-          <div className="bf-sector-step bf-sector-step-2" style={{ position: "absolute", left: "42.26%", top: "49.80%", width: "12.86%", transform: "translate(-50%,-50%)", zIndex: 3, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", fontWeight: 400, fontSize: 18, lineHeight: "22px", color: "#9DBBFF" }}>
+          <div className="bf-sector-step bf-sector-step-2" style={{ position: "absolute", left: "42.26%", top: "calc(49.80% + 4px)", width: "12.86%", transform: "translate(-50%,-50%)", zIndex: 3, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", fontWeight: 400, fontSize: 18, lineHeight: "22px", color: "#9DBBFF" }}>
             <span style={{ whiteSpace: "nowrap" }}>Blockchain<br />Infrastructure</span>
           </div>
-          <div className="bf-sector-step bf-sector-step-3" style={{ position: "absolute", left: "58.33%", top: "49.80%", width: "5.16%", transform: "translate(-50%,-50%)", zIndex: 3, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", fontWeight: 400, fontSize: 18, lineHeight: "22px", color: "#9DBBFF" }}>
+          <div className="bf-sector-step bf-sector-step-3" style={{ position: "absolute", left: "58.33%", top: "calc(49.80% + 4px)", width: "5.16%", transform: "translate(-50%,-50%)", zIndex: 3, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", fontWeight: 400, fontSize: 18, lineHeight: "22px", color: "#9DBBFF" }}>
             <span style={{ whiteSpace: "nowrap" }}>Compliance<br />Technology</span>
           </div>
         </div>
@@ -148,7 +148,7 @@ export default function Sectors() {
               style={{
                 position: "absolute",
                 left: "10.02%",
-                top: "-14.48%",
+                top: "calc(-14.48% - 2px)",
                 width: "80.00%",
                 height: "88.52%",
                 borderRadius: "50%",
@@ -161,7 +161,7 @@ export default function Sectors() {
               style={{
                 position: "absolute",
                 left: "-15.98%",
-                bottom: "-24.05%",
+                bottom: "calc(-24.05% - 4px)",
                 width: "80.00%",
                 height: "88.52%",
                 borderRadius: "50%",
@@ -174,7 +174,7 @@ export default function Sectors() {
               style={{
                 position: "absolute",
                 right: "-15.98%",
-                bottom: "-24.05%",
+                bottom: "calc(-24.05% - 4px)",
                 width: "80.00%",
                 height: "88.52%",
                 borderRadius: "50%",
@@ -183,13 +183,13 @@ export default function Sectors() {
             />
 
             {/* petal labels — centered on each circle's geometric center */}
-            <div className="bf-petal-l1" style={{ position: "absolute", left: "50.02%", top: "29.79%", transform: "translate(-50%,-50%)", textAlign: "center", whiteSpace: "nowrap", zIndex: 3, fontWeight: 400, fontSize: 12, lineHeight: 1.25, color: "#9DBBFF" }}>
+            <div className="bf-petal-l1" style={{ position: "absolute", left: "50.02%", top: "calc(29.79% - 2px)", transform: "translate(-50%,-50%)", textAlign: "center", whiteSpace: "nowrap", zIndex: 3, fontWeight: 400, fontSize: 12, lineHeight: 1.25, color: "#9DBBFF" }}>
               <span style={{ whiteSpace: "nowrap" }}>Risk<br />Analytics</span>
             </div>
-            <div className="bf-petal-l2" style={{ position: "absolute", left: "24.03%", top: "79.79%", transform: "translate(-50%,-50%)", width: "28.85%", textAlign: "center", zIndex: 3, fontWeight: 400, fontSize: 12, lineHeight: 1.25, color: "#9DBBFF" }}>
+            <div className="bf-petal-l2" style={{ position: "absolute", left: "24.03%", top: "calc(79.79% + 4px)", transform: "translate(-50%,-50%)", width: "28.85%", textAlign: "center", zIndex: 3, fontWeight: 400, fontSize: 12, lineHeight: 1.25, color: "#9DBBFF" }}>
               <span style={{ whiteSpace: "nowrap" }}>Blockchain<br />Infrastructure</span>
             </div>
-            <div className="bf-petal-l3" style={{ position: "absolute", left: "75.98%", top: "79.79%", transform: "translate(-50%,-50%)", width: "32.69%", textAlign: "center", zIndex: 3, fontWeight: 400, fontSize: 12, lineHeight: 1.25, color: "#9DBBFF" }}>
+            <div className="bf-petal-l3" style={{ position: "absolute", left: "75.98%", top: "calc(79.79% + 4px)", transform: "translate(-50%,-50%)", width: "32.69%", textAlign: "center", zIndex: 3, fontWeight: 400, fontSize: 12, lineHeight: 1.25, color: "#9DBBFF" }}>
               <span style={{ whiteSpace: "nowrap" }}>Compliance<br />Technology</span>
             </div>
 
