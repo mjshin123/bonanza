@@ -35,8 +35,8 @@ const PAGES = {
     title: `TranSafer - 원화 입출금 검증 솔루션 | ${SITE_NAME}`,
     description: "고객 실명계좌를 바탕으로 거래소와 은행 사이의 원화 입출금을 검증하고 이상 거래를 차단하는 TranSafer입니다.",
   },
-  "/compliance-infra": {
-    title: `Compliance Infra - 기관 맞춤형 가상자산 컴플라이언스 인프라 | ${SITE_NAME}`,
+  "/compliance-suite": {
+    title: `Compliance Suite - 기관 맞춤형 가상자산 컴플라이언스 인프라 | ${SITE_NAME}`,
     description: "비수탁지갑 솔루션, KYT 검증, 가상자산 KRW 시세, 원화 입출금 검증까지. 보난자 그룹의 솔루션을 기관별 사업 모델에 맞게 조합해 제공합니다.",
   },
   "/press": {

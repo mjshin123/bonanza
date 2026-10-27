@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import useNavDarkZone from "../hooks/useNavDarkZone.js";
 import PrivacyPolicyModal from "./PrivacyPolicyModal.jsx";
+import eurocertLogo from "../../EUROCERT 컬러 1.svg";
 
 const menuGroups = [
   {
@@ -17,7 +18,7 @@ const menuGroups = [
     items: [
       { label: "TranSight", href: "/transight" },
       { label: "TranSafer", href: "/transafer" },
-      { label: "Compliance Infra", href: "/compliance-infra" },
+      { label: "Compliance Suite", href: "/compliance-suite" },
     ],
   },
   {
@@ -51,6 +52,19 @@ export default function Footer() {
               <br />
               가상자산 컴플라이언스 전문 기업, 보난자팩토리.
             </p>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 24, color: "#9a9a9a" }}>
+              <img
+                src={eurocertLogo}
+                alt="유로서트 EUROCERT"
+                width={40}
+                height={36}
+                style={{ display: "block", flexShrink: 0, objectFit: "contain", filter: "grayscale(1)" }}
+              />
+              <div style={{ fontSize: 12, fontWeight: 500, lineHeight: 1.6 }}>
+                <div>품질·환경경영 국제표준</div>
+                <div>ISO 9001, ISO 14001</div>
+              </div>
+            </div>
           </div>
           {menuGroups.map((group) => (
             <div key={group.label}>

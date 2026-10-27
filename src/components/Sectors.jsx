@@ -66,7 +66,7 @@ export default function Sectors() {
             Finance
           </div>
           <div style={{ position: "absolute", left: "49.32%", top: "90.14%", width: "2.60%", height: "2.22%", zIndex: 4, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 500, fontSize: 14, color: "var(--grey-200)" }}>
-            Legal
+            Regulation
           </div>
 
           <div aria-hidden="true" className="bf-sector-step bf-sector-step-1" style={{ position: "absolute", left: "40.74%", top: "9.45%", width: "18.53%", height: "32.94%", borderRadius: "50%", background: "linear-gradient(180deg, #0A0A0A 0%, rgba(10,10,10,0.8) 19.23%, rgba(22,64,219,0.8) 100%)", transform: "translateY(6px)", zIndex: 1 }} />
@@ -74,21 +74,21 @@ export default function Sectors() {
           <div aria-hidden="true" className="bf-sector-step bf-sector-step-2" style={{ position: "absolute", left: "32.57%", top: "31.85%", width: "18.53%", height: "32.94%", borderRadius: "50%", background: "linear-gradient(180deg, #0A0A0A 0%, rgba(10,10,10,0.8) 19.23%, rgba(22,64,219,0.8) 100%)", transform: "translate(8px,16px) rotate(-130deg)", zIndex: 1 }} />
 
           <div className="bf-sector-step bf-sector-step-1" style={{ position: "absolute", left: "50%", top: "26.48%", width: "5.57%", transform: "translate(-50%,-50%)", zIndex: 3, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", fontWeight: 400, fontSize: 18, lineHeight: "22px", color: "#9DBBFF" }}>
-            Risk Data
+            <span style={{ whiteSpace: "nowrap" }}>Risk<br />Analytics</span>
           </div>
           <div className="bf-accent" style={{ position: "absolute", left: "50%", top: "38.13%", transform: "translateX(-50%)", zIndex: 3, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", whiteSpace: "nowrap", fontWeight: 300, fontSize: 38, lineHeight: "50px", color: "#fff" }}>
             <AnimatedText text="Digital Asset Compliance" className="" staggerDelay={0.02} duration={0.4} delay={0.1} />
           </div>
           <div className="bf-sector-step bf-sector-step-2" style={{ position: "absolute", left: "42.26%", top: "49.80%", width: "12.86%", transform: "translate(-50%,-50%)", zIndex: 3, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", fontWeight: 400, fontSize: 18, lineHeight: "22px", color: "#9DBBFF" }}>
-            Blockchain Technology
+            <span style={{ whiteSpace: "nowrap" }}>Blockchain<br />Infrastructure</span>
           </div>
           <div className="bf-sector-step bf-sector-step-3" style={{ position: "absolute", left: "58.33%", top: "49.80%", width: "5.16%", transform: "translate(-50%,-50%)", zIndex: 3, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", fontWeight: 400, fontSize: 18, lineHeight: "22px", color: "#9DBBFF" }}>
-            RegTech
+            <span style={{ whiteSpace: "nowrap" }}>Compliance<br />Technology</span>
           </div>
         </div>
 
         {/* ================= MOBILE diagram — hand-tuned separately from the desktop
-            spec above (bigger circles, wider-spread petals, extended Legal point),
+            spec above (bigger circles, wider-spread petals, extended Regulation point),
             shown only below the mobile breakpoint. Every position/size below is a
             percentage of the fixed MOBILE_DESIGN_WIDTH/HEIGHT box; that box is then
             scaled as a whole (via mobileScale) to match the actual rendered width,
@@ -137,7 +137,7 @@ export default function Sectors() {
             Finance
           </div>
           <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", bottom: "-19.42%", zIndex: 4, fontWeight: 500, fontSize: 13, color: "#E5E5E5" }}>
-            Legal
+            Regulation
           </div>
 
           {/* trefoil — 37.14% x 54.65% of the stage (= 520x470 at the 1400x860 reference size) */}
@@ -184,13 +184,13 @@ export default function Sectors() {
 
             {/* petal labels — centered on each circle's geometric center */}
             <div className="bf-petal-l1" style={{ position: "absolute", left: "50.02%", top: "29.79%", transform: "translate(-50%,-50%)", textAlign: "center", whiteSpace: "nowrap", zIndex: 3, fontWeight: 400, fontSize: 12, lineHeight: 1.25, color: "#9DBBFF" }}>
-              Risk Data
+              <span style={{ whiteSpace: "nowrap" }}>Risk<br />Analytics</span>
             </div>
             <div className="bf-petal-l2" style={{ position: "absolute", left: "24.03%", top: "79.79%", transform: "translate(-50%,-50%)", width: "28.85%", textAlign: "center", zIndex: 3, fontWeight: 400, fontSize: 12, lineHeight: 1.25, color: "#9DBBFF" }}>
-              Blockchain Technology
+              <span style={{ whiteSpace: "nowrap" }}>Blockchain<br />Infrastructure</span>
             </div>
             <div className="bf-petal-l3" style={{ position: "absolute", left: "75.98%", top: "79.79%", transform: "translate(-50%,-50%)", width: "32.69%", textAlign: "center", zIndex: 3, fontWeight: 400, fontSize: 12, lineHeight: 1.25, color: "#9DBBFF" }}>
-              RegTech
+              <span style={{ whiteSpace: "nowrap" }}>Compliance<br />Technology</span>
             </div>
 
             {/* center */}

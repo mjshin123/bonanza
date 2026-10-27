@@ -34,7 +34,7 @@ export default function App() {
           <Route path="/group" element={<GroupIntro />} />
           <Route path="/transight" element={<SolutionIntro slug="transight" />} />
           <Route path="/transafer" element={<SolutionIntro slug="transafer" />} />
-          <Route path="/compliance-infra" element={<ComplianceInfra />} />
+          <Route path="/compliance-suite" element={<ComplianceInfra />} />
           <Route path="/history" element={<History />} />
           <Route path="/press" element={<PressReleases />} />
           <Route path="/press/:id" element={<PressReleaseDetail />} />
@@ -49,7 +49,8 @@ export default function App() {
           <Route path="/보도자료/:id" element={<RedirectWithId to="/press" />} />
           <Route path="/공지사항" element={<Navigate to="/notice" replace />} />
           <Route path="/공지사항/:id" element={<RedirectWithId to="/notice" />} />
-          <Route path="/ComplianceInfra" element={<Navigate to="/compliance-infra" replace />} />
+          <Route path="/compliance-infra" element={<Navigate to="/compliance-suite" replace />} />
+          <Route path="/ComplianceInfra" element={<Navigate to="/compliance-suite" replace />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <Footer />

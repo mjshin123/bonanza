@@ -10,7 +10,7 @@ const PARENT_COMPANY = { name: "보난자팩토리", email: "contact@bonanza-fac
 
 const HERO = {
   tagline: "기관 맞춤형 가상자산 컴플라이언스 인프라",
-  title: "Compliance Infra",
+  title: "Compliance Suite",
   desc: "비수탁지갑 솔루션, KYT 검증, 가상자산 KRW 시세, 원화 입출금 검증까지. 보난자 그룹의 솔루션을 기관별 사업 모델에 맞게 조합해 스테이블코인·가상자산 서비스를 규제에 맞게 운영할 수 있도록 지원합니다.",
 };
 
