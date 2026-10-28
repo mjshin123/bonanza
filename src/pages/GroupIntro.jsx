@@ -6,6 +6,7 @@ import { subsidiaries } from "../data/subsidiaries.js";
 import InquiryModal from "../components/InquiryModal.jsx";
 import Orb from "../components/Orb/Orb.jsx";
 import { accentNums } from "../lib/accentNums.jsx";
+import { useLanguage } from "../context/LanguageContext.jsx";
 
 const PARENT_COMPANY = { name: "보난자팩토리", email: "contact@bonanza-factory.co.kr" };
 const PARENT_DESC =
@@ -272,6 +273,7 @@ const NAV_HEIGHT = 64;
 const CAROUSEL_STEP_VH = 60;
 
 export default function GroupIntro() {
+  const { isEnglish } = useLanguage();
   const darkZoneRef = useRef(null);
   useNavDarkZone(darkZoneRef);
   const [inquiryTarget, setInquiryTarget] = useState(null);
@@ -518,9 +520,9 @@ export default function GroupIntro() {
               maxWidth: 720,
             }}
           >
-            보난자 그룹은 각 영역의 전문 자회사와
-            <br />
-            함께 시너지를 만들어 갑니다.
+            {isEnglish ? "Specialized subsidiaries, united by Bonanza Group." : <>
+              보난자 그룹은 각 영역의 전문 자회사와<br />함께 시너지를 만들어 갑니다.
+            </>}
           </h1>
           <p
             className="bf-reveal"
