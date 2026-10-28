@@ -5,6 +5,13 @@ import useNavDarkZone from "../hooks/useNavDarkZone.js";
 import InquiryModal from "../components/InquiryModal.jsx";
 import useStepProgress from "../hooks/useStepProgress.js";
 import { accentNums } from "../lib/accentNums.jsx";
+import { useLanguage } from "../context/LanguageContext.jsx";
+import complianceTranslations from "../data/translations/compliance.js";
+
+function useComplianceTranslation() {
+  const { isEnglish } = useLanguage();
+  return (value) => isEnglish ? (complianceTranslations[value] ?? value) : value;
+}
 
 const PARENT_COMPANY = { name: "보난자팩토리", email: "contact@bonanza-factory.co.kr" };
 
@@ -148,6 +155,7 @@ const labelStyle = {
 
 // 히어로 우측: 기관 하나를 중심으로 모듈이 연결되는 구성도
 function HubDiagram() {
+  const translate = useComplianceTranslation();
   return (
     <div
       className="bf-hubgrid"
@@ -172,7 +180,7 @@ function HubDiagram() {
           fontWeight: 700,
         }}
       >
-        기관 맞춤 컴플라이언스 인프라
+        {translate("기관 맞춤 컴플라이언스 인프라")}
       </div>
       {MODULES.map((m) => (
         <div
@@ -185,8 +193,8 @@ function HubDiagram() {
             minWidth: 0,
           }}
         >
-          <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,.45)", marginBottom: 6 }}>{m.category}</div>
-          <div style={{ fontSize: 15, fontWeight: 700, color: "#fff", wordBreak: "keep-all" }}>{m.name}</div>
+          <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,.45)", marginBottom: 6 }}>{translate(m.category)}</div>
+          <div style={{ fontSize: 15, fontWeight: 700, color: "#fff", wordBreak: "keep-all" }}>{translate(m.name)}</div>
         </div>
       ))}
     </div>
@@ -195,6 +203,7 @@ function HubDiagram() {
 
 // 선택된 모듈은 파란 테두리 + 연한 파란 배경, 선택 안 된 모듈은 회색 테두리만
 function ModuleChip({ module, on }) {
+  const translate = useComplianceTranslation();
   return (
     <div
       style={{
@@ -210,8 +219,8 @@ function ModuleChip({ module, on }) {
         transition: "background .3s ease, color .3s ease, border-color .3s ease",
       }}
     >
-      <span style={{ fontSize: 14, fontWeight: 600 }}>{module.name}</span>
-      <span style={{ fontSize: 12, fontWeight: 500, opacity: 0.8 }}>{module.category}</span>
+      <span style={{ fontSize: 14, fontWeight: 600 }}>{translate(module.name)}</span>
+      <span style={{ fontSize: 12, fontWeight: 500, opacity: 0.8 }}>{translate(module.category)}</span>
     </div>
   );
 }
@@ -220,6 +229,7 @@ const TAB_INTERVAL_MS = 4000;
 
 // 화면에 보이는 동안 일정 시간마다 다음 기관으로 넘기고, 마우스를 올리거나 누르고 있는 동안은 멈춤
 function InstitutionTabs() {
+  const translate = useComplianceTranslation();
   const ref = useRef(null);
   const [activeKey, setActiveKey] = useState(INSTITUTIONS[0].key);
   const [visible, setVisible] = useState(false);
@@ -286,7 +296,7 @@ function InstitutionTabs() {
                 transition: "background .2s ease, color .2s ease",
               }}
             >
-              {inst.label}
+              {translate(inst.label)}
             </button>
           );
         })}
@@ -302,7 +312,7 @@ function InstitutionTabs() {
           <h3
             style={{ margin: 0, fontSize: "clamp(18px,1.6vw,22px)", fontWeight: 700, lineHeight: 1.45, color: "#000", wordBreak: "keep-all" }}
           >
-            {active.heading}
+            {translate(active.heading)}
           </h3>
           <ul style={{ listStyle: "none", margin: "28px 0 0", padding: 0, display: "flex", flexDirection: "column", gap: 12 }}>
             {active.needs.map((need, i) => (
@@ -311,7 +321,7 @@ function InstitutionTabs() {
                 style={{ display: "flex", gap: 14, fontSize: 15, lineHeight: 1.6, color: "#2F2F2F", wordBreak: "keep-all" }}
               >
                 <span style={{ flex: "none", fontWeight: 600, color: "#2A5BFF" }}>{String(i + 1).padStart(2, "0")}</span>
-                {need}
+                {translate(need)}
               </li>
             ))}
           </ul>
@@ -328,7 +338,7 @@ function InstitutionTabs() {
               wordBreak: "keep-all",
             }}
           >
-            {active.outcome}
+            {translate(active.outcome)}
           </div>
         </div>
 
@@ -346,15 +356,16 @@ function InstitutionTabs() {
 
 // 6개를 한 줄에 두는 세로형 카드: 분류·이름·설명은 위, 계열사는 아래에 고정
 function ModuleCard({ module }) {
+  const translate = useComplianceTranslation();
   const body = (
     <>
-      <span style={{ fontSize: 12, fontWeight: 600, lineHeight: 1.5, color: "#2A5BFF", wordBreak: "keep-all" }}>{module.category}</span>
+      <span style={{ fontSize: 12, fontWeight: 600, lineHeight: 1.5, color: "#2A5BFF", wordBreak: "keep-all" }}>{translate(module.category)}</span>
       <div style={{ display: "flex", alignItems: "flex-start", gap: 6, marginTop: 14, fontSize: 19, fontWeight: 700, lineHeight: 1.35, color: "#000", wordBreak: "keep-all" }}>
-        {module.name}
+        {translate(module.name)}
         {module.href && <ArrowUpRight width={18} height={18} color="#1640DB" style={{ flex: "none", marginTop: 3 }} />}
       </div>
-      <p style={{ margin: "14px 0 0", fontSize: 14, lineHeight: 1.7, color: "#5A6178", wordBreak: "keep-all" }}>{module.desc}</p>
-      <span className="bf-moduleowner" style={{ marginTop: "auto", paddingTop: 24, fontSize: 12, fontWeight: 600, color: "#9AA1B5", transition: "color .2s ease" }}>{module.owner}</span>
+      <p style={{ margin: "14px 0 0", fontSize: 14, lineHeight: 1.7, color: "#5A6178", wordBreak: "keep-all" }}>{translate(module.desc)}</p>
+      <span className="bf-moduleowner" style={{ marginTop: "auto", paddingTop: 24, fontSize: 12, fontWeight: 600, color: "#9AA1B5", transition: "color .2s ease" }}>{translate(module.owner)}</span>
     </>
   );
 
@@ -381,6 +392,7 @@ function ModuleCard({ module }) {
 }
 
 function ProcessSteps() {
+  const translate = useComplianceTranslation();
   const count = PROCESS.length;
   const [ref, active] = useStepProgress(count);
   return (
@@ -442,8 +454,8 @@ function ProcessSteps() {
               </span>
             )}
           </div>
-          <div style={{ fontSize: 16, fontWeight: 700, color: "#2F2F2F", marginBottom: 6 }}>{step.title}</div>
-          <div style={{ fontSize: 13, lineHeight: 1.5, color: "#7A8299", padding: "0 4px", wordBreak: "keep-all" }}>{step.text}</div>
+          <div style={{ fontSize: 16, fontWeight: 700, color: "#2F2F2F", marginBottom: 6 }}>{translate(step.title)}</div>
+          <div style={{ fontSize: 13, lineHeight: 1.5, color: "#7A8299", padding: "0 4px", wordBreak: "keep-all" }}>{translate(step.text)}</div>
         </div>
         );
       })}
@@ -452,6 +464,7 @@ function ProcessSteps() {
 }
 
 export default function ComplianceInfra() {
+  const translate = useComplianceTranslation();
   const heroRef = useRef(null);
   const [inquiryOpen, setInquiryOpen] = useState(false);
   useNavDarkZone(heroRef);
@@ -484,7 +497,7 @@ export default function ComplianceInfra() {
               className="bf-reveal"
               style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.14em", color: "#5E8EFF", marginBottom: 20 }}
             >
-              {HERO.tagline}
+              {translate(HERO.tagline)}
             </div>
             <h1
               className="bf-accent bf-reveal"
@@ -504,7 +517,7 @@ export default function ComplianceInfra() {
               className="bf-revealF"
               style={{ margin: "28px 0 0", maxWidth: 560, fontSize: 16, lineHeight: 1.85, color: "rgba(255,255,255,.65)", wordBreak: "keep-all" }}
             >
-              {HERO.desc}
+              {translate(HERO.desc)}
             </p>
           </div>
 
@@ -519,7 +532,7 @@ export default function ComplianceInfra() {
           <div className="bf-reveal">
             <div style={labelStyle}>{OVERVIEW.label}</div>
             <h2 className="bf-accent" style={{ ...headingStyle, margin: "0 auto 56px", maxWidth: 1200, textAlign: "center" }}>
-              {renderHeading(OVERVIEW.heading)}
+              {renderHeading(translate(OVERVIEW.heading))}
             </h2>
             <div className="bf-modulegrid" style={{ display: "grid", gridTemplateColumns: `repeat(${MODULES.length},1fr)`, gap: 14 }}>
               {MODULES.map((m) => (
@@ -531,7 +544,7 @@ export default function ComplianceInfra() {
           <div className="bf-reveal">
             <div style={labelStyle}>Modules</div>
             <h2 className="bf-accent" style={{ ...headingStyle, margin: "0 auto 28px", maxWidth: 1200, textAlign: "center" }}>
-              {renderHeading("은행의 지갑 서비스부터 거래소의 거래 검증, 수사기관의 자금 추적까지. 각 기관의 업무를 하나의 인프라로 구축합니다.")}
+              {renderHeading(translate("은행의 지갑 서비스부터 거래소의 거래 검증, 수사기관의 자금 추적까지. 각 기관의 업무를 하나의 인프라로 구축합니다."))}
             </h2>
             <InstitutionTabs />
           </div>
@@ -539,7 +552,7 @@ export default function ComplianceInfra() {
           <div className="bf-reveal">
             <div style={labelStyle}>Process</div>
             <h2 className="bf-accent" style={{ ...headingStyle, margin: "0 auto 56px", maxWidth: 1200, textAlign: "center" }}>
-              {renderHeading("기관의 사업 모델과 규제 환경에 맞춘 설계로, 모듈 단위 도입부터 서비스 운영까지 전 과정을 함께합니다.")}
+              {renderHeading(translate("기관의 사업 모델과 규제 환경에 맞춘 설계로, 모듈 단위 도입부터 서비스 운영까지 전 과정을 함께합니다."))}
             </h2>
             <ProcessSteps />
           </div>
