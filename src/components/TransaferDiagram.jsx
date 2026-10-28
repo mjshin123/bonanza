@@ -1,4 +1,6 @@
 import { useLayoutEffect, useRef, useState } from "react";
+import { useLanguage } from "../context/LanguageContext.jsx";
+import translations from "../data/translations/compliance.js";
 
 // 거래소 ⇄ TranSafer ⇄ 은행 중계 구조도
 const LINKS = [
@@ -96,6 +98,8 @@ function Link({ label, caption, compact }) {
 }
 
 export default function TransaferDiagram() {
+  const { isEnglish } = useLanguage();
+  const translate = (value) => isEnglish ? (translations[value] ?? value) : value;
   const ref = useRef(null);
   const width = useWidth(ref);
   const compact = width < COMPACT_WIDTH;
@@ -114,11 +118,11 @@ export default function TransaferDiagram() {
         padding: compact ? "24px 0 8px" : "8px 0",
       }}
     >
-      <Node label="거래소" size={size} fontSize={fontSize} />
-      <Link {...LINKS[0]} compact={compact} />
+      <Node label={translate("거래소")} size={size} fontSize={fontSize} />
+      <Link label={translate(LINKS[0].label)} caption={translate(LINKS[0].caption)} compact={compact} />
       <Node label="TranSafer" active size={size} fontSize={fontSize} />
-      <Link {...LINKS[1]} compact={compact} />
-      <Node label="은행" size={size} fontSize={fontSize} />
+      <Link label={translate(LINKS[1].label)} caption={translate(LINKS[1].caption)} compact={compact} />
+      <Node label={translate("은행")} size={size} fontSize={fontSize} />
     </div>
   );
 }

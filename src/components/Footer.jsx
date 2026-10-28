@@ -4,6 +4,7 @@ import useNavDarkZone from "../hooks/useNavDarkZone.js";
 import PrivacyPolicyModal from "./PrivacyPolicyModal.jsx";
 import eurocertLogo from "../../EUROCERT 컬러 1.svg";
 import ismsLogo from "../../isms_logo.png";
+import { useLanguage } from "../context/LanguageContext.jsx";
 
 const menuGroups = [
   {
@@ -32,6 +33,7 @@ const menuGroups = [
 ];
 
 export default function Footer() {
+  const { isEnglish } = useLanguage();
   const darkZoneRef = useRef(null);
   const [policyOpen, setPolicyOpen] = useState(false);
   useNavDarkZone(darkZoneRef);
@@ -61,7 +63,7 @@ export default function Footer() {
                 height={36}
                 style={{ display: "block", flexShrink: 0, objectFit: "contain", filter: "grayscale(1)" }}
               />
-              <div style={{ fontSize: 12, fontWeight: 500, lineHeight: 1.6 }}>
+              <div style={{ width: 222, maxWidth: "calc(100vw - 112px)", fontSize: 12, fontWeight: 500, lineHeight: 1.6 }}>
                 <div>품질·환경경영 국제표준</div>
                 <div>ISO 9001, ISO 14001</div>
               </div>
@@ -74,10 +76,14 @@ export default function Footer() {
                 height={40}
                 style={{ display: "block", flexShrink: 0, objectFit: "contain", filter: "grayscale(1)" }}
               />
-              <div style={{ fontSize: 12, fontWeight: 500, lineHeight: 1.6 }}>
-                <div>ISMS 통합 입출금 서비스 및 블록체인</div>
-                <div>고위험 거래 검증 관련 서비스</div>
-                <div>(2024.01.18 ~ 2027.01.17)</div>
+              <div style={{ width: 222, maxWidth: "calc(100vw - 112px)", fontSize: 12, fontWeight: 500, lineHeight: 1.6 }}>
+                {isEnglish ? <>
+                  <div>[Scope] Deposit & Withdrawal Services & Blockchain Risk Verification</div>
+                  <div>[Validity] 2024.01.18 ~ 2027.01.17</div>
+                </> : <>
+                  <div>[인증범위] 통합입출금 서비스 및 블록체인<br />고위험 거래 검증 관련 서비스</div>
+                  <div>[유효기간] 2024.01.18 ~ 2027.01.17</div>
+                </>}
               </div>
             </div>
           </div>

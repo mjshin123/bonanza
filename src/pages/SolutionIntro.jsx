@@ -8,6 +8,9 @@ import TransightDetails from "../components/TransightDetails.jsx";
 import TransaferFlow from "../components/TransaferFlow.jsx";
 import TransaferDetails from "../components/TransaferDetails.jsx";
 import { accentNums } from "../lib/accentNums.jsx";
+import { useLanguage } from "../context/LanguageContext.jsx";
+import transightTranslations from "../data/translations/transight.js";
+import complianceTranslations from "../data/translations/compliance.js";
 
 const SOLUTIONS = {
   transight: {
@@ -24,8 +27,11 @@ const SOLUTIONS = {
 
 export default function SolutionIntro({ slug }) {
   const darkZoneRef = useRef(null);
+  const { isEnglish } = useLanguage();
   useNavDarkZone(darkZoneRef);
   const solution = SOLUTIONS[slug];
+  const translations = slug === "transight" ? transightTranslations : complianceTranslations;
+  const translate = (value) => isEnglish ? (translations[value] ?? value) : value;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -55,7 +61,7 @@ export default function SolutionIntro({ slug }) {
               className="bf-reveal"
               style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.14em", color: "#5E8EFF", marginBottom: 20 }}
             >
-              {solution.tagline}
+              {translate(solution.tagline)}
             </div>
             <h1
               className="bf-accent bf-reveal"
@@ -75,7 +81,7 @@ export default function SolutionIntro({ slug }) {
               className="bf-revealF"
               style={{ margin: "28px 0 0", maxWidth: 560, fontSize: 16, lineHeight: 1.85, color: "rgba(255,255,255,.65)" }}
             >
-              {solution.desc}
+              {translate(solution.desc)}
             </p>
           </div>
 

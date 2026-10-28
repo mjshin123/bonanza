@@ -1,7 +1,13 @@
 import { Link } from "react-router-dom";
 import { newsItems as allNewsItems } from "../data/news.js";
+import { noticeItems as allNoticeItems } from "../data/notices.js";
 
-const newsItems = allNewsItems.slice(0, 4);
+const newsItems = [
+  ...allNewsItems.map((item) => ({ ...item, contentType: "press", categoryLabel: item.category })),
+  ...allNoticeItems.map((item) => ({ ...item, contentType: "notice", categoryLabel: "공지사항" })),
+]
+  .sort((a, b) => b.date.localeCompare(a.date))
+  .slice(0, 5);
 
 export default function News() {
   return (
@@ -33,8 +39,8 @@ export default function News() {
             <div style={{ display: "flex", flexDirection: "column" }}>
               {newsItems.map((item, i) => (
                 <Link
-                  key={item.id}
-                  to={`/press/${item.id}`}
+                  key={`${item.contentType}-${item.id}`}
+                  to={`/${item.contentType === "notice" ? "notice" : "press"}/${item.id}`}
                   className="bf-techrow"
                   style={{
                     display: "block",
@@ -48,7 +54,7 @@ export default function News() {
                     {item.title}
                   </div>
                   <div className="bf-techsub" style={{ fontSize: 13, color: "var(--text-muted)" }}>
-                    {item.category} · {item.date}
+                    {item.categoryLabel} · {item.date}
                   </div>
                 </Link>
               ))}

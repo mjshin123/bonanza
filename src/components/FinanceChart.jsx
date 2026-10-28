@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
+import { useLanguage } from "../context/LanguageContext.jsx";
 
 export default function FinanceChart({ title, unit, data }) {
+  const { isEnglish } = useLanguage();
   const rootRef = useRef(null);
   const [inView, setInView] = useState(false);
   const max = Math.max(...data.map((d) => d.value));
@@ -28,7 +30,7 @@ export default function FinanceChart({ title, unit, data }) {
         <span style={{ fontSize: 15, fontWeight: 700, color: "var(--text-strong)" }}>{title}</span>
         {unit && (
           <span style={{ fontSize: 12, fontWeight: 500, color: "var(--text-subtle)" }}>
-            (단위: {unit})
+            {isEnglish ? `(Unit: ${unit})` : `(단위: ${unit})`}
           </span>
         )}
       </div>

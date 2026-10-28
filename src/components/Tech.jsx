@@ -5,6 +5,18 @@ import { homeMilestones } from "../data/history.js";
 import DiamondSvg from "./DiamondSvg.jsx";
 import useNavDarkZone from "../hooks/useNavDarkZone.js";
 import { accentNums } from "../lib/accentNums.jsx";
+import { useLanguage } from "../context/LanguageContext.jsx";
+import homeTranslations from "../data/translations/home.js";
+
+const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+function formatDate(year, month, isEnglish) {
+  return isEnglish ? `${monthNames[Number(month) - 1]} ${year}` : `${year}년 ${month}월`;
+}
+
+function translated(value, isEnglish) {
+  return isEnglish ? (homeTranslations[value] ?? value) : value;
+}
 
 // 연혁 페이지와 동일한 데이터에서 "홈 화면에 보이기"로 표시된 항목만 사용한다.
 const milestones = homeMilestones.filter((entry) => entry.showOnHome);
@@ -25,6 +37,7 @@ function centerY(i, sel) {
 
 export default function Tech() {
   const [sel, setSel] = useState(0);
+  const { isEnglish } = useLanguage();
   const picked = milestones[sel];
   const darkZoneRef = useRef(null);
   useNavDarkZone(darkZoneRef);
@@ -45,7 +58,7 @@ export default function Tech() {
             textAlign: "center",
           }}
         >
-          하나씩 쌓아온 인증과 성과가, 지금의 기술력이 되었습니다.
+          {isEnglish ? "A History of Achievement, a Commitment to Innovation" : "하나씩 쌓아온 인증과 성과가, 지금의 기술력이 되었습니다."}
         </h2>
 
         <div id="bf-stack">
@@ -107,19 +120,19 @@ export default function Tech() {
                     color: isSel ? "#5E8EFF" : "#ffffff",
                   }}
                 >
-                  {m.title}
+                  {translated(m.title, isEnglish)}
                 </div>
               );
             })}
 
             <div style={{ position: "absolute", left: 760, top: 150, width: 320 }}>
               <div style={{ color: "#BFBFBF", fontSize: 14, fontWeight: 400, marginBottom: 26 }}>
-                {picked.year}년 {picked.month}월
+                {formatDate(picked.year, picked.month, isEnglish)}
               </div>
               <div className="bf-accent" style={{ color: "#5E8EFF", fontSize: 21, fontWeight: 700, lineHeight: 1.4, marginBottom: 18 }}>
-                {accentNums(picked.title)}
+                {accentNums(translated(picked.title, isEnglish))}
               </div>
-              <div style={{ color: "#ffffff", fontSize: 13, fontWeight: 400, lineHeight: 1.6 }}>{picked.detail}</div>
+              <div style={{ color: "#ffffff", fontSize: 13, fontWeight: 400, lineHeight: 1.6 }}>{translated(picked.detail, isEnglish)}</div>
               {picked.image && (
                 <div
                   style={{
@@ -138,7 +151,7 @@ export default function Tech() {
                   }}
                 >
                   <ImageIcon width={28} height={28} />
-                  <span style={{ fontSize: 11, fontWeight: 600 }}>이미지 영역 (추후 삽입)</span>
+                  <span style={{ fontSize: 11, fontWeight: 600 }}>{translated("이미지 영역 (추후 삽입)", isEnglish)}</span>
                 </div>
               )}
             </div>
@@ -148,10 +161,10 @@ export default function Tech() {
             {milestones.map((m, i) => (
               <div className="bf-stack-mobile-item" key={`mobile-${i}`}>
                 <div style={{ color: "#5E8EFF", fontSize: 13, fontWeight: 700, marginBottom: 6 }}>
-                  {m.year}년 {m.month}월
+                  {formatDate(m.year, m.month, isEnglish)}
                 </div>
-                <div style={{ color: "#fff", fontSize: 16, fontWeight: 700, marginBottom: 8 }}>{m.title}</div>
-                <div style={{ color: "rgba(255,255,255,.7)", fontSize: 13, lineHeight: 1.6 }}>{m.detail}</div>
+                <div style={{ color: "#fff", fontSize: 16, fontWeight: 700, marginBottom: 8 }}>{translated(m.title, isEnglish)}</div>
+                <div style={{ color: "rgba(255,255,255,.7)", fontSize: 13, lineHeight: 1.6 }}>{translated(m.detail, isEnglish)}</div>
                 {m.image && (
                   <div
                     style={{
@@ -170,7 +183,7 @@ export default function Tech() {
                     }}
                   >
                     <ImageIcon width={26} height={26} />
-                    <span style={{ fontSize: 11, fontWeight: 600 }}>이미지 영역 (추후 삽입)</span>
+                      <span style={{ fontSize: 11, fontWeight: 600 }}>{translated("이미지 영역 (추후 삽입)", isEnglish)}</span>
                   </div>
                 )}
               </div>

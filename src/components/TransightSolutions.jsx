@@ -1,3 +1,6 @@
+import { useLanguage } from "../context/LanguageContext.jsx";
+import translations from "../data/translations/transight.js";
+
 const ITEMS = [
   {
     tag: "TranSight API",
@@ -17,6 +20,8 @@ const ITEMS = [
 ];
 
 export default function TransightSolutions() {
+  const { isEnglish } = useLanguage();
+  const translate = (value) => isEnglish ? (translations[value] ?? value) : value;
   return (
     <section className="bf-pad" style={{ background: "#fff", padding: "110px 40px 50px" }}>
       <div style={{ maxWidth: 1400, margin: "0 auto" }}>
@@ -39,9 +44,9 @@ export default function TransightSolutions() {
             color: "#000",
           }}
         >
-          위험 주소 데이터를 기반으로 KYT 검증부터 추적, 공조, 차단까지.
-          <br />
-          온체인 범죄 대응을 하나의 솔루션으로 완성합니다.
+          {isEnglish ? translations["위험 주소 데이터를 기반으로 KYT 검증부터 추적, 공조, 차단까지. 온체인 범죄 대응을 하나의 솔루션으로 완성합니다."] : <>
+            위험 주소 데이터를 기반으로 KYT 검증부터 추적, 공조, 차단까지.<br />온체인 범죄 대응을 하나의 솔루션으로 완성합니다.
+          </>}
         </h2>
         <div className="bf-bento-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 20 }}>
           {ITEMS.map((item, i) => (
@@ -76,11 +81,11 @@ export default function TransightSolutions() {
                   {item.tag}
                 </div>
                 <h3 className="bf-bento-title" style={{ margin: "0 0 14px", fontWeight: 700, fontSize: 24, lineHeight: 1.35, letterSpacing: "-0.01em" }}>
-                  {item.title[0]}
-                  <br />
-                  {item.title[1]}
+                  {isEnglish && item.title[0] === "위험 주소 데이터 &" ? <>Risk Address Data &<br />Live KYT Checks</> :
+                    isEnglish && item.title[0] === "트랜잭션 맵 &" ? <>Transaction Maps &<br />Agency Cooperation</> :
+                    translate(`${item.title[0]} ${item.title[1]}`)}
                 </h3>
-                <p className="bf-bento-desc" style={{ margin: 0, fontSize: 14, lineHeight: 1.75 }}>{item.desc}</p>
+                <p className="bf-bento-desc" style={{ margin: 0, fontSize: 14, lineHeight: 1.75 }}>{translate(item.desc)}</p>
               </div>
             </div>
           ))}

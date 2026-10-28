@@ -4,6 +4,8 @@ import { accentNums } from "../lib/accentNums.jsx";
 import TransaferDiagram from "./TransaferDiagram.jsx";
 import InquiryModal from "./InquiryModal.jsx";
 import useStepProgress from "../hooks/useStepProgress.js";
+import { useLanguage } from "../context/LanguageContext.jsx";
+import translations from "../data/translations/compliance.js";
 
 const PARENT_COMPANY = { name: "보난자팩토리", email: "contact@bonanza-factory.co.kr" };
 
@@ -167,6 +169,8 @@ function ProcessSteps({ steps }) {
 
 export default function TransaferDetails() {
   const { process } = API;
+  const { isEnglish } = useLanguage();
+  const translate = (value) => isEnglish ? (translations[value] ?? value) : value;
   const [inquiryOpen, setInquiryOpen] = useState(false);
   return (
     <section className="bf-pad" style={{ background: "#fff", padding: "110px 40px 130px" }}>
@@ -185,7 +189,7 @@ export default function TransaferDetails() {
             {OVERVIEW.label}
           </div>
           <h2 className="bf-accent" style={{ ...headingStyle, margin: "0 auto", maxWidth: 1200, textAlign: "center" }}>
-            {renderHeading(OVERVIEW.heading)}
+            {renderHeading(translate(OVERVIEW.heading))}
           </h2>
           <div style={{ marginTop: 40, aspectRatio: "21 / 9", overflow: "hidden", borderRadius: 14, background: "#0A0A0A" }}>
             <video
@@ -217,7 +221,7 @@ export default function TransaferDetails() {
               {API.tag}
             </span>
             <h2 className="bf-accent" style={{ ...headingStyle, margin: "20px auto 0", maxWidth: 1200 }}>
-              {renderHeading(API.heading)}
+              {renderHeading(translate(API.heading))}
             </h2>
           </div>
 
@@ -225,7 +229,7 @@ export default function TransaferDetails() {
             <TransaferDiagram />
           </div>
           <div style={{ marginTop: 48 }}>
-            <DetailGrid items={API.points} />
+            <DetailGrid items={API.points.map(translate)} />
           </div>
 
           <div style={{ marginTop: 160 }}>
@@ -239,15 +243,15 @@ export default function TransaferDetails() {
                 marginBottom: 20,
               }}
             >
-              {process.label}
+              {translate(process.label)}
             </div>
             <h2 className="bf-accent" style={{ ...headingStyle, margin: "0 auto 48px", maxWidth: 1200, textAlign: "center" }}>
-              {renderHeading(process.heading)}
+              {renderHeading(translate(process.heading))}
             </h2>
-            <ProcessSteps steps={process.steps} />
+            <ProcessSteps steps={process.steps.map((step) => ({ actor: translate(step.actor), text: translate(step.text) }))} />
           </div>
           <div style={{ marginTop: 48 }}>
-            <DetailGrid items={process.points} />
+            <DetailGrid items={process.points.map(translate)} />
           </div>
         </div>
 
@@ -269,7 +273,7 @@ export default function TransaferDetails() {
               cursor: "pointer",
             }}
           >
-            도입 상담 문의 <ArrowRight width={16} height={16} />
+            {translate("도입 상담 문의")} <ArrowRight width={16} height={16} />
           </button>
         </div>
       </div>

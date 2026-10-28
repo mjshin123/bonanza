@@ -5,6 +5,8 @@ import useNavDarkZone from "../hooks/useNavDarkZone.js";
 import Aurora from "../components/Aurora/Aurora.jsx";
 import FinanceChart from "../components/FinanceChart.jsx";
 import { accentNums } from "../lib/accentNums.jsx";
+import { useLanguage } from "../context/LanguageContext.jsx";
+import aboutTranslations from "../data/translations/about.js";
 
 const revenueData = [
   { year: "2020", value: 4 },
@@ -86,6 +88,9 @@ function AwardCard({ org, title, date, tinted }) {
 const REVEAL_STAGGER = 0.12;
 
 export default function CompanyIntro() {
+  const { isEnglish } = useLanguage();
+  const translate = (value) => isEnglish ? (aboutTranslations[value] ?? value) : value;
+  const displayUnit = (unit) => isEnglish ? ({ "조": "Trillion", "만": "M", "억+": "100M+", "분": "min", "건": "requests" }[unit] ?? unit) : unit;
   const darkZoneRef = useRef(null);
   useNavDarkZone(darkZoneRef);
   const madeHeadingRef = useRef(null);
@@ -227,10 +232,9 @@ export default function CompanyIntro() {
                 fontWeight: 400,
               }}
             >
-              보난자팩토리는 전통 금융과 새로운 가상자산 시장을 안전하고 효율적으로 연결하는 레그테크(RegTech) 기반의
-              컴플라이언스 기업입니다.
-              <br />
-              가상자산 시장의 여명기, 보난자팩토리는 아무도 시도하지 않은 기술적 돌파구를 찾아내며 성장을 시작했습니다.
+              {isEnglish ? aboutTranslations["보난자팩토리는 전통 금융과 새로운 가상자산 시장을 안전하고 효율적으로 연결하는 레그테크(RegTech) 기반의 컴플라이언스 기업입니다. 가상자산 시장의 여명기, 보난자팩토리는 아무도 시도하지 않은 기술적 돌파구를 찾아내며 성장을 시작했습니다."] : <>
+                보난자팩토리는 전통 금융과 새로운 가상자산 시장을 안전하고 효율적으로 연결하는 레그테크(RegTech) 기반의 컴플라이언스 기업입니다.<br />가상자산 시장의 여명기, 보난자팩토리는 아무도 시도하지 않은 기술적 돌파구를 찾아내며 성장을 시작했습니다.
+              </>}
             </p>
 
             <div style={{ margin: "28px 0 0", fontSize: 18, fontWeight: 700, lineHeight: 1.5, color: "#fff" }}>
@@ -318,17 +322,17 @@ export default function CompanyIntro() {
           {achievementSections.map((section, i) => (
             <div key={section.key} className="bf-reveal" style={{ marginBottom: 72, transitionDelay: `${(i + 1) * REVEAL_STAGGER}s` }}>
               <h2 className="bf-accent" style={{ margin: "0 0 16px", fontWeight: 800, fontSize: 28, letterSpacing: "-0.02em", color: "#171717" }}>
-                {accentNums(section.title)}
+                {accentNums(translate(section.title))}
               </h2>
               <div className="bf-achstats" style={{ display: "grid", gridTemplateColumns: `repeat(${section.stats.length},1fr)`, gap: 72 }}>
                 {section.stats.map((stat) => (
                   <div key={stat.label} style={{ borderTop: "1px solid var(--border)", paddingTop: 18 }}>
                     <div style={{ fontSize: 15, color: "var(--text-subtle)", marginBottom: 6 }}>
-                      {stat.label}
+                      {translate(stat.label)}
                     </div>
                     <div className="bf-accent bf-accent-num" style={{ fontWeight: 500, fontSize: "clamp(32px,8vw,48px)", letterSpacing: "-0.02em", color: "var(--text-strong)" }}>
                       {stat.value}
-                      <span style={{ fontSize: 22, marginLeft: 4 }}>{stat.unit}</span>
+                      <span style={{ fontSize: 22, marginLeft: 4 }}>{displayUnit(stat.unit)}</span>
                     </div>
                   </div>
                 ))}
@@ -343,8 +347,8 @@ export default function CompanyIntro() {
             건실한 재무 구조와 고성장 자회사의 시너지를 바탕으로 안정적인 성장 곡선을 만들어내고 있습니다.
           </h2>
           <div className="bf-reveal bf-finance" style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 24, transitionDelay: `${(achievementSections.length + 3) * REVEAL_STAGGER}s` }}>
-            <FinanceChart title="매출" unit="억원" data={revenueData} />
-            <FinanceChart title="자산총계" unit="억원" data={assetsData} />
+            <FinanceChart title={translate("매출")} unit={isEnglish ? "₩100M" : "억원"} data={revenueData} />
+            <FinanceChart title={translate("자산총계")} unit={isEnglish ? "₩100M" : "억원"} data={assetsData} />
           </div>
         </div>
       </section>

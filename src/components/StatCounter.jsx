@@ -1,4 +1,13 @@
 import { useEffect, useRef, useState } from "react";
+import { useLanguage } from "../context/LanguageContext.jsx";
+
+const englishSuffixes = {
+  "조": " Trillion",
+  "만": "M",
+  "억+": "M+",
+  "분": " min",
+  "건": " requests",
+};
 
 function easeOut(t) {
   return 1 - Math.pow(1 - t, 3);
@@ -9,8 +18,10 @@ function format(v, decimals) {
 }
 
 export default function StatCounter({ target, decimals = 0, suffix = "" }) {
+  const { isEnglish } = useLanguage();
   const ref = useRef(null);
-  const [value, setValue] = useState(format(target, decimals) + suffix);
+  const displaySuffix = isEnglish ? (englishSuffixes[suffix] ?? suffix) : suffix;
+  const [value, setValue] = useState(format(target, decimals) + displaySuffix);
 
   useEffect(() => {
     const el = ref.current;
@@ -22,9 +33,9 @@ export default function StatCounter({ target, decimals = 0, suffix = "" }) {
       function step(now) {
         const p = Math.min(1, (now - start) / dur);
         const v = target * easeOut(p);
-        setValue(format(v, decimals) + suffix);
+        setValue(format(v, decimals) + displaySuffix);
         if (p < 1) requestAnimationFrame(step);
-        else setValue(format(target, decimals) + suffix);
+        else setValue(format(target, decimals) + displaySuffix);
       }
       requestAnimationFrame(step);
     }
@@ -39,7 +50,7 @@ export default function StatCounter({ target, decimals = 0, suffix = "" }) {
     );
     io.observe(el);
     return () => io.disconnect();
-  }, [target, decimals, suffix]);
+  }, [target, decimals, displaySuffix]);
 
   return (
     <span ref={ref} style={{ whiteSpace: "nowrap" }}>

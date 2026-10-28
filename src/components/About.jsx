@@ -1,13 +1,15 @@
 import StatCounter from "./StatCounter.jsx";
+import { useLanguage } from "../context/LanguageContext.jsx";
 
 const stats = [
-  { target: 1026, suffix: "조", label: "누적 입출금 검증 금액" },
-  { target: 671, suffix: "만", label: "이상거래 탐지 건수" },
-  { target: 9, suffix: "억+", label: "KYT 검증 건수" },
-  { target: 48, suffix: "분", label: "평균 공조 응답 시간" },
+  { target: 1026, suffix: "조", label: "누적 입출금 검증 금액", englishLabel: "Verified KRW Transfers" },
+  { target: 671, suffix: "만", label: "이상거래 탐지 건수", englishLabel: "Flagged Transactions" },
+  { target: 9, suffix: "억+", label: "KYT 검증 건수", englishLabel: "KYT Screenings" },
+  { target: 48, suffix: "분", label: "평균 공조 응답 시간", englishLabel: "Average Response Time" },
 ];
 
 export default function About() {
+  const { isEnglish } = useLanguage();
   return (
     <section id="about" className="bf-pad" style={{ background: "#fff", padding: "110px 40px 160px" }}>
       <div style={{ maxWidth: 1400, margin: "0 auto" }}>
@@ -23,9 +25,11 @@ export default function About() {
               color: "var(--text-strong)",
             }}
           >
-            국내 최초 가상자산 컴플라이언스
-            <br />
-            솔루션으로 <span style={{ color: "var(--primary)" }}>업계 <span className="bf-accent-num">1위</span></span> 달성
+            {isEnglish ? (
+              <>Korea's Leading Digital Asset<br />Compliance <span style={{ color: "var(--primary)" }}>Provider <span className="bf-accent-num">No. 1</span></span></>
+            ) : (
+              <>국내 최초 가상자산 컴플라이언스<br />솔루션으로 <span style={{ color: "var(--primary)" }}>업계 <span className="bf-accent-num">1위</span></span> 달성</>
+            )}
           </h2>
           <div className="bf-reveal" style={{ paddingBottom: 6 }}>
             <div style={{ width: 40, height: 3, background: "var(--primary)", marginBottom: 18 }} />
@@ -57,7 +61,7 @@ export default function About() {
                 <StatCounter target={stat.target} decimals={stat.decimals} suffix={stat.suffix} />
               </div>
               <div style={{ marginTop: 10, fontSize: 13, fontWeight: 600, color: "var(--text-muted)" }}>
-                {stat.label}
+                {isEnglish ? stat.englishLabel : stat.label}
               </div>
             </div>
           ))}

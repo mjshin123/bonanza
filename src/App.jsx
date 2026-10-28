@@ -14,6 +14,7 @@ import Notices from "./pages/Notices.jsx";
 import NoticeDetail from "./pages/NoticeDetail.jsx";
 import useScrollReveal from "./hooks/useScrollReveal.js";
 import { NavThemeProvider } from "./context/NavThemeContext.jsx";
+import { LanguageProvider } from "./context/LanguageContext.jsx";
 
 function RedirectWithId({ to }) {
   const { id } = useParams();
@@ -24,11 +25,12 @@ export default function App() {
   useScrollReveal();
 
   return (
-    <NavThemeProvider>
-      <div style={{ position: "relative", overflow: "clip" }}>
-        <SeoManager />
-        <Nav />
-        <Routes>
+    <LanguageProvider>
+      <NavThemeProvider>
+        <div style={{ position: "relative", overflow: "clip" }}>
+          <SeoManager />
+          <Nav />
+          <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<CompanyIntro />} />
           <Route path="/group" element={<GroupIntro />} />
@@ -52,9 +54,10 @@ export default function App() {
           <Route path="/compliance-infra" element={<Navigate to="/compliance-suite" replace />} />
           <Route path="/ComplianceInfra" element={<Navigate to="/compliance-suite" replace />} />
           <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-        <Footer />
-      </div>
-    </NavThemeProvider>
+          </Routes>
+          <Footer />
+        </div>
+      </NavThemeProvider>
+    </LanguageProvider>
   );
 }

@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import TransaferIcon from "./TransaferIcon.jsx";
 import NetworkTraceIcon from "./icons/NetworkTraceIcon.jsx";
 import CoopIcon from "./CoopIcon.jsx";
+import { useLanguage } from "../context/LanguageContext.jsx";
 
 const cards = [
   {
@@ -39,6 +40,7 @@ const CATCHUP_MS = 500; // transition applied only for the reveal catch-up, so b
 const MOBILE_QUERY = "(max-width:860px)"; // same breakpoint the rest of the site stacks on
 
 export default function Solutions() {
+  const { isEnglish } = useLanguage();
   const outerRef = useRef(null);
   const contentRef = useRef(null);
   const hasSettledRef = useRef(false);
@@ -190,11 +192,12 @@ export default function Solutions() {
                 lineHeight: 1.25,
                 letterSpacing: "-0.02em",
                 color: "var(--text-strong)",
+                whiteSpace: isEnglish ? "nowrap" : undefined,
               }}
             >
-              온체인과 오프체인을 통합적으로 모니터링하는
-              <br />
-              리스크 관리 시스템을 구축하세요.
+              {isEnglish ? "Complete Visibility Across On-Chain and Off-Chain Risks" : <>
+                온체인과 오프체인을 통합적으로 모니터링하는<br />리스크 관리 시스템을 구축하세요.
+              </>}
             </h2>
           </div>
 

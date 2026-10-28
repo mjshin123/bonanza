@@ -1,6 +1,8 @@
 import { ArrowRight } from "lucide-react";
 import { accentNums } from "../lib/accentNums.jsx";
 import KytApiDiagram from "./KytApiDiagram.jsx";
+import { useLanguage } from "../context/LanguageContext.jsx";
+import translations from "../data/translations/transight.js";
 
 const SECTIONS = [
   {
@@ -97,6 +99,8 @@ function DetailItem({ index, title }) {
 }
 
 export default function TransightDetails() {
+  const { isEnglish } = useLanguage();
+  const translate = (value) => isEnglish ? (translations[value] ?? value) : value;
   let videoCount = 0;
   return (
     <section className="bf-pad" style={{ background: "#fff", padding: "110px 40px 130px" }}>
@@ -129,7 +133,7 @@ export default function TransightDetails() {
                 color: "#000",
               }}
             >
-              {renderHeading(sec.heading)}
+              {renderHeading(translate(sec.heading))}
             </h2>
             </div>
             {sec.features.map((feature, fi) => {
@@ -182,8 +186,8 @@ export default function TransightDetails() {
                           color: "#000",
                         }}
                       >
-                        <span style={{ fontSize: 12, fontWeight: 600, color: "#2A5BFF", whiteSpace: "nowrap" }}>주요 기능</span>
-                        <span style={{ whiteSpace: "nowrap" }}>{feature.title}</span>
+                        <span style={{ fontSize: 12, fontWeight: 600, color: "#2A5BFF", whiteSpace: "nowrap" }}>{translate("주요 기능")}</span>
+                        <span style={{ whiteSpace: "nowrap" }}>{translate(feature.title)}</span>
                         {feature.titleNote && (
                           <span style={{ fontSize: 13, fontWeight: 400, letterSpacing: 0, color: "#7A8299" }}>
                             {feature.titleNote}
@@ -193,7 +197,7 @@ export default function TransightDetails() {
                     )}
                     {feature.diagram && <feature.diagram />}
                     {feature.lead && (
-                      <p style={{ margin: 0, fontSize: 16, fontWeight: 500, lineHeight: 1.7, color: "#2F2F2F" }}>{feature.lead}</p>
+                      <p style={{ margin: 0, fontSize: 16, fontWeight: 500, lineHeight: 1.7, color: "#2F2F2F" }}>{translate(feature.lead)}</p>
                     )}
                     <div
                       style={{
@@ -204,7 +208,7 @@ export default function TransightDetails() {
                       }}
                     >
                       {feature.points.map((point, pi) => (
-                        <DetailItem key={point} index={pi} title={point} />
+                        <DetailItem key={point} index={pi} title={translate(point)} />
                       ))}
                     </div>
                   </div>

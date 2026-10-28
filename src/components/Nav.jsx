@@ -4,6 +4,7 @@ import { Menu } from "lucide-react";
 import useNavScroll from "../hooks/useNavScroll.js";
 import { scrollToAnchor } from "../lib/scroll.js";
 import { useNavTheme } from "../context/NavThemeContext.jsx";
+import { useLanguage } from "../context/LanguageContext.jsx";
 import InquiryModal from "./InquiryModal.jsx";
 import { accentNums } from "../lib/accentNums.jsx";
 
@@ -13,47 +14,53 @@ const megaGroups = [
   {
     key: "about",
     label: "기업 개요",
+    enLabel: "Company",
     href: "#about",
+    enHeading: "Building Trust Through Technology",
     heading: (
       <>
         신뢰를 쌓아온<br />보난자팩토리를 소개합니다
       </>
     ),
     items: [
-      { label: "회사 소개", href: "/about", route: true },
-      { label: "보난자 그룹", href: "/group", route: true },
-      { label: "연혁", href: "/history", route: true },
+      { label: "회사 소개", enLabel: "About", href: "/about", route: true },
+      { label: "보난자 그룹", enLabel: "Bonanza Group", href: "/group", route: true },
+      { label: "연혁", enLabel: "History", href: "/history", route: true },
     ],
     image: "/images/nav/menu-1.jpg",
   },
   {
     key: "solutions",
     label: "솔루션",
+    enLabel: "Solutions",
     href: "#solutions",
+    enHeading: "End-to-End Compliance Solutions",
     heading: (
       <>
         가상자산 컴플라이언스를<br />완성하는 솔루션
       </>
     ),
     items: [
-      { label: "TranSight", href: "/transight", route: true },
-      { label: "TranSafer", href: "/transafer", route: true },
-      { label: "Compliance Suite", href: "/compliance-suite", route: true },
+      { label: "TranSight", enLabel: "TranSight", href: "/transight", route: true },
+      { label: "TranSafer", enLabel: "TranSafer", href: "/transafer", route: true },
+      { label: "Compliance Suite", enLabel: "Compliance Suite", href: "/compliance-suite", route: true },
     ],
     image: "/images/nav/menu-3.png",
   },
   {
     key: "news",
     label: "뉴스룸",
+    enLabel: "Insights",
     href: "#news",
+    enHeading: "News from Bonanza Factory",
     heading: (
       <>
         보난자팩토리의<br />새로운 소식
       </>
     ),
     items: [
-      { label: "보도자료", href: "/press", route: true },
-      { label: "공지사항", href: "/notice", route: true },
+      { label: "보도자료", enLabel: "Company News", href: "/press", route: true },
+      { label: "공지사항", enLabel: "Notices", href: "/notice", route: true },
     ],
     image: "/images/nav/menu-4.png",
   },
@@ -94,26 +101,10 @@ const MEGA_CLOSE_DELAY = 300;
 export default function Nav() {
   const scrolled = useNavScroll();
   const { dark } = useNavTheme();
+  const { lang, pickLang } = useLanguage();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openGroup, setOpenGroup] = useState(null);
   const [inquiryOpen, setInquiryOpen] = useState(false);
-  // KOR / ENG switch — UI only for now (no English content yet); remembered per browser
-  const [lang, setLang] = useState(() => {
-    try {
-      return localStorage.getItem("bf-lang") === "en" ? "en" : "ko";
-    } catch {
-      return "ko";
-    }
-  });
-  function pickLang(next) {
-    setLang(next);
-    document.documentElement.lang = next;
-    try {
-      localStorage.setItem("bf-lang", next);
-    } catch {
-      /* storage blocked: keep the in-memory choice */
-    }
-  }
   const closeTimerRef = useRef(null);
   const location = useLocation();
   const routerNavigate = useNavigate();
@@ -223,7 +214,7 @@ export default function Nav() {
                 onClose={closeAll}
                 style={{ fontWeight: 500, fontSize: 15, color: dark ? "#fff" : "var(--primary)", transition: "color .25s ease" }}
               >
-                {group.label}
+                {lang === "en" ? group.enLabel : group.label}
               </MegaAnchor>
               <div className="bf-mega" data-open={openGroup === group.key ? "1" : "0"}>
                 <div
@@ -251,7 +242,7 @@ export default function Nav() {
                       transition: "color .25s ease",
                     }}
                   >
-                    {accentNums(group.heading)}
+                    {accentNums(lang === "en" ? group.enHeading : group.heading)}
                   </h3>
                   <div style={{ flex: "none", width: 280 }}>
                     {group.items.map((item) => (
@@ -264,7 +255,7 @@ export default function Nav() {
                         onClose={closeAll}
                         className="bf-megaitem"
                       >
-                        {item.label}
+                        {lang === "en" ? item.enLabel : item.label}
                       </MegaAnchor>
                     ))}
                   </div>
@@ -352,7 +343,7 @@ export default function Nav() {
               transition: "background .2s ease, color .25s ease, border-color .25s ease",
             }}
           >
-            사업 문의
+            {lang === "en" ? "Contact" : "사업 문의"}
           </a>
 
           <button
@@ -411,7 +402,7 @@ export default function Nav() {
               onClose={closeAll}
               style={{ display: "block", fontWeight: 600, fontSize: 15, color: dark ? "#fff" : "var(--primary)", marginBottom: 6, transition: "color .25s ease" }}
             >
-              {group.label}
+              {lang === "en" ? group.enLabel : group.label}
             </MegaAnchor>
             {group.items.map((item) => (
               <MegaAnchor
@@ -430,7 +421,7 @@ export default function Nav() {
                   transition: "color .25s ease",
                 }}
               >
-                {item.label}
+                {lang === "en" ? item.enLabel : item.label}
               </MegaAnchor>
             ))}
           </div>
@@ -457,7 +448,7 @@ export default function Nav() {
             fontSize: 14,
           }}
         >
-          사업 문의
+          {lang === "en" ? "Contact" : "사업 문의"}
         </a>
       </div>
 

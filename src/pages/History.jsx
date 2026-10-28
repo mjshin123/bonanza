@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronRight, Image as ImageIcon, Plus } from "lucide-react";
 import { historyEntries, groupHistoryByYear } from "../data/history.js";
+import { useLanguage } from "../context/LanguageContext.jsx";
 
 const timeline = groupHistoryByYear(historyEntries);
 
@@ -187,6 +188,7 @@ function HistoryYear({ year, rows, isLast }) {
 }
 
 export default function History() {
+  const { isEnglish } = useLanguage();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -209,7 +211,7 @@ export default function History() {
           className="bf-accent bf-reveal"
           style={{ margin: 0, fontWeight: 500, fontSize: "clamp(24px,3.1vw,38px)", lineHeight: 1.3, letterSpacing: "-0.01em", color: "var(--text-strong)" }}
         >
-          하나씩 쌓아온 발자취,<br />보난자팩토리의 연혁
+          {isEnglish ? "Bonanza Factory: Our Journey" : <>하나씩 쌓아온 발자취,<br />보난자팩토리의 연혁</>}
         </h1>
         <p className="bf-reveal" style={{ margin: "22px 0 0", maxWidth: 560, fontSize: 15, lineHeight: 1.7, color: "var(--text-muted)" }}>
           국내 최초 가상자산 컴플라이언스 기업으로서 걸어온 길을 연도별로 소개합니다.

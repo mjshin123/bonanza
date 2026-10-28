@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { subsidiaries } from "../data/subsidiaries.js";
 import { accentNums } from "../lib/accentNums.jsx";
+import { useLanguage } from "../context/LanguageContext.jsx";
 
 const MOBILE_QUERY = "(max-width:860px)";
 const MOBILE_COLLAPSED_HEIGHT = 120;
 const MOBILE_EXPANDED_HEIGHT = 420;
 
 export default function Group() {
+  const { isEnglish } = useLanguage();
   // Which card is "open": tapping sets this, and it's what's shown whenever no
   // card is actively under the mouse.
   const [openIndex, setOpenIndex] = useState(0);
@@ -33,14 +35,14 @@ export default function Group() {
   return (
     <section id="group" className="bf-pad" style={{ background: "var(--surface-subtle)", padding: "110px 40px", borderTop: "1px solid var(--border)" }}>
       <div style={{ maxWidth: 1400, margin: "0 auto" }}>
-        <div className="bf-reveal" style={{ maxWidth: 640, marginBottom: 48 }}>
+        <div className="bf-reveal" style={{ maxWidth: isEnglish ? 720 : 640, marginBottom: 48 }}>
           <div style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.1em", color: "var(--primary)", marginBottom: 14 }}>
             GROUP SYNERGY
           </div>
-          <h2 className="bf-accent" style={{ margin: 0, fontWeight: 700, fontSize: "clamp(26px,3.2vw,36px)", lineHeight: 1.3, letterSpacing: "-0.02em", color: "var(--text-strong)" }}>
-            보난자 그룹의 모회사로서
-            <br />
-            자회사들과 시너지를 이끌어갑니다.
+          <h2 className="bf-accent" style={{ margin: 0, fontWeight: 700, fontSize: isEnglish ? "clamp(24px,2.7vw,30px)" : "clamp(26px,3.2vw,36px)", lineHeight: 1.3, letterSpacing: "-0.02em", color: "var(--text-strong)" }}>
+            {isEnglish ? <>As the parent company of Bonanza Group,<br />we drive synergy across our subsidiaries.</> : <>
+              보난자 그룹의 모회사로서<br />자회사들과 시너지를 이끌어갑니다.
+            </>}
           </h2>
         </div>
 
