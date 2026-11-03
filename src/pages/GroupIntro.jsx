@@ -14,6 +14,34 @@ const PARENT_DESC =
 
 const solutionItems = [
   {
+    company: "보난자랩",
+    title: "Market Data",
+    desc: "국내 및 글로벌 주요 디지털자산 거래소와의 라이선스를 기반으로 기관에 최적화된 통합 마켓데이터를 제공합니다.",
+    video: "/videos/bonanzalab-market-data.mp4",
+    link: "https://bonanzalab.io/products/market-data",
+  },
+  {
+    company: "보난자랩",
+    title: "Market Analytics",
+    desc: "마켓데이터는 물론 디지털자산 관련 다양한 데이터를 기반으로 산출한 독자적인 시장분석 지표를 제공합니다.",
+    video: "/videos/bonanzalab-market-analytics.mp4",
+    link: "https://bonanzalab.io/products/analytics",
+  },
+  {
+    company: "보난자랩",
+    title: "Reference Rate",
+    desc: "국내 5대 거래소 마켓데이터를 기반으로 원화 디지털자산 기준가격을 제공합니다.",
+    video: "/videos/bonanzalab-reference-rate.mp4",
+    link: "https://bonanzalab.io/products/reference-rate",
+  },
+  {
+    company: "보난자랩",
+    title: "Index Solutions",
+    desc: "디지털자산 지수의 설계부터 산출까지 지수사업에 필요한 모든 것을 제공합니다.",
+    video: "/videos/bonanzalab-index-solutions.mp4",
+    link: "https://bonanzalab.io/products/index-solution",
+  },
+  {
     company: "트라버스",
     title: "디지털자산 지갑·송금 인프라 솔루션, took!",
     desc: "기업과 기관이 디지털자산 지갑 및 송금 서비스를 효율적으로 구축·운영할 수 있도록 지원하는 WaaS(Wallet-as-a-Service) 솔루션입니다. KYT 기능을 내재화하여 디지털자산 거래 위험을 실시간으로 모니터링하고, 규제 준수와 안전한 자산 관리를 지원하는 통합 인프라를 제공합니다.",
@@ -194,7 +222,7 @@ function AccordionRow({ item, index, open, onOpen }) {
           >
             {item.desc}
           </p>
-          {!item.textOnly && (
+          {item.link && (
             <a
               href={item.link || "#"}
               {...(item.link.startsWith("http") && { target: "_blank", rel: "noopener noreferrer" })}
@@ -359,14 +387,6 @@ export default function GroupIntro() {
     return () => observer.disconnect();
   }, []);
 
-  // Every row swaps places being the tall "open" one, so the list's total height
-  // is the same in every steady state — but the padding/max-height/font-size
-  // transitions don't all finish at exactly the same moment, so while a row is
-  // opening/closing the two rows' combined height can briefly overshoot that
-  // steady-state total, which shakes everything below (the footer). Locking the
-  // wrapper to a real measured height (with overflow hidden to absorb that brief
-  // overshoot) keeps the list's own box perfectly stable, so the wobble never
-  // reaches outside it.
   useEffect(() => {
     const el = listRef.current;
     if (!el) return undefined;
@@ -376,6 +396,38 @@ export default function GroupIntro() {
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
+
+  // A fresh downward pass starts at the first solution. Reset only after the
+  // user has actually scrolled back above the accordion, so reading a card or
+  // making a small upward correction does not unexpectedly change it.
+  useEffect(() => {
+    if (isMobile) return undefined;
+    function resetAfterLeavingSolutions() {
+      const list = listRef.current;
+      // Do this only once the entire accordion is below the viewport. Changing
+      // an open row's height while it is visible can otherwise make the browser
+      // preserve its scroll anchor and pull the next opened row upward.
+      if (!list || list.getBoundingClientRect().top < window.innerHeight) return;
+      if (activeRef.current === 0 && targetRef.current === 0) return;
+
+      if (stepTimeoutRef.current) {
+        window.clearTimeout(stepTimeoutRef.current);
+        stepTimeoutRef.current = null;
+      }
+      lockedRef.current = false;
+      wheelAccumRef.current = 0;
+      activeRef.current = 0;
+      targetRef.current = 0;
+      setActive(0);
+    }
+
+    window.addEventListener("scroll", resetAfterLeavingSolutions, { passive: true });
+    window.addEventListener("resize", resetAfterLeavingSolutions);
+    return () => {
+      window.removeEventListener("scroll", resetAfterLeavingSolutions);
+      window.removeEventListener("resize", resetAfterLeavingSolutions);
+    };
+  }, [isMobile]);
 
   // Steps `active` by exactly one row toward targetRef.current, then locks for
   // STEP_DELAY so that row's animation always finishes before anything else can
@@ -405,22 +457,12 @@ export default function GroupIntro() {
     // This wheel/touch-delta system is a desktop-only substitute for that (mice
     // have no scroll-snap-driving momentum the way touch scrolling does).
     if (isMobile) return undefined;
-    // Driven by wheel/touch gestures rather than actual page scroll position:
-    // once the page is already at the very top or bottom, native scrolling can't
-    // move any further in that direction, so it never fires another scroll event —
-    // which would otherwise strand the user unable to go back to earlier rows.
-    // Wheel/touch input keeps firing regardless of whether the page itself can
-    // still move, so "scroll up" always works even at the top of the page.
     function onWheel(e) {
       if (!sectionActiveRef.current) return;
-      // While locked, ignore wheel input entirely so it can't build up a "debt"
-      // that instantly fires the moment the lock lifts.
       if (lockedRef.current) {
         wheelAccumRef.current = 0;
         return;
       }
-      // Reversing direction shouldn't have to pay off leftover accumulation from
-      // the previous direction — that would make a reversal feel unresponsive.
       if ((e.deltaY > 0 && wheelAccumRef.current < 0) || (e.deltaY < 0 && wheelAccumRef.current > 0)) {
         wheelAccumRef.current = 0;
       }
@@ -671,7 +713,7 @@ export default function GroupIntro() {
                   <p style={{ margin: "16px 0 0", fontSize: 14, lineHeight: 1.7, color: "var(--text-muted)", fontWeight: 500 }}>
                     {item.desc}
                   </p>
-                  {!item.textOnly && (
+                  {item.link && (
                     <a
                       href={item.link || "#"}
                       {...(item.link.startsWith("http") && { target: "_blank", rel: "noopener noreferrer" })}

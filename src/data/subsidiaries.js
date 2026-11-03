@@ -2,7 +2,7 @@ export const subsidiaries = [
   {
     key: "lab",
     name: "보난자랩",
-    email: "lab@bonanzafactory.co.kr",
+    email: "contact@bonanza-lab.co.kr",
     mark: "B",
     image: "/images/bonanzalab.png",
     background: "linear-gradient(90deg,rgba(20,20,20,1) 0%,rgba(20,20,20,0.15) 65%), url(/images/bonanzalab.png)",
@@ -10,8 +10,8 @@ export const subsidiaries = [
     backgroundPosition: "center",
     color: "#fff",
     markBg: "rgba(255,255,255,.18)",
-    desc: "금융 전문성과 데이터 활용 역량을 바탕으로 디지털자산에 특화된 다양한 투자 정보와 인사이트를 제공합니다. 이용기업과 투자자가 신뢰할 수 있는 서비스를 제공함으로써 디지털자산 투자 정보 데이터의 새로운 기준을 제시합니다.",
-    descLong: "금융 전문성과 데이터 활용 역량을 바탕으로 디지털자산에 특화된 다양한 투자 정보와 인사이트를 제공합니다. 이용기업과 투자자가 신뢰할 수 있는 서비스를 제공함으로써 디지털자산 투자 정보 데이터의 새로운 기준을 제시합니다.",
+    desc: "보난자랩은 디지털자산에 전문성을 보유한 B2B 데이터 인프라 기업입니다. 공식 라이선스를 기반으로 디지털자산과 관련된 원천데이터 수집 및 가공을 거쳐 기업이 즉시 활용할 수 있는 다양한 데이터를 제공합니다.",
+    descLong: "보난자랩은 디지털자산에 전문성을 보유한 B2B 데이터 인프라 기업입니다. 공식 라이선스를 기반으로 디지털자산과 관련된 원천데이터 수집 및 가공을 거쳐 기업이 즉시 활용할 수 있는 다양한 데이터를 제공합니다.",
     descColor: "rgba(255,255,255,.88)",
   },
   {
