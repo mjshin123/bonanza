@@ -32,7 +32,7 @@ export default {
   "이상거래 탐지 건수": "Flagged Transactions",
   "9억+": "900M+",
   "KYT 검증 건수": "KYT Screenings",
-  "48분": "48 min",
+  "48시간": "48 hours",
   "평균 공조 응답 시간": "Average Response Time",
   "온체인과 오프체인을 통합적으로 모니터링하는 리스크 관리 시스템을 구축하세요.": "Complete Visibility Across On-Chain and Off-Chain Risks",
   "온체인": "On-Chain",

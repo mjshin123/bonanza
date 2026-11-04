@@ -27,6 +27,10 @@ const PAGES = {
     title: `연혁 | ${SITE_NAME}`,
     description: "가상자산 컴플라이언스의 기준을 만들어 온 보난자팩토리의 주요 연혁과 성과를 확인하세요.",
   },
+  "/ci": {
+    title: `CI 소개 | ${SITE_NAME}`,
+    description: "보난자팩토리의 공식 CI 로고 파일과 브랜드 전용 색상 가이드를 확인하고 다운로드하세요.",
+  },
   "/transight": {
     title: `TranSight - 가상자산 통합 AML 솔루션 | ${SITE_NAME}`,
     description: "위험 주소 데이터를 기반으로 KYT 검증부터 추적, 공조, 차단까지. 온체인 범죄 대응을 하나의 솔루션으로 완성하는 TranSight입니다.",

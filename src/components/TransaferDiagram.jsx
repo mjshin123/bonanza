@@ -113,7 +113,7 @@ export default function TransaferDiagram() {
         display: "flex",
         alignItems: "center",
         gap: compact ? 4 : 12,
-        maxWidth: 780,
+        maxWidth: 850,
         margin: "0 auto",
         padding: compact ? "24px 0 8px" : "8px 0",
       }}

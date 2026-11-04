@@ -4,6 +4,7 @@ export default {
   "회사 소개": "About",
   "보난자 그룹": "Bonanza Group",
   "연혁": "History",
+  "CI 소개": "CI Guide",
   "솔루션": "Solutions",
   "가상자산 컴플라이언스를 완성하는 솔루션": "End-to-End Compliance Solutions",
   "TranSight": "TranSight",

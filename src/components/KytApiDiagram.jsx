@@ -37,7 +37,7 @@ function Arrow({ label, caption, dir }) {
           flexDirection: dir === "right" ? "row" : "row-reverse",
           alignItems: "center",
           justifyContent: "center",
-          width: "100%",
+          width: "calc(100% + 8px)",
           height: 28,
           marginBottom: 6,
         }}
@@ -83,7 +83,7 @@ export default function KytApiDiagram() {
       }}
     >
       <Node label="이용기관" />
-      <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 22 }}>
+      <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 10 }}>
         {CALLS.map((call) => (
           <Arrow key={call.label} {...call} />
         ))}

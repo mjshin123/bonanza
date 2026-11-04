@@ -6,6 +6,7 @@ const englishSuffixes = {
   "만": "M",
   "억+": "M+",
   "분": " min",
+  "시간": " hours",
   "건": " requests",
 };
 

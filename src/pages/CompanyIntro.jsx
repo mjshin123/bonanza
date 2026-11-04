@@ -45,7 +45,7 @@ const achievementSections = [
     key: "network",
     title: "국내 유일 수사기관-거래소 공조 네트워크로 응답 시간 단축",
     stats: [
-      { label: "평균 공조 응답 시간", value: "48", unit: "분" },
+      { label: "평균 공조 응답 시간", value: "48", unit: "시간" },
       { label: "총 요청 건수", value: "120", unit: "건" },
     ],
   },
@@ -90,7 +90,13 @@ const REVEAL_STAGGER = 0.12;
 export default function CompanyIntro() {
   const { isEnglish } = useLanguage();
   const translate = (value) => isEnglish ? (aboutTranslations[value] ?? value) : value;
-  const displayUnit = (unit) => isEnglish ? ({ "조": "Trillion", "만": "M", "억+": "100M+", "분": "min", "건": "requests" }[unit] ?? unit) : unit;
+  const displayUnit = (unit) => isEnglish ? ({ "조": "Trillion", "만": "M", "억+": "100M+", "분": "min", "시간": "hours", "건": "requests" }[unit] ?? unit) : unit;
+  const displayStat = (stat) => {
+    if (isEnglish && stat.unit === "억+") {
+      return { value: String(Number(stat.value) * 100), unit: "M+" };
+    }
+    return { value: stat.value, unit: displayUnit(stat.unit) };
+  };
   const darkZoneRef = useRef(null);
   useNavDarkZone(darkZoneRef);
   const madeHeadingRef = useRef(null);
@@ -325,17 +331,20 @@ export default function CompanyIntro() {
                 {accentNums(translate(section.title))}
               </h2>
               <div className="bf-achstats" style={{ display: "grid", gridTemplateColumns: `repeat(${section.stats.length},1fr)`, gap: 72 }}>
-                {section.stats.map((stat) => (
+                {section.stats.map((stat) => {
+                  const display = displayStat(stat);
+                  return (
                   <div key={stat.label} style={{ borderTop: "1px solid var(--border)", paddingTop: 18 }}>
                     <div style={{ fontSize: 15, color: "var(--text-subtle)", marginBottom: 6 }}>
                       {translate(stat.label)}
                     </div>
                     <div className="bf-accent bf-accent-num" style={{ fontWeight: 500, fontSize: "clamp(32px,8vw,48px)", letterSpacing: "-0.02em", color: "var(--text-strong)" }}>
-                      {stat.value}
-                      <span style={{ fontSize: 22, marginLeft: 4 }}>{displayUnit(stat.unit)}</span>
+                      {display.value}
+                      <span style={{ fontSize: 22, marginLeft: 4 }}>{display.unit}</span>
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           ))}

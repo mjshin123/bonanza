@@ -5,7 +5,7 @@ const stats = [
   { target: 1026, suffix: "조", label: "누적 입출금 검증 금액", englishLabel: "Verified KRW Transfers" },
   { target: 671, suffix: "만", label: "이상거래 탐지 건수", englishLabel: "Flagged Transactions" },
   { target: 9, suffix: "억+", label: "KYT 검증 건수", englishLabel: "KYT Screenings" },
-  { target: 48, suffix: "분", label: "평균 공조 응답 시간", englishLabel: "Average Response Time" },
+  { target: 48, suffix: "시간", label: "평균 공조 응답 시간", englishLabel: "Average Response Time" },
 ];
 
 export default function About() {

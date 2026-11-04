@@ -8,6 +8,7 @@ import GroupIntro from "./pages/GroupIntro.jsx";
 import SolutionIntro from "./pages/SolutionIntro.jsx";
 import ComplianceInfra from "./pages/ComplianceInfra.jsx";
 import History from "./pages/History.jsx";
+import CiGuide from "./pages/CiGuide.jsx";
 import PressReleases from "./pages/PressReleases.jsx";
 import PressReleaseDetail from "./pages/PressReleaseDetail.jsx";
 import Notices from "./pages/Notices.jsx";
@@ -38,6 +39,7 @@ export default function App() {
           <Route path="/transafer" element={<SolutionIntro slug="transafer" />} />
           <Route path="/compliance-suite" element={<ComplianceInfra />} />
           <Route path="/history" element={<History />} />
+          <Route path="/ci" element={<CiGuide />} />
           <Route path="/press" element={<PressReleases />} />
           <Route path="/press/:id" element={<PressReleaseDetail />} />
           <Route path="/notice" element={<Notices />} />
@@ -47,6 +49,7 @@ export default function App() {
           <Route path="/회사소개" element={<Navigate to="/about" replace />} />
           <Route path="/계열사-소개" element={<Navigate to="/group" replace />} />
           <Route path="/연혁" element={<Navigate to="/history" replace />} />
+          <Route path="/ci소개" element={<Navigate to="/ci" replace />} />
           <Route path="/보도자료" element={<Navigate to="/press" replace />} />
           <Route path="/보도자료/:id" element={<RedirectWithId to="/press" />} />
           <Route path="/공지사항" element={<Navigate to="/notice" replace />} />

@@ -26,6 +26,7 @@ const megaGroups = [
       { label: "회사 소개", enLabel: "About", href: "/about", route: true },
       { label: "보난자 그룹", enLabel: "Bonanza Group", href: "/group", route: true },
       { label: "연혁", enLabel: "History", href: "/history", route: true },
+      { label: "CI 소개", enLabel: "CI Guide", href: "/ci", route: true },
     ],
     image: "/images/nav/menu-1.jpg",
   },

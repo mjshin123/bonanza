@@ -17,7 +17,7 @@ export default function useNavDarkZone(ref) {
     // after it has already scrolled below the nav, especially on tall sections.
     const update = () => {
       const rect = node.getBoundingClientRect();
-      setZoneActive(key, rect.top < NAV_HEIGHT && rect.bottom > 0);
+      setZoneActive(key, rect.top <= NAV_HEIGHT && rect.bottom > 0);
     };
 
     update();
